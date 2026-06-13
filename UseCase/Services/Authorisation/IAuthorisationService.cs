@@ -4,12 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DoMain.Entities;
+using UseCase.DTO;
 
 namespace UseCase.Services.Authorisation
 {
     internal interface IAuthorisationService
     {
-        User Verify(string username, string password);
-        void Registration();
+        AuthorisedUser Verify(VerifyUserDTO info);
+        AuthorisedUser Registration(RegistrationUserDTO info);
     }
 }
