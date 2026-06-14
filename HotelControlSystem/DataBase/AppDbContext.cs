@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
-namespace Adapters.Controllers
+namespace HotelControlSystem.DataBase
 {
-    public class Controller : IController
+    internal class AppDbContext : DbContext
     {
-        
+
     }
 }

@@ -8,9 +8,9 @@ using UseCase.DTO;
 
 namespace UseCase.Services.Authorisation
 {
-    internal interface IAuthorisationService
+    public interface IAuthorisationService
     {
-        AuthorisedUser Verify(VerifyUserDTO info);
-        AuthorisedUser Registration(RegistrationUserDTO info);
+        public AuthorisedUserDTO Verify(VerifyUserDTO info);
+        public AuthorisedUserDTO Registration(RegistrateUserUseCaseDTO info);
     }
 }

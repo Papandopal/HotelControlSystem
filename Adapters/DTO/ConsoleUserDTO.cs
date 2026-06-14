@@ -5,16 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using DoMain.Enums;
 
-namespace HotelControlSystem.DTO
+namespace Adapters.DTO
 {
-    internal record UserMainInfoDTO
+    public record ConsoleUserDTO
     {
         public string UserName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public UserRole Role { get; set; } = UserRole.Customer;
-        public override string ToString()
-        {
-            return $"{UserName} | {Email} | {Role.ToString()}";
-        }
+        public DateTime CreatedAt { get; set; }
     }
 }

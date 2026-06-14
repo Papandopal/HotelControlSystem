@@ -12,28 +12,24 @@ using UseCase.Database;
 
 namespace HotelControlSystem.DataBase.UnitOfWork
 {
-    internal class UnitOfWork(IUserRepository users) : DbContext, IUnitOfWork
+    internal class UnitOfWork(DbContext context, IUserRepository userRepository) : IUnitOfWork
     {
         IDbContextTransaction? transaction;
-        public IUserRepository Users => users;
-        public IRepository<Room> Rooms => new RoomRepository(this);
-        public IRepository<LoyaltyProgram> LoyaltyPrograms => new LoyaltyProgramRepository(this);
-        public IRepository<Hotel> Hotels => new HotelRepository(this);
-        public IRepository<Booking> Bookings => new BookingRepository(this);
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            base.OnConfiguring(optionsBuilder);
-        }
+        DbContext dbContext = context;
+        public IUserRepository Users => userRepository;
+        public IRepository<Room> Rooms => new RoomRepository(dbContext);
+        public IRepository<LoyaltyProgram> LoyaltyPrograms => new LoyaltyProgramRepository(dbContext);
+        public IRepository<Hotel> Hotels => new HotelRepository(dbContext);
+        public IRepository<Booking> Bookings => new BookingRepository(dbContext);
 
         public void StartTransaction()
         {
-            transaction = Database.BeginTransaction();
+            transaction = dbContext.Database.BeginTransaction();
         }
         public void Commit()
         {
             if (transaction is null) return;
-            SaveChanges();
+            dbContext.SaveChanges();
             transaction.Commit();
             transaction.Dispose();
             transaction = null;
