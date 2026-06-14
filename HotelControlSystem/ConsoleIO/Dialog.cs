@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Adapters.Controllers;
+﻿using Adapters.Controllers.Console;
+using Adapters.DTO;
+using AutoMapper;
 using HotelControlSystem.DTO;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 
 namespace HotelControlSystem.ConsoleIO
 {
-    internal class Dialog(UserMainInfoDTO userMainInfo, IController controller)
+    internal class Dialog(UserMainInfoDTO userMainInfo, Controller controller, IMapper mapper)
     {
         UserMainInfoDTO userMainInfo = userMainInfo;
-        IController controller = controller;
+        Controller controller = controller;
         int chouse;
         public void Start()
         {
@@ -32,17 +28,32 @@ namespace HotelControlSystem.ConsoleIO
                     if (!int.TryParse(Console.ReadLine(), out chouse)) continue;
                     RunCommand(chouse);
                 }
-                catch 
+                catch(Exception e) 
                 {
-
+                    Console.WriteLine(e.Message);
                 }
             }
         }
 
         public string GetInfo()
         {
-            if (userMainInfo.Name.Length != 0) return userMainInfo.ToString();
+            if (userMainInfo.UserName.Length != 0) return userMainInfo.ToString();
             else return "Unauthorised";
+        }
+
+        public RegistrateUserDTO GetRegistrationInfo()
+        {
+            string? name = null, password = null, email = null;
+            Console.WriteLine("Name: ");
+            while(name is null) name = Console.ReadLine();
+
+            Console.WriteLine("Password: ");
+            while(password is null) password = Console.ReadLine();
+
+            Console.WriteLine("Email: ");
+            while(email is null) email = Console.ReadLine();
+
+            return new RegistrateUserDTO() {UserName = name, Password = password, Email = email };
         }
 
         public void RunCommand(int commandId)
@@ -50,7 +61,12 @@ namespace HotelControlSystem.ConsoleIO
             switch (commandId)
             {
                 case 1:
-                   
+                    RegistrateUserDTO info = GetRegistrationInfo();
+                    ConsoleUserDTO consoleUserDTO = controller.Registration(info);
+                    userMainInfo = mapper.Map<UserMainInfoDTO>(consoleUserDTO);
+                    break;
+                case 2:
+                    
                 default:
                     break;
             }

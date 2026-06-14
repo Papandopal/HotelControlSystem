@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UseCase.DTO
+namespace Adapters.DTO
 {
-    public record VerifyUserDTO
+    public record RegistrateUserDTO
     {
         public string UserName { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
     }
 }

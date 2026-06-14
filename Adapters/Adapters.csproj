@@ -14,10 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DoMain\DoMain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="DTO\" />
+    <ProjectReference Include="..\UseCase\UseCase.csproj" />
   </ItemGroup>
 
 </Project>

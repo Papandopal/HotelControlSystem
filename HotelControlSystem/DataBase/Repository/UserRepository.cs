@@ -16,7 +16,7 @@ namespace HotelControlSystem.DataBase.Repository
         DbSet<User> users = context.Set<User>();
         public void Add(User entity)
         {
-            throw new NotImplementedException();
+            Console.WriteLine("ok");
         }
 
         public void Delete(int id)
