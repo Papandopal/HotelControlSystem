@@ -14,11 +14,14 @@ namespace HotelControlSystem
         {
             var services = new ServiceCollection();
 
-            services.AddScoped<UserMainInfoDTO>();
             services.AddScoped<Dialog>();
             services.AddScoped<IController, Controller>();
+
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IUserRepository, UserRepository>();
+
+            services.AddAutoMapper(;
+            services.AddScoped<UserMainInfoDTO>();
 
             var provider = services.BuildServiceProvider();
             

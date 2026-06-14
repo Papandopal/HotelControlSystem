@@ -9,10 +9,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 
 namespace HotelControlSystem.ConsoleIO
 {
-    internal class Dialog(UserMainInfoDTO userMainInfo, IController identifire)
+    internal class Dialog(UserMainInfoDTO userMainInfo, IController controller)
     {
         UserMainInfoDTO userMainInfo = userMainInfo;
-        IController identifire = identifire;
+        IController controller = controller;
         int chouse;
         public void Start()
         {
@@ -21,8 +21,7 @@ namespace HotelControlSystem.ConsoleIO
 
                 try
                 {
-                    if (userMainInfo.Name.Length != 0) Console.WriteLine(userMainInfo.ToString());
-                    else Console.WriteLine("Unauthorised");
+                    Console.WriteLine(GetInfo());
 
                     Console.WriteLine("1 - Registration");
                     Console.WriteLine("2 - Log in");
@@ -37,9 +36,13 @@ namespace HotelControlSystem.ConsoleIO
                 {
 
                 }
-
-                
             }
+        }
+
+        public string GetInfo()
+        {
+            if (userMainInfo.Name.Length != 0) return userMainInfo.ToString();
+            else return "Unauthorised";
         }
 
         public void RunCommand(int commandId)
@@ -47,7 +50,7 @@ namespace HotelControlSystem.ConsoleIO
             switch (commandId)
             {
                 case 1:
-
+                   
                 default:
                     break;
             }
