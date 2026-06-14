@@ -12,10 +12,10 @@ using UseCase.Database;
 
 namespace HotelControlSystem.DataBase.UnitOfWork
 {
-    internal class UnitOfWork(DbContext context, IUserRepository userRepository) : IUnitOfWork
+    internal class UnitOfWork(AppDbContext context, IUserRepository userRepository) : IUnitOfWork
     {
         IDbContextTransaction? transaction;
-        DbContext dbContext = context;
+        AppDbContext dbContext = context;
         public IUserRepository Users => userRepository;
         public IRepository<Room> Rooms => new RoomRepository(dbContext);
         public IRepository<LoyaltyProgram> LoyaltyPrograms => new LoyaltyProgramRepository(dbContext);

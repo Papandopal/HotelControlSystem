@@ -4,32 +4,39 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DoMain.Entities;
+using HotelControlSystem.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using UseCase.Database;
 
 namespace HotelControlSystem.DataBase.Repository
 {
-    internal class LoyaltyProgramRepository(DbContext context) : IRepository<LoyaltyProgram>
+    internal class LoyaltyProgramRepository(AppDbContext context) : IRepository<LoyaltyProgram>
     {
         DbSet<LoyaltyProgram> loyaltyPrograms = context.Set<LoyaltyProgram>();
         public void Add(LoyaltyProgram entity)
         {
-            throw new NotImplementedException();
+            loyaltyPrograms.Add(entity);
         }
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            var loyaltyProgram = loyaltyPrograms.FirstOrDefault(x => x.Id == id);
+            if (loyaltyProgram is null) throw new ItemNotFoundException("loyaltyProgram not found");
+            loyaltyProgram.IsDeleted = true;
         }
 
         public LoyaltyProgram GetById(int id)
         {
-            throw new NotImplementedException();
+            var loyaltyProgram = loyaltyPrograms.FirstOrDefault(x => x.Id == id);
+            if (loyaltyProgram is null) throw new ItemNotFoundException("loyaltyProgram not found");
+            return loyaltyProgram;
         }
 
         public void Update(LoyaltyProgram entity)
         {
-            throw new NotImplementedException();
+            var loyaltyProgram = loyaltyPrograms.FirstOrDefault(x => x.Id == entity.Id);
+            if (loyaltyProgram is null) throw new ItemNotFoundException("loyaltyProgram not found");
+            loyaltyProgram = entity;
         }
     }
 }

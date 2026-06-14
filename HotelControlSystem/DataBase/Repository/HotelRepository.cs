@@ -10,7 +10,7 @@ using UseCase.Database;
 
 namespace HotelControlSystem.DataBase.Repository
 {
-    public class HotelRepository(DbContext context) : IRepository<Hotel>
+    public class HotelRepository(AppDbContext context) : IRepository<Hotel>
     {
         DbSet<Hotel> hotels = context.Set<Hotel>();
         public void Add(Hotel entity)
