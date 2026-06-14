@@ -7,13 +7,15 @@ using DoMain.Enums;
 
 namespace DoMain.Entities
 {
-    public class LoyaltyProgram
+    public class LoyaltyProgram(User user)
     {
         public int Id { get; init; }
-        public int UserId { get; init; }
+        public int UserId { get; set; }
+        public User User { get; set; } = user;
         public int TotalPoints { get; set; }
         public LoyaltyProgramTier Tier { get; set; } = LoyaltyProgramTier.Bronze;
         public decimal TotalSpent { get; set; }
+        public bool IsDeleted { get; set; }
         public DateTime JoinedAt { get; } = DateTime.Now;
         
     }

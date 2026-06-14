@@ -1,9 +1,11 @@
 ﻿using Adapters.Controllers;
 using Adapters.Controllers.Console;
 using HotelControlSystem.ConsoleIO;
+using HotelControlSystem.DataBase;
 using HotelControlSystem.DataBase.Repository;
 using HotelControlSystem.DataBase.UnitOfWork;
 using HotelControlSystem.DTO;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using UseCase.Database;
 using UseCase.Services.Authorisation;
@@ -20,8 +22,12 @@ namespace HotelControlSystem
             services.AddScoped<Controller>();
             services.AddLogging();
 
-            services.AddScoped<IUnitOfWork, TestUnitOfWork>();
-            services.AddScoped<IUserRepository, TestUserRepository>();
+            services.AddDbContext<AppDbContext>(options =>
+            {
+                options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=ConsoleDb;Trusted_Connection=True;");
+            });
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IUserRepository, UserRepository>();
 
             services.AddScoped<IAuthorisationService, AuthorisationService>();
 

@@ -11,27 +11,33 @@ using UseCase.Database;
 
 namespace HotelControlSystem.DataBase.Repository
 {
-    internal class UserRepository(DbContext context) : IUserRepository
+    internal class UserRepository(AppDbContext context) : IUserRepository
     {
         DbSet<User> users = context.Set<User>();
         public void Add(User entity)
         {
-            Console.WriteLine("ok");
+            users.Add(entity);
         }
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            var user = users.FirstOrDefault(x => x.Id == id);
+            if (user is null) throw new ItemNotFoundException("user not found");
+            user.isDeleted = true;
         }
 
         public User GetById(int id)
         {
-            throw new NotImplementedException();
+            var user = users.FirstOrDefault(x => x.Id == id);
+            if (user is null) throw new ItemNotFoundException("user not found");
+            return user;
         }
 
         public void Update(User entity)
         {
-            throw new NotImplementedException();
+            var user = users.FirstOrDefault(x => x.Id == entity.Id);
+            if (user is null) throw new ItemNotFoundException("user not found");
+            user = entity;
         }
 
         public User GetByUserName(string userName)

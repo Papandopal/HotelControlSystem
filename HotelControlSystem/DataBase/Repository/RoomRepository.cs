@@ -4,32 +4,39 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DoMain.Entities;
+using HotelControlSystem.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using UseCase.Database;
 
 namespace HotelControlSystem.DataBase.Repository
 {
-    internal class RoomRepository(DbContext context) : IRepository<Room>
+    internal class RoomRepository(AppDbContext context) : IRepository<Room>
     {
         DbSet<Room> rooms = context.Set<Room>();
         public void Add(Room entity)
         {
-            throw new NotImplementedException();
+            rooms.Add(entity);
         }
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            var room = rooms.FirstOrDefault(x => x.Id == id);
+            if (room is null) throw new ItemNotFoundException("room not found");
+            room.IsDeleted = true;
         }
 
         public Room GetById(int id)
         {
-            throw new NotImplementedException();
+            var room = rooms.FirstOrDefault(x => x.Id == id);
+            if (room is null) throw new ItemNotFoundException("room not found");
+            return room;
         }
 
         public void Update(Room entity)
         {
-            throw new NotImplementedException();
+            var room = rooms.FirstOrDefault(x => x.Id == entity.Id);
+            if (room is null) throw new ItemNotFoundException("room not found");
+            room = entity;
         }
     }
 }
