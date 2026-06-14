@@ -5,11 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
-namespace UseCase
+namespace UseCase.Database
 {
     public interface IRepository<T> where T : class
     {
-        T? GetById(int id);
+        T GetById(int id);
         void Add(T entity);
         void Update(T entity);
         void Delete(int id);

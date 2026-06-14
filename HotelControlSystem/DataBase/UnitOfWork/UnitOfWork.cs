@@ -8,14 +8,14 @@ using DoMain.Entities;
 using HotelControlSystem.DataBase.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
-using UseCase;
+using UseCase.Database;
 
 namespace HotelControlSystem.DataBase.UnitOfWork
 {
-    internal class UnitOfWork : DbContext, IUnitOfWork
+    internal class UnitOfWork(IUserRepository users) : DbContext, IUnitOfWork
     {
         IDbContextTransaction? transaction;
-        public IRepository<User> Users => new UserRepository(this);
+        public IUserRepository Users => users;
         public IRepository<Room> Rooms => new RoomRepository(this);
         public IRepository<LoyaltyProgram> LoyaltyPrograms => new LoyaltyProgramRepository(this);
         public IRepository<Hotel> Hotels => new HotelRepository(this);

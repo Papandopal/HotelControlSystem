@@ -1,9 +1,10 @@
 ﻿using Adapters.Controllers;
 using HotelControlSystem.ConsoleIO;
+using HotelControlSystem.DataBase.Repository;
 using HotelControlSystem.DataBase.UnitOfWork;
 using HotelControlSystem.DTO;
 using Microsoft.Extensions.DependencyInjection;
-using UseCase;
+using UseCase.Database;
 
 namespace HotelControlSystem
 {
@@ -17,6 +18,7 @@ namespace HotelControlSystem
             services.AddScoped<Dialog>();
             services.AddScoped<IController, Controller>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IUserRepository, UserRepository>();
 
             var provider = services.BuildServiceProvider();
             

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DoMain.Entities;
 using Microsoft.EntityFrameworkCore;
-using UseCase;
+using UseCase.Database;
 
 namespace HotelControlSystem.DataBase.Repository
 {
@@ -22,7 +22,7 @@ namespace HotelControlSystem.DataBase.Repository
             throw new NotImplementedException();
         }
 
-        public LoyaltyProgram? GetById(int id)
+        public LoyaltyProgram GetById(int id)
         {
             throw new NotImplementedException();
         }

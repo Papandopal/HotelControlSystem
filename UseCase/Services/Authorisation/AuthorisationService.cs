@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using DoMain.Entities;
+using UseCase.Database;
 using UseCase.DTO;
+using UseCase.Exceptions;
 
 namespace UseCase.Services.Authorisation
 {
@@ -18,7 +20,10 @@ namespace UseCase.Services.Authorisation
 
         public AuthorisedUser Verify(VerifyUserDTO info)
         {
-            throw new NotImplementedException();
+            string passwordHash = BCrypt.Net.BCrypt.HashPassword(info.Password);
+            var user = unitOfWork.Users.GetByUserName(info.Name);
+            if (user.PasswordHash != passwordHash) throw new AuthorisationFailedException("Verify failed");
+            return mapper.Map<AuthorisedUser>(user);
         }
     }
 }

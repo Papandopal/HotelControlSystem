@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using DoMain.Entities;
 using HotelControlSystem.Exceptions;
 using Microsoft.EntityFrameworkCore;
-using UseCase;
+using UseCase.Database;
 
 namespace HotelControlSystem.DataBase.Repository
 {
@@ -25,7 +25,7 @@ namespace HotelControlSystem.DataBase.Repository
             booking.IsDeleted = true;
         }
 
-        public Booking? GetById(int id)
+        public Booking GetById(int id)
         {
             var booking = bookings.FirstOrDefault(x => x.Id == id);
             if (booking is null) throw new ItemNotFoundException("booking not found");
