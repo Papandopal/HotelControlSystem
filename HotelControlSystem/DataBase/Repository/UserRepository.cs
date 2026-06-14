@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using DoMain.Entities;
+using HotelControlSystem.Exceptions;
 using Microsoft.EntityFrameworkCore;
-using UseCase;
+using UseCase.Database;
 
 namespace HotelControlSystem.DataBase.Repository
 {
-    internal class UserRepository(DbContext context) : IRepository<User>
+    internal class UserRepository(DbContext context) : IUserRepository
     {
         DbSet<User> users = context.Set<User>();
         public void Add(User entity)
@@ -22,7 +24,7 @@ namespace HotelControlSystem.DataBase.Repository
             throw new NotImplementedException();
         }
 
-        public User? GetById(int id)
+        public User GetById(int id)
         {
             throw new NotImplementedException();
         }
@@ -30,6 +32,13 @@ namespace HotelControlSystem.DataBase.Repository
         public void Update(User entity)
         {
             throw new NotImplementedException();
+        }
+
+        public User GetByUserName(string userName)
+        {
+            var user = users.FirstOrDefault(x => x.UserName == userName);
+            if (user is null) throw new ItemNotFoundException("user not found");
+            return user;
         }
     }
 }

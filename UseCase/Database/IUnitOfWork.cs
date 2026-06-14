@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 using DoMain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace UseCase
+namespace UseCase.Database
 {
     public interface IUnitOfWork
     {
         public void StartTransaction();
         public void Commit();
         public void Rollback();
-        public IRepository<User> Users { get; }
+        public IUserRepository Users { get; }
         public IRepository<Room> Rooms { get; }
         public IRepository<LoyaltyProgram> LoyaltyPrograms { get; }
         public IRepository<Hotel> Hotels { get; }

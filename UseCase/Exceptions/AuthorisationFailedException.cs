@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HotelControlSystem.Exceptions
+namespace UseCase.Exceptions
 {
-    internal class ItemNotFoundException : Exception
+    internal class AuthorisationFailedException : Exception
     {
-        public ItemNotFoundException(string? message) 
+        public AuthorisationFailedException(string? message)
         {
-            if(message is not null) Message = message;
+            if (message is not null) Message = message;
         }
         public string Message { get; set; } = string.Empty;
 
