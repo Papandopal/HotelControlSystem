@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using DoMain.Enums;
 
-namespace Adapters.DTO
+namespace UseCase.DTO
 {
-    public record ConsoleUserDTO
+    public record AuthorisedUserUseCaseDTO
     {
         public string UserName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;

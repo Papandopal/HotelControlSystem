@@ -10,7 +10,7 @@ namespace UseCase.Services.Authorisation
 {
     public interface IAuthorisationService
     {
-        public AuthorisedUserDTO Verify(VerifyUserDTO info);
-        public AuthorisedUserDTO Registration(RegistrateUserUseCaseDTO info);
+        public AuthorisedUserUseCaseDTO Verify(VerifyUserUseCaseDTO info);
+        public AuthorisedUserUseCaseDTO Registration(RegistrateUserUseCaseDTO info);
     }
 }

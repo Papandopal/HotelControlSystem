@@ -15,8 +15,8 @@ namespace HotelControlSystem.DataBase.ConnectionsConfiguration
         public void Configure(EntityTypeBuilder<Booking> builder)
         {
             builder.Property(x => x.Id).ValueGeneratedOnAdd();
-            builder.HasOne(x => x.User).WithOne().HasForeignKey<Booking>(x => x.UserId);
-            builder.HasOne(x=>x.Room).WithOne().HasForeignKey<Booking>(x=>x.RoomId); 
+            builder.HasOne(x => x.User).WithOne().HasForeignKey<Booking>(x => x.UserId).OnDelete(DeleteBehavior.NoAction);
+            builder.HasOne(x=>x.Room).WithOne().HasForeignKey<Booking>(x=>x.RoomId).OnDelete(DeleteBehavior.NoAction); 
         }
     }
 }

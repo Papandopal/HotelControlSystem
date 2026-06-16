@@ -16,7 +16,7 @@ namespace HotelControlSystem.DataBase.ConnectionsConfiguration
         {
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).ValueGeneratedOnAdd();
-            builder.HasOne(x=>x.)
+            builder.HasOne(x => x.User).WithOne().HasForeignKey<LoyaltyProgram>(x => x.UserId).OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

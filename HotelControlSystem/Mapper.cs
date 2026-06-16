@@ -19,9 +19,12 @@ namespace HotelControlSystem
             CreateMap<RegistrateUserDTO, RegistrateUserUseCaseDTO>();
             CreateMap<RegistrateUserUseCaseDTO, User>();
 
-            CreateMap<User, AuthorisedUserDTO>();
-            CreateMap<AuthorisedUserDTO, ConsoleUserDTO>();
-            CreateMap<ConsoleUserDTO, UserMainInfoDTO>();
+            CreateMap<User, AuthorisedUserUseCaseDTO>();
+            CreateMap<AuthorisedUserUseCaseDTO, AuthorisedUserDTO>();
+            CreateMap<AuthorisedUserDTO, UserMainInfoDTO>();
+
+            CreateMap<VerifyUserConsoleDTO, VerifyUserDTO>();
+            CreateMap<VerifyUserDTO, VerifyUserUseCaseDTO>();
         }
     }
 }

@@ -16,7 +16,7 @@ namespace HotelControlSystem.DataBase.ConnectionsConfiguration
         {
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).ValueGeneratedOnAdd();
-            builder.HasOne(x => x.Hotel).WithOne().HasForeignKey<Room>(x=>x.HotelId);
+            builder.HasOne(x => x.Hotel).WithOne().HasForeignKey<Room>(x=>x.HotelId).OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

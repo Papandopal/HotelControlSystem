@@ -16,10 +16,12 @@ namespace HotelControlSystem
     {
         static void Main(string[] args)
         {
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+
             var services = new ServiceCollection();
 
             services.AddScoped<Dialog>();
-            services.AddScoped<Controller>();
+            services.AddScoped<UserController>();
             services.AddLogging();
 
             services.AddDbContext<AppDbContext>(options =>
@@ -40,8 +42,31 @@ namespace HotelControlSystem
             var provider = services.BuildServiceProvider();
             
             var dialog = provider.GetService<Dialog>();
-            if(dialog is null) Console.WriteLine("мамой клянусь, такого быть не может");
+            if(dialog is null) Console.WriteLine("");
             else dialog.Start();
+        }
+
+        private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+
+#if DEBUG
+            return;
+#endif
+
+            var exception = (Exception)e.ExceptionObject;
+            if (exception is not null)
+            {
+                Console.WriteLine(exception.Message);
+            
+                Environment.Exit(exception.HResult);
+            }
+            else
+            {
+                Console.WriteLine("Unknow error");
+                Environment.Exit(-1);
+            }
+            
+            
         }
     }
 }
