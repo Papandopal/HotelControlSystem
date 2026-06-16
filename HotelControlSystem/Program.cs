@@ -26,7 +26,7 @@ namespace HotelControlSystem
 
             services.AddDbContext<AppDbContext>(options =>
             {
-                options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=ConsoleDb;Trusted_Connection=True;");
+                options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=ConsoleDb1;Trusted_Connection=True;");
             });
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IUserRepository, UserRepository>();
