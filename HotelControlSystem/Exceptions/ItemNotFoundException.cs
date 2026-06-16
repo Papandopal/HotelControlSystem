@@ -11,13 +11,8 @@ namespace HotelControlSystem.Exceptions
     {
         public ItemNotFoundException(string? message) 
         {
-            if(message is not null) Message = message;
+            Message = message ?? string.Empty;
         }
-        public string Message { get; set; } = string.Empty;
-
-        public override string ToString()
-        {
-            return Message;
-        }
+        public override string Message { get; }
     }
 }

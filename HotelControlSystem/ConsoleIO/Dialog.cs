@@ -5,10 +5,10 @@ using HotelControlSystem.DTO;
 
 namespace HotelControlSystem.ConsoleIO
 {
-    internal class Dialog(UserMainInfoDTO userMainInfo, Controller controller, IMapper mapper)
+    internal class Dialog(UserMainInfoDTO userMainInfo, UserController userController, IMapper mapper)
     {
         UserMainInfoDTO userMainInfo = userMainInfo;
-        Controller controller = controller;
+        UserController controller = userController;
         int chouse;
         public void Start()
         {
@@ -41,32 +41,49 @@ namespace HotelControlSystem.ConsoleIO
             else return "Unauthorised";
         }
 
-        public RegistrateUserDTO GetRegistrationInfo()
+        private static void Input<T>(string text, out T result) where T : IParsable<T>
         {
-            string? name = null, password = null, email = null;
-            Console.WriteLine("Name: ");
-            while(name is null) name = Console.ReadLine();
-
-            Console.WriteLine("Password: ");
-            while(password is null) password = Console.ReadLine();
-
-            Console.WriteLine("Email: ");
-            while(email is null) email = Console.ReadLine();
-
-            return new RegistrateUserDTO() {UserName = name, Password = password, Email = email };
+            Console.Write(text);
+            string? input = null;
+            while(input is null) input = Console.ReadLine();
+            while (!T.TryParse(input, null, out result)) Console.WriteLine("Invalide data");
         }
 
-        public void RunCommand(int commandId)
+        private RegistrateUserConsoleDTO GetRegistrateUserConsoleDTO()
+        {
+            string name, password, email;
+            
+            Input("Name: ", out name);
+            Input("Password: ", out password);
+            Input("Email: ", out email);
+
+            return new RegistrateUserConsoleDTO() {UserName = name, Password = password, Email = email };
+        }
+
+        private VerifyUserConsoleDTO GetVerifyIUserConsoleDTO()
+        {
+            string name, password;
+            Input("Name: ", out name);
+            Input("Password: ", out password);
+            return new VerifyUserConsoleDTO() { UserName = name, Password = password };
+        }
+
+        private void RunCommand(int commandId)
         {
             switch (commandId)
             {
                 case 1:
-                    RegistrateUserDTO info = GetRegistrationInfo();
-                    ConsoleUserDTO consoleUserDTO = controller.Registration(info);
-                    userMainInfo = mapper.Map<UserMainInfoDTO>(consoleUserDTO);
+                    RegistrateUserConsoleDTO registrateUserConsole = GetRegistrateUserConsoleDTO();
+                    RegistrateUserDTO registrateUser = mapper.Map<RegistrateUserDTO>(registrateUserConsole);
+                    AuthorisedUserDTO authorisedUserDTO = controller.Registration(registrateUser);
+                    userMainInfo = mapper.Map<UserMainInfoDTO>(authorisedUserDTO);
                     break;
                 case 2:
-                    
+                    VerifyUserConsoleDTO verifyUserConsole = GetVerifyIUserConsoleDTO();
+                    VerifyUserDTO verifyUser = mapper.Map<VerifyUserDTO>(verifyUserConsole);
+                    AuthorisedUserDTO authorisedUser = controller.Authorisation(verifyUser);
+                    userMainInfo = mapper.Map<UserMainInfoDTO>(authorisedUser);
+                    break;
                 default:
                     break;
             }

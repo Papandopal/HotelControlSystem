@@ -6,8 +6,13 @@ using System.Threading.Tasks;
 
 namespace DoMain.Entities
 {
-    public class Hotel(User manager)
+    public class Hotel
     {
+        private Hotel() {} 
+        public Hotel(User manager) 
+        {
+            Manager = manager;
+        }
         public int Id { get; init; }
         public string Name { get; set; } = string.Empty;
         public string City { get; set; } = string.Empty;
@@ -24,7 +29,7 @@ namespace DoMain.Entities
         }
 
         public int ManagerId { get; set; }
-        public User Manager { get; set; } = manager;
+        public User Manager { get; set; }
         public bool IsDeleted { get; set; } = false;
     }
 }

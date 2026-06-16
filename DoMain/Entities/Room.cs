@@ -7,11 +7,16 @@ using DoMain.Enums;
 
 namespace DoMain.Entities
 {
-    public class Room(Hotel hotel)
+    public class Room
     {
+        private Room() { }
+        public Room(Hotel hotel)
+        {
+            Hotel = hotel;
+        }
         public int Id { get; init; }
         public int HotelId { get; init; }
-        public Hotel Hotel { get; init; } = hotel;
+        public Hotel Hotel { get; init; }
         public RoomType RoomType { get; set; }
         public decimal PricePerNight { get; set; }
         public int Capacity { get; set; }

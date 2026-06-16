@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UseCase.Exceptions
+namespace HotelControlSystem.Exceptions
 {
-    internal class AuthorisationFailedException : Exception
+    public class ServiceNotFoundException: Exception
     {
-        public AuthorisationFailedException(string? message)
+        public ServiceNotFoundException(string? message) 
         {
             Message = message ?? string.Empty;
         }
