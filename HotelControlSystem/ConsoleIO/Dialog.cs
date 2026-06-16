@@ -10,11 +10,11 @@ namespace HotelControlSystem.ConsoleIO
         UserMainInfoDTO userMainInfo = userMainInfo;
         UserController controller = userController;
         int chouse;
+        bool exit = false;
         public void Start()
         {
-            while (true)
+            while (!exit)
             {
-
                 try
                 {
                     Console.WriteLine(GetInfo());
@@ -28,9 +28,9 @@ namespace HotelControlSystem.ConsoleIO
                     if (!int.TryParse(Console.ReadLine(), out chouse)) continue;
                     RunCommand(chouse);
                 }
-                catch(Exception e) 
+                catch(Exception e)
                 {
-                    Console.WriteLine(e.Message);
+                    Console.WriteLine(e);
                 }
             }
         }
@@ -46,7 +46,7 @@ namespace HotelControlSystem.ConsoleIO
             Console.Write(text);
             string? input = null;
             while(input is null) input = Console.ReadLine();
-            while (!T.TryParse(input, null, out result)) Console.WriteLine("Invalide data");
+            while (!T.TryParse(input, null, out result) || input == string.Empty) Console.WriteLine("Invalide data");
         }
 
         private RegistrateUserConsoleDTO GetRegistrateUserConsoleDTO()
@@ -83,6 +83,12 @@ namespace HotelControlSystem.ConsoleIO
                     VerifyUserDTO verifyUser = mapper.Map<VerifyUserDTO>(verifyUserConsole);
                     AuthorisedUserDTO authorisedUser = controller.Authorisation(verifyUser);
                     userMainInfo = mapper.Map<UserMainInfoDTO>(authorisedUser);
+                    break;
+                case 3:
+                    userMainInfo = new();
+                    break;
+                case 4:
+                    exit = true;
                     break;
                 default:
                     break;
