@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DoMain.Entities;
-using UseCase.DTO;
+using UseCase.Services.AuthorisationServices.DTO;
 
-namespace UseCase.Services.Authorisation
+namespace UseCase.Services.AuthorisationServices
 {
     public interface IAuthorisationService
     {

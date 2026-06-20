@@ -1,16 +1,17 @@
-﻿using Adapters.Controllers;
-using Adapters.Controllers.Console;
+﻿using Adapters.Controllers.Console;
 using HotelControlSystem.ConsoleIO;
-using HotelControlSystem.ConsoleIO.Behavior;
 using HotelControlSystem.DataBase;
 using HotelControlSystem.DataBase.Repository;
 using HotelControlSystem.DataBase.UnitOfWork;
 using HotelControlSystem.DTO;
-using HotelControlSystem.Services.AccountServices;
+using HotelControlSystem.RoleBehavior;
+using HotelControlSystem.Services.AuthorisationServices;
+using HotelControlSystem.Services.UserServices;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using UseCase.Database;
-using UseCase.Services.Authorisation;
+using UseCase.Services.AuthorisationServices;
+using UseCase.Services.UserServices;
 
 namespace HotelControlSystem
 {
@@ -22,10 +23,20 @@ namespace HotelControlSystem
 
             var services = new ServiceCollection();
 
-            services.AddScoped<Dialog>();
+            services.AddScoped<Input>();
+
             services.AddScoped<GeneralBehavior>();
             services.AddScoped<CustomerBehavior>();
+            services.AddScoped<AdminBehavior>();
+            services.AddScoped<ManagerBehavior>();
+
+            services.AddScoped<AuthorisationController>();
             services.AddScoped<UserController>();
+            services.AddScoped<RoomController>();
+            services.AddScoped<BookingController>();
+            services.AddScoped<HotelController>();
+            services.AddScoped<LoyaltyProgramController>();
+
             services.AddLogging();
 
             services.AddDbContext<AppDbContext>(options =>
@@ -34,20 +45,26 @@ namespace HotelControlSystem
             });
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IHotelRepository, HotelRepository>();
+            services.AddScoped<IRoomRepository, RoomRepository>();
+            services.AddScoped<IBookingRepository, BookingRepository>();
+            services.AddScoped<ILoyaltyProgramRepository, LoyaltyProgramRepository>();
 
             services.AddScoped<IAuthorisationService, AuthorisationService>();
+            services.AddScoped<IUserService, UserService>();
 
             services.AddAutoMapper(configuration =>
             {
                 configuration.AddProfile<Mapper>();
             });
+            services.AddScoped(typeof(Paginator<>));
 
             services.AddScoped<UserMainInfoDTO>();
 
             var provider = services.BuildServiceProvider();
-            
-            var dialog = provider.GetService<Dialog>();
-            if(dialog is null) Console.WriteLine("");
+
+            var dialog = provider.GetService<Input>();
+            if (dialog is null) Console.WriteLine("");
             else dialog.Start();
         }
 
@@ -62,7 +79,7 @@ namespace HotelControlSystem
             if (exception is not null)
             {
                 Console.WriteLine(exception.Message);
-            
+
                 Environment.Exit(exception.HResult);
             }
             else
@@ -70,8 +87,8 @@ namespace HotelControlSystem
                 Console.WriteLine("Unknow error");
                 Environment.Exit(-1);
             }
-            
-            
+
+
         }
     }
 }

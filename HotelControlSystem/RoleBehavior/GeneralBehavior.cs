@@ -4,17 +4,17 @@ using AutoMapper;
 using DoMain.Enums;
 using HotelControlSystem.DTO;
 
-namespace HotelControlSystem.ConsoleIO.Behavior
+namespace HotelControlSystem.RoleBehavior
 {
     internal class GeneralBehavior
     {
         public List<Action> Actions { get; } = new List<Action>();
 
         UserMainInfoDTO userMainInfoDTO;
-        UserController userController;
+        AuthorisationController userController;
         IMapper mapper;
 
-        public GeneralBehavior(UserMainInfoDTO userMainInfoDTO, IMapper mapper, UserController userController)
+        public GeneralBehavior(UserMainInfoDTO userMainInfoDTO, IMapper mapper, AuthorisationController userController)
         {
             this.userMainInfoDTO = userMainInfoDTO;
             this.userController = userController;
@@ -74,7 +74,7 @@ namespace HotelControlSystem.ConsoleIO.Behavior
 
         private void LogOut()
         {
-            mapper.Map(userMainInfoDTO, new UserMainInfoDTO());
+            userMainInfoDTO.Reset();
         }
     }
 }

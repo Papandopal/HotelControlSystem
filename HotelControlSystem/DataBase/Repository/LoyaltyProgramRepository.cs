@@ -10,7 +10,7 @@ using UseCase.Database;
 
 namespace HotelControlSystem.DataBase.Repository
 {
-    internal class LoyaltyProgramRepository(AppDbContext context) : IRepository<LoyaltyProgram>
+    internal class LoyaltyProgramRepository(AppDbContext context) : ILoyaltyProgramRepository
     {
         DbSet<LoyaltyProgram> loyaltyPrograms = context.Set<LoyaltyProgram>();
         public void Add(LoyaltyProgram entity)
@@ -23,6 +23,11 @@ namespace HotelControlSystem.DataBase.Repository
             var loyaltyProgram = loyaltyPrograms.FirstOrDefault(x => x.Id == id);
             if (loyaltyProgram is null) throw new ItemNotFoundException("loyaltyProgram not found");
             loyaltyProgram.IsDeleted = true;
+        }
+
+        public List<LoyaltyProgram> GetAll()
+        {
+            return loyaltyPrograms.ToList();
         }
 
         public LoyaltyProgram GetById(int id)

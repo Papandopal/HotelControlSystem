@@ -10,7 +10,7 @@ using UseCase.Database;
 
 namespace HotelControlSystem.DataBase.Repository
 {
-    internal class RoomRepository(AppDbContext context) : IRepository<Room>
+    internal class RoomRepository(AppDbContext context) : IRoomRepository
     {
         DbSet<Room> rooms = context.Set<Room>();
         public void Add(Room entity)
@@ -23,6 +23,11 @@ namespace HotelControlSystem.DataBase.Repository
             var room = rooms.FirstOrDefault(x => x.Id == id);
             if (room is null) throw new ItemNotFoundException("room not found");
             room.IsDeleted = true;
+        }
+
+        public List<Room> GetAll()
+        {
+            return rooms.ToList();
         }
 
         public Room GetById(int id)
