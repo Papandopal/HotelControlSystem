@@ -2,6 +2,6 @@
 {
     public enum UserRole
     {
-        Admin, HotelManager, Customer
+        Unauthorised, Customer, HotelManager, Admin 
     }
 }

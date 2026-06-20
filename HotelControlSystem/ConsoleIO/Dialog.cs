@@ -1,32 +1,30 @@
-﻿using Adapters.Controllers.Console;
-using Adapters.DTO;
-using AutoMapper;
+﻿using System.Text;
+using DoMain.Enums;
+using HotelControlSystem.ConsoleIO.Behavior;
 using HotelControlSystem.DTO;
+using HotelControlSystem.Exceptions;
 
 namespace HotelControlSystem.ConsoleIO
 {
-    internal class Dialog(UserMainInfoDTO userMainInfo, UserController userController, IMapper mapper)
+    internal class Dialog(UserMainInfoDTO userMainInfo, GeneralBehavior generalBehavior, CustomerBehavior customerBehavior)
     {
-        UserMainInfoDTO userMainInfo = userMainInfo;
-        UserController controller = userController;
-        int chouse;
-        bool exit = false;
+        private UserMainInfoDTO userMainInfo = userMainInfo;
+        private List<Action> generalActions = generalBehavior.Actions;
+        private List<Action>? roleActions;
+        private uint curAction = 0;
+        private int prevCursorPositionLine = 0;
+        private bool exit = false;
         public void Start()
         {
             while (!exit)
             {
                 try
                 {
+                    prevCursorPositionLine = Console.CursorTop;
                     Console.WriteLine(GetInfo());
-
-                    Console.WriteLine("1 - Registration");
-                    Console.WriteLine("2 - Log in");
-                    Console.WriteLine("3 - Log out");
-                    Console.WriteLine("4 - Exit");
-
-
-                    if (!int.TryParse(Console.ReadLine(), out chouse)) continue;
-                    RunCommand(chouse);
+                    SetRoleActions(userMainInfo.Role);
+                    Console.WriteLine(GetMenu());
+                    ChoiseAction();
                 }
                 catch(Exception e)
                 {
@@ -37,62 +35,104 @@ namespace HotelControlSystem.ConsoleIO
 
         public string GetInfo()
         {
-            if (userMainInfo.UserName.Length != 0) return userMainInfo.ToString();
+            if (userMainInfo.Role != UserRole.Unauthorised)
+                return new string(' ', Symbols.SelectedItem.Length) + userMainInfo.ToString();
             else return "Unauthorised";
         }
 
-        private static void Input<T>(string text, out T result) where T : IParsable<T>
+        private void SetRoleActions(UserRole role)
         {
-            Console.Write(text);
-            string? input = null;
-            while(input is null) input = Console.ReadLine();
-            while (!T.TryParse(input, null, out result) || input == string.Empty) Console.WriteLine("Invalide data");
-        }
-
-        private RegistrateUserConsoleDTO GetRegistrateUserConsoleDTO()
-        {
-            string name, password, email;
-            
-            Input("Name: ", out name);
-            Input("Password: ", out password);
-            Input("Email: ", out email);
-
-            return new RegistrateUserConsoleDTO() {UserName = name, Password = password, Email = email };
-        }
-
-        private VerifyUserConsoleDTO GetVerifyIUserConsoleDTO()
-        {
-            string name, password;
-            Input("Name: ", out name);
-            Input("Password: ", out password);
-            return new VerifyUserConsoleDTO() { UserName = name, Password = password };
-        }
-
-        private void RunCommand(int commandId)
-        {
-            switch (commandId)
+            switch (role)
             {
-                case 1:
-                    RegistrateUserConsoleDTO registrateUserConsole = GetRegistrateUserConsoleDTO();
-                    RegistrateUserDTO registrateUser = mapper.Map<RegistrateUserDTO>(registrateUserConsole);
-                    AuthorisedUserDTO authorisedUserDTO = controller.Registration(registrateUser);
-                    userMainInfo = mapper.Map<UserMainInfoDTO>(authorisedUserDTO);
+                case UserRole.Admin:
+
                     break;
-                case 2:
-                    VerifyUserConsoleDTO verifyUserConsole = GetVerifyIUserConsoleDTO();
-                    VerifyUserDTO verifyUser = mapper.Map<VerifyUserDTO>(verifyUserConsole);
-                    AuthorisedUserDTO authorisedUser = controller.Authorisation(verifyUser);
-                    userMainInfo = mapper.Map<UserMainInfoDTO>(authorisedUser);
+                case UserRole.HotelManager:
+
                     break;
-                case 3:
-                    userMainInfo = new();
+                case UserRole.Customer:
+                    roleActions = customerBehavior.Actions;
                     break;
-                case 4:
-                    exit = true;
+                case UserRole.Unauthorised:
+                    roleActions = null;
                     break;
                 default:
-                    break;
+                    throw new UnknowRoleException($"actions for {role.ToString()} not found");
             }
+        }
+
+        private string GetMenu()
+        {
+            List<Action> actions = new(generalActions);
+            if (roleActions is not null) actions.AddRange(roleActions);
+
+            StringBuilder sb = new StringBuilder();
+            int offsetForSelectSymbol = Symbols.SelectedItem.Length;
+
+            for (int i = 0; i < actions.Count; i++)
+            {
+                if (i == curAction) sb.Append(Symbols.SelectedItem + generalActions[i].Method.Name+'\n');
+                else sb.Append(new string(' ', offsetForSelectSymbol) + generalActions[i].Method.Name+'\n');
+            }
+            return sb.ToString();
+        }
+
+        private void ChoiseAction()
+        {
+            ConsoleKeyInfo input = Console.ReadKey(intercept: true);
+
+            Action choise = input switch
+            {
+                ConsoleKeyInfo key when key.Key == Symbols.RunAction => RunAction,
+                ConsoleKeyInfo key when key.Key == Symbols.NextAction => NextAction,
+                ConsoleKeyInfo key when key.Key == Symbols.PrevAction => PrevAction,
+                ConsoleKeyInfo key when key.Key == Symbols.Exit => Exit,
+                _ => ChoiseAction
+            };
+            choise.Invoke();
+        }
+        
+        private void RunAction()
+        {
+            if (curAction < generalActions.Count) generalActions[(int)curAction].Invoke();
+            else if (roleActions is not null && curAction - generalActions.Count < roleActions.Count)
+            {
+                roleActions[(int)curAction - generalActions.Count].Invoke();
+            }
+        }
+
+        private void NextAction()
+        {
+            for(int i = prevCursorPositionLine; i < Console.CursorTop; i++)
+            {
+                Console.CursorLeft = 0;
+                Console.CursorTop = i;
+                Console.Write(new string(' ', 100));
+            }
+            Console.CursorLeft = 0;
+            Console.CursorTop = prevCursorPositionLine;
+            if (curAction + 1 >= generalActions.Count + (roleActions is not null ? roleActions.Count : 0)) return;
+            curAction++;
+            
+        }
+
+        private void PrevAction()
+        {
+            for (int i = prevCursorPositionLine; i < Console.CursorTop; i++)
+            {
+                Console.CursorLeft = 0;
+                Console.CursorTop = i;
+                Console.Write(new string(' ', 100));
+            }
+            Console.CursorLeft = 0;
+            Console.CursorTop = prevCursorPositionLine;
+            if (curAction <= 0) return;
+            curAction--;
+        }
+
+        private void Exit()
+        {
+            exit = true;
         }
     }
 }

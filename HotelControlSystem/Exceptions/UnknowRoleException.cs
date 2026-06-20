@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UseCase.Exceptions
+namespace HotelControlSystem.Exceptions
 {
-    internal class AuthorisationFailedException : Exception
+    public class UnknowRoleException: Exception
     {
-        public AuthorisationFailedException(string? message)
+        public UnknowRoleException(string? message)
         {
             Message = message ?? string.Empty;
         }

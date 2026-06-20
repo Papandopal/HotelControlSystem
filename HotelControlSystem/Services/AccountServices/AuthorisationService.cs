@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
 using BCrypt.Net;
 using DoMain.Entities;
+using HotelControlSystem.Exceptions;
 using UseCase.Database;
 using UseCase.DTO;
-using UseCase.Exceptions;
+using UseCase.Services.Authorisation;
 
-namespace UseCase.Services.Authorisation
+namespace HotelControlSystem.Services.AccountServices
 {
     public class AuthorisationService(IUnitOfWork unitOfWork, IMapper mapper) : IAuthorisationService
     {
