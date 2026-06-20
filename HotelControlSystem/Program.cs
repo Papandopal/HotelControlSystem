@@ -1,10 +1,12 @@
 ﻿using Adapters.Controllers;
 using Adapters.Controllers.Console;
 using HotelControlSystem.ConsoleIO;
+using HotelControlSystem.ConsoleIO.Behavior;
 using HotelControlSystem.DataBase;
 using HotelControlSystem.DataBase.Repository;
 using HotelControlSystem.DataBase.UnitOfWork;
 using HotelControlSystem.DTO;
+using HotelControlSystem.Services.AccountServices;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using UseCase.Database;
@@ -21,6 +23,8 @@ namespace HotelControlSystem
             var services = new ServiceCollection();
 
             services.AddScoped<Dialog>();
+            services.AddScoped<GeneralBehavior>();
+            services.AddScoped<CustomerBehavior>();
             services.AddScoped<UserController>();
             services.AddLogging();
 
@@ -37,6 +41,7 @@ namespace HotelControlSystem
             {
                 configuration.AddProfile<Mapper>();
             });
+
             services.AddScoped<UserMainInfoDTO>();
 
             var provider = services.BuildServiceProvider();

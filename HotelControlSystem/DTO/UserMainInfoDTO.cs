@@ -7,11 +7,11 @@ using DoMain.Enums;
 
 namespace HotelControlSystem.DTO
 {
-    internal record UserMainInfoDTO
+    public class UserMainInfoDTO
     {
         public string UserName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
-        public UserRole Role { get; set; } = UserRole.Customer;
+        public UserRole Role { get; set; }
         public override string ToString()
         {
             return $"{UserName} | {Email} | {Role.ToString()}";
