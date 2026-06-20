@@ -3,10 +3,10 @@ using BCrypt.Net;
 using DoMain.Entities;
 using HotelControlSystem.Exceptions;
 using UseCase.Database;
-using UseCase.DTO;
-using UseCase.Services.Authorisation;
+using UseCase.Services.AuthorisationServices;
+using UseCase.Services.AuthorisationServices.DTO;
 
-namespace HotelControlSystem.Services.AccountServices
+namespace HotelControlSystem.Services.AuthorisationServices
 {
     public class AuthorisationService(IUnitOfWork unitOfWork, IMapper mapper) : IAuthorisationService
     {

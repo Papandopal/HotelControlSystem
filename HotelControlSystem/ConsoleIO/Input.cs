@@ -1,12 +1,13 @@
 ﻿using System.Text;
 using DoMain.Enums;
-using HotelControlSystem.ConsoleIO.Behavior;
 using HotelControlSystem.DTO;
 using HotelControlSystem.Exceptions;
+using HotelControlSystem.RoleBehavior;
 
 namespace HotelControlSystem.ConsoleIO
 {
-    internal class Dialog(UserMainInfoDTO userMainInfo, GeneralBehavior generalBehavior, CustomerBehavior customerBehavior)
+    internal class Input(UserMainInfoDTO userMainInfo, GeneralBehavior generalBehavior, CustomerBehavior customerBehavior,
+        AdminBehavior adminBehavior, ManagerBehavior managerBehavior)
     {
         private UserMainInfoDTO userMainInfo = userMainInfo;
         private List<Action> generalActions = generalBehavior.Actions;
@@ -20,10 +21,22 @@ namespace HotelControlSystem.ConsoleIO
             {
                 try
                 {
-                    prevCursorPositionLine = Console.CursorTop;
                     Console.WriteLine(GetInfo());
+                    int beforePrint = Console.CursorTop;
                     SetRoleActions(userMainInfo.Role);
-                    Console.WriteLine(GetMenu());
+
+                    string menuText = GetMenu();
+                    Console.Write(menuText);
+
+                    int menuLinesCount = menuText.Split('\n').Length;
+
+                    int expectedCursorTop = beforePrint + menuLinesCount;
+                    int actualCursorTop = Console.CursorTop;
+
+                    int scrollShift = expectedCursorTop - actualCursorTop;
+
+                    prevCursorPositionLine = beforePrint - scrollShift;
+                    if (prevCursorPositionLine < 0) prevCursorPositionLine = 0;
                     ChoiseAction();
                 }
                 catch(Exception e)
@@ -32,23 +45,21 @@ namespace HotelControlSystem.ConsoleIO
                 }
             }
         }
-
         public string GetInfo()
         {
             if (userMainInfo.Role != UserRole.Unauthorised)
                 return new string(' ', Symbols.SelectedItem.Length) + userMainInfo.ToString();
             else return "Unauthorised";
         }
-
         private void SetRoleActions(UserRole role)
         {
             switch (role)
             {
                 case UserRole.Admin:
-
+                    roleActions = adminBehavior.Actions;
                     break;
                 case UserRole.HotelManager:
-
+                    roleActions = managerBehavior.Actions;
                     break;
                 case UserRole.Customer:
                     roleActions = customerBehavior.Actions;
@@ -60,7 +71,6 @@ namespace HotelControlSystem.ConsoleIO
                     throw new UnknowRoleException($"actions for {role.ToString()} not found");
             }
         }
-
         private string GetMenu()
         {
             List<Action> actions = new(generalActions);
@@ -71,12 +81,11 @@ namespace HotelControlSystem.ConsoleIO
 
             for (int i = 0; i < actions.Count; i++)
             {
-                if (i == curAction) sb.Append(Symbols.SelectedItem + generalActions[i].Method.Name+'\n');
-                else sb.Append(new string(' ', offsetForSelectSymbol) + generalActions[i].Method.Name+'\n');
+                if (i == curAction) sb.Append(Symbols.SelectedItem + actions[i].Method.Name+'\n');
+                else sb.Append(new string(' ', offsetForSelectSymbol) + actions[i].Method.Name+'\n');
             }
             return sb.ToString();
         }
-
         private void ChoiseAction()
         {
             ConsoleKeyInfo input = Console.ReadKey(intercept: true);
@@ -91,7 +100,6 @@ namespace HotelControlSystem.ConsoleIO
             };
             choise.Invoke();
         }
-        
         private void RunAction()
         {
             if (curAction < generalActions.Count) generalActions[(int)curAction].Invoke();
@@ -99,37 +107,32 @@ namespace HotelControlSystem.ConsoleIO
             {
                 roleActions[(int)curAction - generalActions.Count].Invoke();
             }
+            curAction = 0;
         }
+        private void ConsoleClear()
+        {
+            int currentCursor = Console.CursorTop;
 
+            for (int i = prevCursorPositionLine; i < currentCursor; i++)
+            {
+                Console.SetCursorPosition(0, i);
+                Console.Write(new string(' ', Console.WindowWidth - 1));
+            }
+            Console.SetCursorPosition(0, prevCursorPositionLine);
+        }
         private void NextAction()
         {
-            for(int i = prevCursorPositionLine; i < Console.CursorTop; i++)
-            {
-                Console.CursorLeft = 0;
-                Console.CursorTop = i;
-                Console.Write(new string(' ', 100));
-            }
-            Console.CursorLeft = 0;
-            Console.CursorTop = prevCursorPositionLine;
+            ConsoleClear();
             if (curAction + 1 >= generalActions.Count + (roleActions is not null ? roleActions.Count : 0)) return;
             curAction++;
             
         }
-
         private void PrevAction()
         {
-            for (int i = prevCursorPositionLine; i < Console.CursorTop; i++)
-            {
-                Console.CursorLeft = 0;
-                Console.CursorTop = i;
-                Console.Write(new string(' ', 100));
-            }
-            Console.CursorLeft = 0;
-            Console.CursorTop = prevCursorPositionLine;
+            ConsoleClear();
             if (curAction <= 0) return;
             curAction--;
         }
-
         private void Exit()
         {
             exit = true;

@@ -7,20 +7,16 @@ using DoMain.Enums;
 
 namespace HotelControlSystem.DTO
 {
-    public class UserMainInfoDTO
+    public class UserInfoConsoleDTO
     {
         public string UserName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public UserRole Role { get; set; }
+        public DateTime CreatedAt { get; set; }
         public override string ToString()
         {
-            return $"{UserName} | {Email} | {Role.ToString()}";
-        }
-        public void Reset()
-        {
-            UserName = string.Empty;
-            Email = string.Empty;
-            Role = UserRole.Unauthorised;
+            return $"Name: {UserName}\n" +
+                $"Email: {Email}";
         }
     }
 }

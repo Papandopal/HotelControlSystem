@@ -46,5 +46,10 @@ namespace HotelControlSystem.DataBase.Repository
             if (user is null) throw new ItemNotFoundException("user not found");
             return user;
         }
+
+        public List<User> GetAll()
+        {
+            return users.ToList();
+        }
     }
 }

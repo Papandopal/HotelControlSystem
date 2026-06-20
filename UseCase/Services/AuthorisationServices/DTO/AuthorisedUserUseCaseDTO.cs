@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DoMain.Enums;
 
-namespace UseCase.DTO
+namespace UseCase.Services.AuthorisationServices.DTO
 {
     public record AuthorisedUserUseCaseDTO
     {

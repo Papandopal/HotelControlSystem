@@ -7,7 +7,8 @@ using Adapters.DTO;
 using AutoMapper;
 using DoMain.Entities;
 using HotelControlSystem.DTO;
-using UseCase.DTO;
+using UseCase.Services.AuthorisationServices.DTO;
+using UseCase.Services.UserServices.DTO;
 
 namespace HotelControlSystem
 {
@@ -25,6 +26,10 @@ namespace HotelControlSystem
 
             CreateMap<VerifyUserConsoleDTO, VerifyUserDTO>();
             CreateMap<VerifyUserDTO, VerifyUserUseCaseDTO>();
+
+            CreateMap<User, UserInfoUseCaseDTO>();
+            CreateMap<UserInfoUseCaseDTO, UserInfoDTO>();
+            CreateMap<UserInfoDTO, UserInfoConsoleDTO>();
         }
     }
 }
