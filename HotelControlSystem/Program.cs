@@ -23,7 +23,7 @@ namespace HotelControlSystem
 
             var services = new ServiceCollection();
 
-            services.AddScoped<Input>();
+            services.AddScoped<Dialog>();
 
             services.AddScoped<GeneralBehavior>();
             services.AddScoped<CustomerBehavior>();
@@ -63,7 +63,7 @@ namespace HotelControlSystem
 
             var provider = services.BuildServiceProvider();
 
-            var dialog = provider.GetService<Input>();
+            var dialog = provider.GetService<Dialog>();
             if (dialog is null) Console.WriteLine("");
             else dialog.Start();
         }
