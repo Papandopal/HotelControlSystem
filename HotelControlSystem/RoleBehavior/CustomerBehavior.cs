@@ -11,7 +11,6 @@ namespace HotelControlSystem.RoleBehavior
         public List<Action> Actions { get; } = new List<Action>();
         public CustomerBehavior() 
         {
-
             Actions.AddRange();
         }
 

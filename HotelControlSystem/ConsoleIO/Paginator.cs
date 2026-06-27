@@ -8,13 +8,13 @@ namespace HotelControlSystem.ConsoleIO
 {
     public class Paginator<T> where T : class
     {
-        List<List<T>> pages = new();
+        private List<List<T>> pages = new();
 
-        int prevCursorPositionLine = Console.CursorTop;
-        int index = 0;
-        bool exit = false;
+        private int index = 0;
+        private bool exit = false;
 
         public Paginator() { }
+
         public void SetItems(List<T> items, uint size = 2)
         {
             exit = false;
@@ -23,29 +23,22 @@ namespace HotelControlSystem.ConsoleIO
 
             if (size == 0) throw new ArgumentOutOfRangeException("size of page can`t be 0");
 
-            List<T> page = new() { items[0] };
-            for (int i = 1; i < items.Count; i++)
+            List<T> page = new();
+            int curCount = 0;
+
+            foreach (T item in items)
             {
-                page.Add(items[i]);
-                if (size == 1 || i % (size - 1) == 0)
+                page.Add(item);
+                curCount++;
+                if(curCount == size)
                 {
                     pages.Add(page);
                     page = new();
+                    curCount = 0;
                 }
             }
 
             if (page.Count > 0) pages.Add(page);
-
-            int beforePrint = Console.CursorTop;
-
-            int lenghtOfItem = pages[0][0].ToString()?.Split('\n').Length ?? 1;
-
-            int expectedCursorTop = beforePrint + (int)size*lenghtOfItem;
-            int actualCursorTop = Console.CursorTop;
-
-            int scrollShift = expectedCursorTop - actualCursorTop;
-
-            prevCursorPositionLine = beforePrint - scrollShift;
         }
 
         public bool TryGetPage(int num)
@@ -57,26 +50,6 @@ namespace HotelControlSystem.ConsoleIO
             else
             {
                 return true;
-            }
-        }
-
-        private void ConsoleClear()
-        {
-            int currentCursor = Console.CursorTop;
-
-            for (int i = prevCursorPositionLine; i < currentCursor; i++)
-            {
-                Console.SetCursorPosition(0, i);
-                Console.Write(new string(' ', Console.WindowWidth - 1));
-            }
-            Console.SetCursorPosition(0, prevCursorPositionLine);
-        }
-
-        private void WriteEnumirable(IEnumerable<T> items)
-        {
-            foreach (T item in items)
-            {
-                Console.WriteLine(item.ToString());
             }
         }
 
@@ -101,23 +74,23 @@ namespace HotelControlSystem.ConsoleIO
 
         private void CurPage()
         {
-            ConsoleClear();
+            Output.ConsoleClear();
             if (!TryGetPage(0)) exit = true;
-            else WriteEnumirable(pages[index]);
+            else Output.WriteList(pages[index]);
         }
 
         private void NextPage()
         {
-            ConsoleClear();
-            if (TryGetPage(++index)) WriteEnumirable(pages[index]);
-            else WriteEnumirable(pages[--index]);
+            Output.ConsoleClear();
+            if (TryGetPage(++index)) Output.WriteList(pages[index]);
+            else Output.WriteList(pages[--index]);
         }
 
         private void PrevPage()
         {
-            ConsoleClear();
-            if (TryGetPage(--index)) WriteEnumirable(pages[index]);
-            else WriteEnumirable(pages[++index]);
+            Output.ConsoleClear();
+            if (TryGetPage(--index)) Output.WriteList(pages[index]);
+            else Output.WriteList(pages[++index]);
         }
 
         private void Exit()

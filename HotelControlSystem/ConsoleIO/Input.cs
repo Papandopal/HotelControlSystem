@@ -1,141 +1,23 @@
-﻿using System.Text;
-using DoMain.Enums;
-using HotelControlSystem.DTO;
-using HotelControlSystem.Exceptions;
-using HotelControlSystem.RoleBehavior;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace HotelControlSystem.ConsoleIO
 {
-    internal class Input(UserMainInfoDTO userMainInfo, GeneralBehavior generalBehavior, CustomerBehavior customerBehavior,
-        AdminBehavior adminBehavior, ManagerBehavior managerBehavior)
+    internal static class Input
     {
-        private UserMainInfoDTO userMainInfo = userMainInfo;
-        private List<Action> generalActions = generalBehavior.Actions;
-        private List<Action>? roleActions;
-        private uint curAction = 0;
-        private int prevCursorPositionLine = 0;
-        private bool exit = false;
-        public void Start()
+        public static void GetItem<T>(string text, out T result) where T : IParsable<T>
         {
-            while (!exit)
+            Console.Write(text);
+            string? input = null;
+            input = Console.ReadLine();
+            while (input is null || input == string.Empty || !T.TryParse(input, null, out result))
             {
-                try
-                {
-                    Console.WriteLine(GetInfo());
-                    int beforePrint = Console.CursorTop;
-                    SetRoleActions(userMainInfo.Role);
-
-                    string menuText = GetMenu();
-                    Console.Write(menuText);
-
-                    int menuLinesCount = menuText.Split('\n').Length;
-
-                    int expectedCursorTop = beforePrint + menuLinesCount;
-                    int actualCursorTop = Console.CursorTop;
-
-                    int scrollShift = expectedCursorTop - actualCursorTop;
-
-                    prevCursorPositionLine = beforePrint - scrollShift;
-                    if (prevCursorPositionLine < 0) prevCursorPositionLine = 0;
-                    ChoiseAction();
-                }
-                catch(Exception e)
-                {
-                    Console.WriteLine(e);
-                }
+                Console.WriteLine("Invalide data");
+                input = Console.ReadLine();
             }
-        }
-        public string GetInfo()
-        {
-            if (userMainInfo.Role != UserRole.Unauthorised)
-                return new string(' ', Symbols.SelectedItem.Length) + userMainInfo.ToString();
-            else return "Unauthorised";
-        }
-        private void SetRoleActions(UserRole role)
-        {
-            switch (role)
-            {
-                case UserRole.Admin:
-                    roleActions = adminBehavior.Actions;
-                    break;
-                case UserRole.HotelManager:
-                    roleActions = managerBehavior.Actions;
-                    break;
-                case UserRole.Customer:
-                    roleActions = customerBehavior.Actions;
-                    break;
-                case UserRole.Unauthorised:
-                    roleActions = null;
-                    break;
-                default:
-                    throw new UnknowRoleException($"actions for {role.ToString()} not found");
-            }
-        }
-        private string GetMenu()
-        {
-            List<Action> actions = new(generalActions);
-            if (roleActions is not null) actions.AddRange(roleActions);
-
-            StringBuilder sb = new StringBuilder();
-            int offsetForSelectSymbol = Symbols.SelectedItem.Length;
-
-            for (int i = 0; i < actions.Count; i++)
-            {
-                if (i == curAction) sb.Append(Symbols.SelectedItem + actions[i].Method.Name+'\n');
-                else sb.Append(new string(' ', offsetForSelectSymbol) + actions[i].Method.Name+'\n');
-            }
-            return sb.ToString();
-        }
-        private void ChoiseAction()
-        {
-            ConsoleKeyInfo input = Console.ReadKey(intercept: true);
-
-            Action choise = input switch
-            {
-                ConsoleKeyInfo key when key.Key == Symbols.RunAction => RunAction,
-                ConsoleKeyInfo key when key.Key == Symbols.NextAction => NextAction,
-                ConsoleKeyInfo key when key.Key == Symbols.PrevAction => PrevAction,
-                ConsoleKeyInfo key when key.Key == Symbols.Exit => Exit,
-                _ => ChoiseAction
-            };
-            choise.Invoke();
-        }
-        private void RunAction()
-        {
-            if (curAction < generalActions.Count) generalActions[(int)curAction].Invoke();
-            else if (roleActions is not null && curAction - generalActions.Count < roleActions.Count)
-            {
-                roleActions[(int)curAction - generalActions.Count].Invoke();
-            }
-            curAction = 0;
-        }
-        private void ConsoleClear()
-        {
-            int currentCursor = Console.CursorTop;
-
-            for (int i = prevCursorPositionLine; i < currentCursor; i++)
-            {
-                Console.SetCursorPosition(0, i);
-                Console.Write(new string(' ', Console.WindowWidth - 1));
-            }
-            Console.SetCursorPosition(0, prevCursorPositionLine);
-        }
-        private void NextAction()
-        {
-            ConsoleClear();
-            if (curAction + 1 >= generalActions.Count + (roleActions is not null ? roleActions.Count : 0)) return;
-            curAction++;
-            
-        }
-        private void PrevAction()
-        {
-            ConsoleClear();
-            if (curAction <= 0) return;
-            curAction--;
-        }
-        private void Exit()
-        {
-            exit = true;
         }
     }
 }

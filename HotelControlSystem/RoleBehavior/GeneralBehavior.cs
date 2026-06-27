@@ -2,6 +2,7 @@
 using Adapters.DTO;
 using AutoMapper;
 using DoMain.Enums;
+using HotelControlSystem.ConsoleIO;
 using HotelControlSystem.DTO;
 
 namespace HotelControlSystem.RoleBehavior
@@ -23,27 +24,19 @@ namespace HotelControlSystem.RoleBehavior
             Actions.AddRange(Registration, Verify, LogOut);
         }
 
-        private static void Input<T>(string text, out T result) where T : IParsable<T>
-        {
-            Console.Write(text);
-            string? input = null;
-            input = Console.ReadLine();
-            while (input is null || input == string.Empty || !T.TryParse(input, null, out result))
-            {
-                Console.WriteLine("Invalide data");
-                input = Console.ReadLine();
-            }
-        }
-
         private RegistrateUserConsoleDTO GetRegistrateUserConsoleDTO()
         {
             string name, password, email;
             int role = 0;
 
-            Input("Name: ", out name);
-            Input("Password: ", out password);
-            Input("Email: ", out email);
-            while (role <= 0 || role > (int)UserRole.Admin)Input("Role: ", out role);
+            Input.GetItem("Name: ", out name);
+            Input.GetItem("Password: ", out password);
+            Input.GetItem("Email: ", out email);
+
+            while (role <= 0 || role > (int)UserRole.Admin)
+            {
+                Input.GetItem("Role: ", out role);
+            }
 
             return new RegistrateUserConsoleDTO() { UserName = name, Password = password, Email = email, Role = (UserRole)role };
         }
@@ -59,8 +52,8 @@ namespace HotelControlSystem.RoleBehavior
         private VerifyUserConsoleDTO GetVerifyIUserConsoleDTO()
         {
             string name, password;
-            Input("Name: ", out name);
-            Input("Password: ", out password);
+            Input.GetItem("Name: ", out name);
+            Input.GetItem("Password: ", out password);
             return new VerifyUserConsoleDTO() { UserName = name, Password = password };
         }
 
