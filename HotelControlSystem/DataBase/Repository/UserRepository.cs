@@ -40,10 +40,10 @@ namespace HotelControlSystem.DataBase.Repository
             user = entity;
         }
 
-        public User GetByUserName(string userName)
+        public IEnumerable<User> GetByUserName(string userName)
         {
-            var user = users.FirstOrDefault(x => x.UserName == userName);
-            if (user is null) throw new ItemNotFoundException("user not found");
+            var user = users.Where(x => x.UserName == userName).AsEnumerable();
+            if (user.Count()==0) throw new ItemNotFoundException("user not found");
             return user;
         }
 

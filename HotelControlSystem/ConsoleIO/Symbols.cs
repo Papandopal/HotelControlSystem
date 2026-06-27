@@ -18,5 +18,7 @@ namespace HotelControlSystem.ConsoleIO
         public static readonly ConsoleKey NextPage = ConsoleKey.RightArrow;
         public static readonly ConsoleKey PrevPage = ConsoleKey.LeftArrow;
         public static readonly ConsoleKey Exit = ConsoleKey.Escape;
+
+        public static readonly ConsoleKey StopInput = ConsoleKey.Z;
     }
 }

@@ -45,7 +45,6 @@ namespace HotelControlSystem.ConsoleIO
             Console.Write(item);
             prevCursorTop = GetCursorTop(item, beforePrint);
         }
-
         public static void WriteLine(object item)
         {
             int beforePrint = Console.CursorTop;

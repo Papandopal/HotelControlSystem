@@ -23,11 +23,21 @@ namespace HotelControlSystem.Services.AuthorisationServices
 
         public AuthorisedUserUseCaseDTO Verify(VerifyUserUseCaseDTO info)
         {
-            User user = unitOfWork.Users.GetByUserName(info.UserName);
+            IEnumerable<User> users = unitOfWork.Users.GetByUserName(info.UserName);
             string password = info.Password;
-            string hash = user.PasswordHash;
-            if (!BCrypt.Net.BCrypt.Verify(password, hash)) throw new AuthorisationFailedException("Verify failed");
-            return mapper.Map<AuthorisedUserUseCaseDTO>(user);
+            foreach (User user in users)
+            {
+                if (user.isDeleted) continue;
+
+                string hash = user.PasswordHash;
+
+                if (BCrypt.Net.BCrypt.Verify(password, hash))
+                {
+                    return mapper.Map<AuthorisedUserUseCaseDTO>(user);
+                }
+            }
+
+            throw new AuthorisationFailedException("Verify failed");
         }
     }
 }
