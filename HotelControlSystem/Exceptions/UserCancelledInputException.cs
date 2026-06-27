@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace HotelControlSystem.Exceptions
 {
-    public class ServiceNotFoundException: Exception
+    internal class UserCancelledInputException : Exception
     {
         public override string Message { get; }
-        public ServiceNotFoundException(string? message) 
+        public UserCancelledInputException(string message) 
         {
-            Message = message ?? string.Empty;
+            Message = message;
         }
     }
 }

@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Channels;
 using System.Threading.Tasks;
+using HotelControlSystem.Exceptions;
 
 namespace HotelControlSystem.ConsoleIO
 {
@@ -10,14 +12,36 @@ namespace HotelControlSystem.ConsoleIO
     {
         public static void GetItem<T>(string text, out T result) where T : IParsable<T>
         {
-            Console.Write(text);
-            string? input = null;
-            input = Console.ReadLine();
+            Output.Write(text);
+
+            string? input = Console.ReadLine();
+
             while (input is null || input == string.Empty || !T.TryParse(input, null, out result))
             {
-                Console.WriteLine("Invalide data");
+                Output.WriteLine("Invalide data");
                 input = Console.ReadLine();
             }
         }
+
+        private static string BuildInput()
+        {
+            StringBuilder builder = new();
+            ConsoleKeyInfo key;
+
+            do
+            {
+                key = Console.ReadKey();
+
+                if (key.Key == Symbols.StopInput && key.Modifiers.HasFlag(ConsoleModifiers.Control))
+                    throw new UserCancelledInputException("user cancelled input");
+
+                builder.Append(key);
+
+            } while (key.Key != ConsoleKey.Enter);
+
+            return builder.ToString();
+        }
+
     }
 }
+

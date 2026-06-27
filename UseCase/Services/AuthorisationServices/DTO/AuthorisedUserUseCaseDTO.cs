@@ -9,6 +9,7 @@ namespace UseCase.Services.AuthorisationServices.DTO
 {
     public record AuthorisedUserUseCaseDTO
     {
+        public int Id { get; }
         public string UserName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public UserRole Role { get; set; }

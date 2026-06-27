@@ -9,13 +9,16 @@ namespace HotelControlSystem.DTO
 {
     public class UserInfoConsoleDTO
     {
+        public int Id { get; init; }
         public string UserName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public UserRole Role { get; set; }
         public DateTime CreatedAt { get; set; }
         public override string ToString()
         {
-            return $"Name: {UserName}\n" +
+            return 
+                $"Id: {Id}\n" +
+                $"Name: {UserName}\n" +
                 $"Email: {Email}";
         }
     }
