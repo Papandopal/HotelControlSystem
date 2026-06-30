@@ -9,6 +9,7 @@ using HotelControlSystem.DataBase.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using UseCase.Database;
+using UseCase.Database.Repositories;
 
 namespace HotelControlSystem.DataBase.UnitOfWork
 {

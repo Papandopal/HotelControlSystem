@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
-namespace UseCase.Database
+namespace UseCase.Database.Repositories
 {
     public interface IRepository<T> where T : class
     {

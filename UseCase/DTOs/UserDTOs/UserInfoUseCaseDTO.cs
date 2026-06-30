@@ -5,13 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using DoMain.Enums;
 
-namespace UseCase.Services.AuthorisationServices.DTO
+namespace UseCase.DTOs.UserDTOs
 {
-    public record RegistrateUserUseCaseDTO
+    public class UserInfoUseCaseDTO
     {
+        public int Id { get; init; }
         public string UserName { get; set; } = string.Empty;
-        public string Password { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public UserRole Role { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
 }

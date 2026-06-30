@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using DoMain.Enums;
 using UseCase.Database;
+using UseCase.DTOs.UserDTOs;
 using UseCase.Services.AuthorisationServices.DTO;
-using UseCase.Services.UserServices.DTO;
 
 namespace UseCase.Services.UserServices
 {

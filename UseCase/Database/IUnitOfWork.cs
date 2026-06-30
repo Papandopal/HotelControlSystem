@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DoMain.Entities;
 using Microsoft.EntityFrameworkCore;
+using UseCase.Database.Repositories;
 
 namespace UseCase.Database
 {

@@ -1,6 +1,6 @@
 ﻿using System.Text;
 using DoMain.Enums;
-using HotelControlSystem.DTO;
+using HotelControlSystem.DTOs.AuthorisationDTOs;
 using HotelControlSystem.Exceptions;
 using HotelControlSystem.RoleBehavior;
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using DoMain.Entities;
 using HotelControlSystem.Exceptions;
 using Microsoft.EntityFrameworkCore;
-using UseCase.Database;
+using UseCase.Database.Repositories;
 
 namespace HotelControlSystem.DataBase.Repository
 {

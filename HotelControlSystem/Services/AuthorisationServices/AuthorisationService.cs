@@ -3,8 +3,8 @@ using BCrypt.Net;
 using DoMain.Entities;
 using HotelControlSystem.Exceptions;
 using UseCase.Database;
+using UseCase.DTOs.AuthorisationDTOs;
 using UseCase.Services.AuthorisationServices;
-using UseCase.Services.AuthorisationServices.DTO;
 
 namespace HotelControlSystem.Services.AuthorisationServices
 {

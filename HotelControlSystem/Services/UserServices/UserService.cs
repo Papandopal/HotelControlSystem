@@ -9,6 +9,7 @@ using HotelControlSystem.ConsoleIO;
 using HotelControlSystem.DTO;
 using HotelControlSystem.Exceptions;
 using UseCase.Database;
+using UseCase.Database.Repositories;
 using UseCase.Services.UserServices;
 using UseCase.Services.UserServices.DTO;
 

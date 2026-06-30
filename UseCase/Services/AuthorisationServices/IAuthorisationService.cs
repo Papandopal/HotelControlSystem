@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DoMain.Entities;
-using UseCase.Services.AuthorisationServices.DTO;
+using UseCase.DTOs.AuthorisationDTOs;
 
 namespace UseCase.Services.AuthorisationServices
 {

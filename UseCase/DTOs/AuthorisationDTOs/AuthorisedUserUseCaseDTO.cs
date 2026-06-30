@@ -5,11 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using DoMain.Enums;
 
-namespace Adapters.DTO
+namespace UseCase.DTOs.AuthorisationDTOs
 {
-    public class UserInfoDTO
+    public record AuthorisedUserUseCaseDTO
     {
-        public int Id { get; init; }
+        public int Id { get; }
         public string UserName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public UserRole Role { get; set; }

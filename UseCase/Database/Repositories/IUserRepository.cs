@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DoMain.Entities;
 
-namespace UseCase.Database
+namespace UseCase.Database.Repositories
 {
     public interface IUserRepository : IRepository<User>
     {

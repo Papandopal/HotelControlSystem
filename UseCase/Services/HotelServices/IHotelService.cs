@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DoMain.Entities;
 
-namespace UseCase.Database
+namespace UseCase.Services.HotelService
 {
-    public interface IHotelRepository : IRepository<Hotel>
+    internal class IHotelService
     {
     }
 }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UseCase.Services.AuthorisationServices.DTO
+namespace UseCase.DTOs.AuthorisationDTOs
 {
     public record VerifyUserUseCaseDTO
     {

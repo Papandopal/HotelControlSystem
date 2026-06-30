@@ -1,5 +1,5 @@
 ﻿using Adapters.Controllers.Console;
-using Adapters.DTO;
+using Adapters.DTO.UserDTOs;
 using AutoMapper;
 using DoMain.Enums;
 using HotelControlSystem.ConsoleIO;

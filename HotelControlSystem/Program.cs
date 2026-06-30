@@ -10,6 +10,7 @@ using HotelControlSystem.Services.UserServices;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using UseCase.Database;
+using UseCase.Database.Repositories;
 using UseCase.Services.AuthorisationServices;
 using UseCase.Services.UserServices;
 
