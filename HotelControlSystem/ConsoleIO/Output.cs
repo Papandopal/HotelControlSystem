@@ -11,8 +11,12 @@ namespace HotelControlSystem.ConsoleIO
     internal static class Output
     {
         private static int prevCursorTop = Console.CursorTop;
-        private static int GetCursorTop(object item, int cursorTopBeforePrint) 
+        private static int GetCursorTop<T>(T item, int cursorTopBeforePrint) 
         {
+            if (item is null)
+            {
+                return prevCursorTop;
+            }
             int lenghtOfItem = item.ToString()?.Split('\n').Length ?? 1;
 
             int expectedCursorTop = cursorTopBeforePrint + lenghtOfItem;
@@ -22,15 +26,15 @@ namespace HotelControlSystem.ConsoleIO
 
             return cursorTopBeforePrint - scrollShift;
         }
-        private static int GetCursorTop(IEnumerable<object> items, int cursorTopBeforePrint)
+        private static int GetCursorTop<T>(IEnumerable<T> items, int cursorTopBeforePrint)
         {
 
-            if (items.Count() == 0) 
+            if (items is null || items.Count() == 0) 
             {
-                return 0;
+                return prevCursorTop;
             }
 
-            int lenghtOfItem = items.ElementAt(0).ToString()?.Split('\n').Length ?? 1;
+            int lenghtOfItem = items.ElementAt(0)?.ToString()?.Split('\n').Length ?? 1;
 
             int expectedCursorTop = cursorTopBeforePrint + lenghtOfItem*items.Count();
             int actualCursorTop = Console.CursorTop;
@@ -39,22 +43,27 @@ namespace HotelControlSystem.ConsoleIO
 
             return cursorTopBeforePrint - scrollShift;
         }
-        public static void Write(object item)
+        public static void Write<T>(T item)
         {
             int beforePrint = Console.CursorTop;
             Console.Write(item);
             prevCursorTop = GetCursorTop(item, beforePrint);
         }
-        public static void WriteLine(object item)
+        public static void WriteLine<T>(T item)
         {
             int beforePrint = Console.CursorTop;
             Console.WriteLine(item);
             prevCursorTop = GetCursorTop(item, beforePrint);
         }
-        public static void WriteList(IEnumerable<object> items)
+        public static void WriteList<T>(IEnumerable<T> items)
         {
+            if(items is null || items.Count() == 0)
+            {
+                return;
+            }
+
             int beforePrint = Console.CursorTop;
-            foreach (object item in items)
+            foreach (T item in items)
             {
                 Console.WriteLine(item);
             }

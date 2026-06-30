@@ -1,4 +1,4 @@
-﻿using Adapters.DTO;
+﻿using Adapters.DTO.UserDTOs;
 using AutoMapper;
 using DoMain.Enums;
 using UseCase.Services.UserServices;
@@ -14,12 +14,12 @@ namespace Adapters.Controllers.Console
         
         public void DeleteUserById(int id)
         {
-            userService.DeleteUserById(id);
+            userService.DeleteUser(id);
         }
 
-        public void PromoteUserById(int id, UserRole new_role)
+        public void PromoteUser(int id, UserRole new_role)
         {
-            userService.PromoteUserById(id, new_role);
+            userService.PromoteUser(id, new_role);
         }
     }
 }

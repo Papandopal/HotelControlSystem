@@ -15,8 +15,8 @@ namespace DoMain.Entities
             User = user;
         }
         public int Id { get; init; }
-        public int UserId { get; set; }
-        public User User { get; set; }
+        public int UserId { get; init; }
+        public User User { get; init; }
         public int TotalPoints { get; set; }
         public LoyaltyProgramTier Tier { get; set; } = LoyaltyProgramTier.Bronze;
         public decimal TotalSpent { get; set; }
