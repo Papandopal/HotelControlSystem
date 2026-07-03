@@ -17,7 +17,7 @@ namespace HotelControlSystem.Services.UserServices
 {
     internal class UserService(UserMainInfoDTO userMainInfo, IUnitOfWork unitOfWork, IMapper mapper) : IUserService
     {
-        public void DeleteUser(int id)
+        public void Delete(int id)
         {
             unitOfWork.StartTransaction();
 
@@ -35,7 +35,7 @@ namespace HotelControlSystem.Services.UserServices
             return mapper.Map<List<UserInfoUseCaseDTO>>(unitOfWork.Users.GetAll());
         }
 
-        public void PromoteUser(int id, UserRole new_role)
+        public void Promote(int id, UserRole new_role)
         {
             unitOfWork.StartTransaction();
 
@@ -51,7 +51,7 @@ namespace HotelControlSystem.Services.UserServices
             unitOfWork.Commit();
         }
 
-        public bool UserIsExists(int id)
+        public bool IsExists(int id)
         {
             unitOfWork.StartTransaction();
             var user = unitOfWork.Users.GetById(id);

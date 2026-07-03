@@ -9,10 +9,11 @@ namespace UseCase.Database.Repositories
 {
     public interface IRepository<T> where T : class
     {
-        List<T> GetAll(); 
-        T GetById(int id);
-        void Add(T entity);
-        void Update(T entity);
-        void Delete(int id);
+        public List<T> GetAll(); 
+        public T GetById(int id);
+        public bool IsExists(int id);
+        public void Add(T entity);
+        public void Update(T entity);
+        public void Delete(int id);
     }
 }

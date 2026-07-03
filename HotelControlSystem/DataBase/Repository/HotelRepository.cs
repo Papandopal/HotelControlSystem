@@ -37,6 +37,12 @@ namespace HotelControlSystem.DataBase.Repository
             return hotel;
         }
 
+        public bool IsExists(int id)
+        {
+            var hotel = hotels.FirstOrDefault(x => x.Id == id);
+            return hotel is not null && !hotel.IsDeleted;
+        }
+
         public void Update(Hotel entity)
         {
             var hotel = hotels.FirstOrDefault(x => x.Id == entity.Id);

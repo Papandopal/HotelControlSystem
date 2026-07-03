@@ -12,16 +12,25 @@ namespace HotelControlSystem.Services.HotelServices
     internal class HotelService(IUnitOfWork unitOfWork, IMapper mapper) : IHotelService
     {
         List<HotelInfoUseCaseDTO> hotels = new();
-        public bool HotelIsExists(int id)
+        public bool IsExists(int id)
+        {
+            unitOfWork.StartTransaction();
+
+            var isExists = unitOfWork.Hotels.IsExists(id);
+
+            unitOfWork.Commit();
+            return isExists;
+        }
+        public HotelInfoUseCaseDTO GetById(int id)
         {
             unitOfWork.StartTransaction();
 
             var hotel = unitOfWork.Hotels.GetById(id);
 
             unitOfWork.Commit();
-            return hotel is not null && !hotel.IsDeleted;
+            return mapper.Map<HotelInfoUseCaseDTO>(hotel);
         }
-        public void CreateHotel(CreateHotelUseCaseDTO createHotelUseCaseDTO)
+        public void Create(CreateHotelUseCaseDTO createHotelUseCaseDTO)
         {
             unitOfWork.StartTransaction();
 
@@ -69,7 +78,7 @@ namespace HotelControlSystem.Services.HotelServices
             unitOfWork.Commit();
         }
 
-        public void UpdateHotel(UpdateHotelUseCaseDTO updateHotelUseCaseDTO)
+        public void Update(UpdateHotelUseCaseDTO updateHotelUseCaseDTO)
         {
             unitOfWork.StartTransaction();
 
@@ -124,12 +133,12 @@ namespace HotelControlSystem.Services.HotelServices
             return hotels;
         }
 
-        public List<HotelInfoUseCaseDTO> SortHotelsByRating()
+        public List<HotelInfoUseCaseDTO> GetSortedHotelsByRating()
         {
             return hotels.OrderByDescending(x => x.Rating).ToList();
         }
 
-        public List<HotelInfoUseCaseDTO> SortHotelsByName()
+        public List<HotelInfoUseCaseDTO> GetSortedHotelsByName()
         {
             return hotels.OrderBy(x => x.Name).ToList();
         }

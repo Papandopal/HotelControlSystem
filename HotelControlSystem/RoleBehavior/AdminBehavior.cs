@@ -21,23 +21,37 @@ namespace HotelControlSystem.RoleBehavior
 
         private IMapper mapper;
 
-        private Paginator<UserInfoConsoleDTO> paginator;
-        public AdminBehavior(UserController userController, HotelController hotelController, IMapper mapper, Paginator<UserInfoConsoleDTO> paginator)
+        private Paginator<UserInfoConsoleDTO> userPaginator;
+        private Paginator<HotelInfoConsoleDTO> hotelPaginator;
+        public AdminBehavior(UserController userController, HotelController hotelController,
+            Paginator<UserInfoConsoleDTO> userPaginator, Paginator<HotelInfoConsoleDTO> hotelPaginator,
+            IMapper mapper)
         {
             this.userController = userController;
             this.hotelController = hotelController;
+
+            this.userPaginator = userPaginator;
+            this.hotelPaginator = hotelPaginator;
+
             this.mapper = mapper;
-            this.paginator = paginator;
 
             //MethodNames must be called "***Action"
-            Actions.AddRange(GetAllUsersAction, DeleteUserAction, PromoteUserAction, CreateHotelAction, ChangeHotelManagerAction);
+            Actions.AddRange(GetAllUsersAction, DeleteUserAction, PromoteUserAction, 
+                GetAllHotelsAction, CreateHotelAction, ChangeHotelManagerAction, UpdateHotelAction);
         }
 
         private void GetAllUsersAction()
         {
             List<UserInfoConsoleDTO> users = mapper.Map<List<UserInfoConsoleDTO>>(userController.GetAllUsers());
-            paginator.SetItems(users);
-            paginator.StartPagination();
+            userPaginator.SetItems(users);
+            userPaginator.StartPagination();
+        }
+
+        private void GetAllHotelsAction()
+        {
+            List<HotelInfoConsoleDTO> hotels = mapper.Map<List<HotelInfoConsoleDTO>>(hotelController.GetAllHotels());
+            hotelPaginator.SetItems(hotels);
+            hotelPaginator.StartPagination();  
         }
 
         private void DeleteUserAction()
@@ -90,11 +104,8 @@ namespace HotelControlSystem.RoleBehavior
             Input.GetItem("Country: ", out country);
             Input.GetItem("City: ", out city);
             Input.GetItem("Address: ", out address);
-
-            //NEED VALIDATION!!!!!!!!!!!!!!
             Input.GetItem("Name: ", out name);
             Input.GetItem("Manager Id: ", out managerId);
-            //ADD CANCELLATION OF ACTION
 
             return new CreateHotelConsoleDTO 
                 { Country = country, City = city, Address = address, Name = name, ManagerId = managerId };
@@ -104,7 +115,7 @@ namespace HotelControlSystem.RoleBehavior
         {
             var createHotelConsoleDTO = GetCreateHotelConsoleDTO();
 
-            hotelController.CreateHotel(mapper.Map<CreateHotelDTO>(createHotelConsoleDTO));
+            hotelController.Create(mapper.Map<CreateHotelDTO>(createHotelConsoleDTO));
         }
 
         private void ChangeHotelManagerAction()
@@ -112,7 +123,7 @@ namespace HotelControlSystem.RoleBehavior
             int hotel_id;
             Input.GetItem("Hotel id: ", out hotel_id);
 
-            while (!hotelController.HotelIsExists(hotel_id))
+            while (!hotelController.IsExists(hotel_id))
             {
                 Output.WriteLine("Hotel not found");
                 Input.GetItem("Hotel id: ", out hotel_id);
@@ -133,5 +144,34 @@ namespace HotelControlSystem.RoleBehavior
             hotelController.SetHotelManager(mapper.Map<HotelManagerAppointmentDTO>(hotelManagerAppointmentConsoleDTO));
         }
 
+        private UpdateHotelConsoleDTO CreateUpdateHotelConsoleDTO(int id)
+        {
+            string? country, city, address, name;
+
+            Input.TryGetItem("Country: ", out country);
+            Input.TryGetItem("City: ", out city);
+            Input.TryGetItem("Address: ", out address);
+            Input.TryGetItem("Name: ", out name);
+
+            return new UpdateHotelConsoleDTO { Id = id, Country = country, City = city, Address = address, Name = name };
+        }
+
+        private void UpdateHotelAction()
+        {
+            int hotel_id;
+            Input.GetItem("Hotel id: ", out hotel_id);
+
+            while (!hotelController.IsExists(hotel_id))
+            {
+                Output.WriteLine("Hotel not found");
+                Input.GetItem("Hotel id: ", out hotel_id);
+            }
+
+            UpdateHotelConsoleDTO updatedHotel = mapper.Map<UpdateHotelConsoleDTO>(hotelController);
+
+            UpdateHotelConsoleDTO updateHotelConsoleDTO = CreateUpdateHotelConsoleDTO(hotel_id);
+
+            hotelController.Update(mapper.Map<UpdateHotelDTO>(updateHotelConsoleDTO));
+        }
     }
 }

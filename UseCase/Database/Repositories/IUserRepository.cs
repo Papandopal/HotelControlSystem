@@ -9,6 +9,6 @@ namespace UseCase.Database.Repositories
 {
     public interface IUserRepository : IRepository<User>
     {
-        public IEnumerable<User> GetByUserName(string userName);
+        public IEnumerable<User> GetUsersByUserName(string userName);
     }
 }

@@ -23,7 +23,7 @@ namespace HotelControlSystem.Services.AuthorisationServices
 
         public AuthorisedUserUseCaseDTO Verify(VerifyUserUseCaseDTO info)
         {
-            IEnumerable<User> users = unitOfWork.Users.GetByUserName(info.UserName);
+            IEnumerable<User> users = unitOfWork.Users.GetUsersByUserName(info.UserName);
             string password = info.Password;
             foreach (User user in users)
             {

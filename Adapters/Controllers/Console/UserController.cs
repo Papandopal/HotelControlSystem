@@ -9,7 +9,7 @@ namespace Adapters.Controllers.Console
     {
         public bool UserIsExists(int id)
         {
-            return userService.UserIsExists(id);
+            return userService.IsExists(id);
         }
         public List<UserInfoDTO> GetAllUsers()
         {
@@ -18,12 +18,12 @@ namespace Adapters.Controllers.Console
         
         public void DeleteUserById(int id)
         {
-            userService.DeleteUser(id);
+            userService.Delete(id);
         }
 
         public void PromoteUser(int id, UserRole new_role)
         {
-            userService.PromoteUser(id, new_role);
+            userService.Promote(id, new_role);
         }
     }
 }

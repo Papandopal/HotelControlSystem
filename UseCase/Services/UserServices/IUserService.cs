@@ -5,9 +5,9 @@ namespace UseCase.Services.UserServices
 {
     public interface IUserService
     {
-        public bool UserIsExists(int id);
+        public bool IsExists(int id);
         public List<UserInfoUseCaseDTO> GetAllUsers();
-        public void DeleteUser(int id); 
-        public void PromoteUser(int id, UserRole new_role);
+        public void Delete(int id); 
+        public void Promote(int id, UserRole new_role);
     }
 }

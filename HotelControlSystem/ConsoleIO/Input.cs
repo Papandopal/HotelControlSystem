@@ -21,6 +21,17 @@ namespace HotelControlSystem.ConsoleIO
             }
         }
 
+        public static bool TryGetItem<T>(string text, out T? result) where T : IParsable<T>
+        {
+            string? input = BuildInput(text);
+            if (input is null || input == string.Empty || !T.TryParse(input, null, out result))
+            {
+                result = default;
+                return false;
+            }
+            return true;
+        }
+
         private static string BuildInput(string text)
         {
             StringBuilder builder = new();

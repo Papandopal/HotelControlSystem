@@ -14,17 +14,17 @@ namespace Adapters.Controllers.Console
 {
     public class HotelController(IHotelService hotelService, IMapper mapper)
     {
-        public bool HotelIsExists(int id)
+        public bool IsExists(int id)
         {
-            return hotelService.HotelIsExists(id);
+            return hotelService.IsExists(id);
         }
-        public void CreateHotel(CreateHotelDTO createHotelDTO)
+        public void Create(CreateHotelDTO createHotelDTO)
         {
-            hotelService.CreateHotel(mapper.Map<CreateHotelUseCaseDTO>(createHotelDTO));
+            hotelService.Create(mapper.Map<CreateHotelUseCaseDTO>(createHotelDTO));
         }
-        public void UpdateHotel(UpdateHotelDTO updateHotelDTO)
+        public void Update(UpdateHotelDTO updateHotelDTO)
         {
-            hotelService.UpdateHotel(mapper.Map<UpdateHotelUseCaseDTO>(updateHotelDTO));
+            hotelService.Update(mapper.Map<UpdateHotelUseCaseDTO>(updateHotelDTO));
         }
         public void SetHotelManager(HotelManagerAppointmentDTO hotelManagerAppointmentDTO)
         {
@@ -33,6 +33,10 @@ namespace Adapters.Controllers.Console
         public List<HotelInfoDTO> GetAllHotels()
         {
             return mapper.Map<List<HotelInfoDTO>>(hotelService.GetAllHotels());
+        }
+        public UpdateHotelDTO GetById(int id)
+        {
+            return mapper.Map<UpdateHotelDTO>(hotelService.GetById(id));
         }
         public List<HotelInfoDTO> GetHotelsByManagerId(int id)
         {
@@ -46,13 +50,13 @@ namespace Adapters.Controllers.Console
         {
             return mapper.Map<List<HotelInfoDTO>>(hotelService.GetHotelsByRating(rating));
         }
-        public List<HotelInfoDTO> SortHotelsByRating()
+        public List<HotelInfoDTO> GetSortedHotelsByRating()
         {
-            return mapper.Map<List<HotelInfoDTO>>(hotelService.SortHotelsByRating());
+            return mapper.Map<List<HotelInfoDTO>>(hotelService.GetSortedHotelsByRating());
         }
-        public List<HotelInfoDTO> SortHotelsByName()
+        public List<HotelInfoDTO> GetSortedHotelsByName()
         {
-            return mapper.Map<List<HotelInfoDTO>>(hotelService.SortHotelsByName());
+            return mapper.Map<List<HotelInfoDTO>>(hotelService.GetSortedHotelsByName());
         }
     }
 }

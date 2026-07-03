@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HotelControlSystem.DTOs.HotelDTOs
 {
-    internal class HotelInfoConsoleDTO
+    public class HotelInfoConsoleDTO
     {
         private int Id { get; init; }
         public string Name { get; set; } = string.Empty;
@@ -14,5 +14,11 @@ namespace HotelControlSystem.DTOs.HotelDTOs
         public string Country { get; set; } = string.Empty;
         public string Address { get; set; } = string.Empty;
         public int Rating { get; set; }
+        public override string ToString()
+        {
+            return $"Id: {Id}\n" +
+                   $"Address: {Country}, {City}, {Address}\n" +
+                   $"Rating: {Rating}";
+        }
     }
 }
