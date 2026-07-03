@@ -41,7 +41,7 @@ namespace HotelControlSystem.DataBase.Repository
         {
             var loyaltyProgram = loyaltyPrograms.FirstOrDefault(x => x.Id == entity.Id);
             if (loyaltyProgram is null) throw new ItemNotFoundException("loyaltyProgram not found");
-            loyaltyProgram = entity;
+            loyaltyPrograms.Update(loyaltyProgram);
         }
     }
 }

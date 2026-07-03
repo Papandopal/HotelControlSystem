@@ -22,9 +22,37 @@ namespace Adapters.Controllers.Console
         {
             hotelService.CreateHotel(mapper.Map<CreateHotelUseCaseDTO>(createHotelDTO));
         }
+        public void UpdateHotel(UpdateHotelDTO updateHotelDTO)
+        {
+            hotelService.UpdateHotel(mapper.Map<UpdateHotelUseCaseDTO>(updateHotelDTO));
+        }
         public void SetHotelManager(HotelManagerAppointmentDTO hotelManagerAppointmentDTO)
         {
             hotelService.SetHotelManager(mapper.Map<HotelManagerAppointmentUseCaseDTO>(hotelManagerAppointmentDTO));
+        }
+        public List<HotelInfoDTO> GetAllHotels()
+        {
+            return mapper.Map<List<HotelInfoDTO>>(hotelService.GetAllHotels());
+        }
+        public List<HotelInfoDTO> GetHotelsByManagerId(int id)
+        {
+            return mapper.Map<List<HotelInfoDTO>>(hotelService.GetAllHotels());
+        }
+        public List<HotelInfoDTO> GetHotelsByPlace(string country, string? city = null)
+        {
+            return mapper.Map<List<HotelInfoDTO>>(hotelService.GetHotelsByPlace(country, city));
+        }
+        public List<HotelInfoDTO> GetHotelsByRating(int rating)
+        {
+            return mapper.Map<List<HotelInfoDTO>>(hotelService.GetHotelsByRating(rating));
+        }
+        public List<HotelInfoDTO> SortHotelsByRating()
+        {
+            return mapper.Map<List<HotelInfoDTO>>(hotelService.SortHotelsByRating());
+        }
+        public List<HotelInfoDTO> SortHotelsByName()
+        {
+            return mapper.Map<List<HotelInfoDTO>>(hotelService.SortHotelsByName());
         }
     }
 }

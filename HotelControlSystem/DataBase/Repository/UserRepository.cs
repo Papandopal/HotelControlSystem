@@ -37,7 +37,7 @@ namespace HotelControlSystem.DataBase.Repository
         {
             var user = users.FirstOrDefault(x => x.Id == entity.Id);
             if (user is null) throw new ItemNotFoundException("user not found");
-            user = entity;
+            users.Update(user);
         }
 
         public IEnumerable<User> GetByUserName(string userName)

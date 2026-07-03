@@ -1,11 +1,13 @@
 ﻿using Adapters.DTO.HotelDTOs;
 using Adapters.DTO.UserDTOs;
 using Adapters.DTOs.AuthorisationDTOs;
+using Adapters.DTOs.HotelDTOs;
 using AutoMapper;
 using DoMain.Entities;
 using HotelControlSystem.DTO.HotelDTOs;
 using HotelControlSystem.DTO.UserDTOs;
 using HotelControlSystem.DTOs.AuthorisationDTOs;
+using HotelControlSystem.DTOs.HotelDTOs;
 using UseCase.DTOs.AuthorisationDTOs;
 using UseCase.DTOs.HotelDTOs;
 using UseCase.DTOs.UserDTOs;
@@ -33,6 +35,18 @@ namespace HotelControlSystem
 
             CreateMap<HotelManagerAppointmentConsoleDTO, HotelManagerAppointmentDTO>();
             CreateMap<HotelManagerAppointmentDTO, HotelManagerAppointmentUseCaseDTO>();
+
+            CreateMap<CreateHotelConsoleDTO, CreateHotelDTO>();
+            CreateMap<CreateHotelDTO, CreateHotelUseCaseDTO>();
+            CreateMap<CreateHotelUseCaseDTO, Hotel>();
+
+            CreateMap<Hotel, HotelInfoUseCaseDTO>();
+            CreateMap<HotelInfoUseCaseDTO, HotelInfoDTO>();
+            CreateMap<HotelInfoDTO, HotelInfoConsoleDTO>();
+
+            CreateMap<UpdateHotelConsoleDTO, UpdateHotelDTO>();
+            CreateMap<UpdateHotelDTO, UpdateHotelUseCaseDTO>();
+            CreateMap<UpdateHotelUseCaseDTO, Hotel>();
         }
     }
 }

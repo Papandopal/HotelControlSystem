@@ -41,7 +41,7 @@ namespace HotelControlSystem.DataBase.Repository
         {
             var hotel = hotels.FirstOrDefault(x => x.Id == entity.Id);
             if (hotel is null) throw new ItemNotFoundException("hotel not found");
-            hotel = entity;
+            hotels.Update(hotel);
         }
     }
 }
