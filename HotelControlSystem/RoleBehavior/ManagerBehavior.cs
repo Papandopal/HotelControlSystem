@@ -13,6 +13,7 @@ namespace HotelControlSystem.RoleBehavior
         public ManagerBehavior()
         {
 
+            //MethodNames must be called "***Action"
             Actions.AddRange();
         }
     }

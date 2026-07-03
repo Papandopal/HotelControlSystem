@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Adapters.DTO.UserDTOs;
+using Adapters.DTOs.AuthorisationDTOs;
 using AutoMapper;
 using UseCase.DTOs.AuthorisationDTOs;
 using UseCase.Services.AuthorisationServices;

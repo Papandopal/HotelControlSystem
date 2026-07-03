@@ -1,5 +1,5 @@
 ﻿using Adapters.Controllers.Console;
-using Adapters.DTO.UserDTOs;
+using Adapters.DTOs.AuthorisationDTOs;
 using AutoMapper;
 using DoMain.Enums;
 using HotelControlSystem.ConsoleIO;
@@ -21,7 +21,8 @@ namespace HotelControlSystem.RoleBehavior
             this.userController = userController;
             this.mapper = mapper;
 
-            Actions.AddRange(Registration, Verify, LogOut);
+            //MethodNames must be called "***Action"
+            Actions.AddRange(RegistrationAction, VerifyAction, LogOutAction);
         }
 
         private RegistrateUserConsoleDTO GetRegistrateUserConsoleDTO()
@@ -41,7 +42,7 @@ namespace HotelControlSystem.RoleBehavior
             return new RegistrateUserConsoleDTO() { UserName = name, Password = password, Email = email, Role = (UserRole)role };
         }
 
-        private void Registration()
+        private void RegistrationAction()
         {
             RegistrateUserConsoleDTO registrateUserConsole = GetRegistrateUserConsoleDTO();
             RegistrateUserDTO registrateUser = mapper.Map<RegistrateUserDTO>(registrateUserConsole);
@@ -57,7 +58,7 @@ namespace HotelControlSystem.RoleBehavior
             return new VerifyUserConsoleDTO() { UserName = name, Password = password };
         }
 
-        private void Verify()
+        private void VerifyAction()
         {
             VerifyUserConsoleDTO verifyUserConsole = GetVerifyUserConsoleDTO();
             VerifyUserDTO verifyUser = mapper.Map<VerifyUserDTO>(verifyUserConsole);
@@ -65,7 +66,7 @@ namespace HotelControlSystem.RoleBehavior
             mapper.Map(authorisedUser, userMainInfoDTO);
         } 
 
-        private void LogOut()
+        private void LogOutAction()
         {
             userMainInfoDTO.Reset();
         }

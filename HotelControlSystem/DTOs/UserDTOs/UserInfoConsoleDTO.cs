@@ -18,6 +18,7 @@ namespace HotelControlSystem.DTO.UserDTOs
         {
             return 
                 $"Id: {Id}\n" +
+                $"Role: {Role}\n" +
                 $"Name: {UserName}\n" +
                 $"Email: {Email}";
         }

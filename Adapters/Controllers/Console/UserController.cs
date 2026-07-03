@@ -7,6 +7,10 @@ namespace Adapters.Controllers.Console
 {
     public class UserController(IUserService userService, IMapper mapper)
     {
+        public bool UserIsExists(int id)
+        {
+            return userService.UserIsExists(id);
+        }
         public List<UserInfoDTO> GetAllUsers()
         {
             return mapper.Map<List<UserInfoDTO>>(userService.GetAllUsers());

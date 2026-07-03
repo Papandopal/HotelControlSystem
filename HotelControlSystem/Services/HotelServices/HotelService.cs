@@ -1,23 +1,46 @@
-﻿using HotelControlSystem.Exceptions;
+﻿using AutoMapper;
+using DoMain.Entities;
+using DoMain.Enums;
+using HotelControlSystem.Exceptions;
 using UseCase.Database;
 using UseCase.DTOs.HotelDTOs;
 using UseCase.Services.HotelServices;
 
 namespace HotelControlSystem.Services.HotelServices
 {
-    internal class HotelService(IUnitOfWork unitOfWork) : IHotelService
+    internal class HotelService(IUnitOfWork unitOfWork, IMapper mapper) : IHotelService
     {
         public bool HotelIsExists(int id)
         {
             unitOfWork.StartTransaction();
-            var hotel = unitOfWork.Hotels.GetById(id);
-            unitOfWork.Commit();
-            return hotel is not null;
-        }
 
+            var hotel = unitOfWork.Hotels.GetById(id);
+
+            unitOfWork.Commit();
+            return hotel is not null && !hotel.IsDeleted;
+        }
+        public void CreateHotel(CreateHotelUseCaseDTO createHotelUseCaseDTO)
+        {
+            unitOfWork.StartTransaction();
+
+            var hotel = mapper.Map<Hotel>(createHotelUseCaseDTO);
+            var manager = unitOfWork.Users.GetById(createHotelUseCaseDTO.ManagerId);
+
+            if(manager.Role != UserRole.HotelManager)
+            {
+                unitOfWork.Rollback();
+                throw new UnsuitableItemException("user is not manager");
+            }
+
+            hotel.Manager = manager;
+            unitOfWork.Hotels.Add(hotel);
+
+            unitOfWork.Commit();
+        }
         public void SetHotelManager(HotelManagerAppointmentUseCaseDTO hotelManagerAppointmentUseCaseDTO)
         {
             unitOfWork.StartTransaction();
+
             var hotel = unitOfWork.Hotels.GetById(hotelManagerAppointmentUseCaseDTO.HotelId);
             var new_manager = unitOfWork.Users.GetById(hotelManagerAppointmentUseCaseDTO.ManagerId);
 
@@ -32,8 +55,15 @@ namespace HotelControlSystem.Services.HotelServices
                 throw new ItemNotFoundException("manager not found");
             }
 
+            if (new_manager.Role != UserRole.HotelManager)
+            {
+                unitOfWork.Rollback();
+                throw new UnsuitableItemException("user is not manager");
+            }
+
             hotel.Manager = new_manager;
             unitOfWork.Hotels.Update(hotel);
+
             unitOfWork.Commit();
         }
     }

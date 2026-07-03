@@ -20,5 +20,6 @@ namespace HotelControlSystem.ConsoleIO
         public static readonly ConsoleKey Exit = ConsoleKey.Escape;
 
         public static readonly ConsoleKey StopInput = ConsoleKey.Z;
+        public static readonly ConsoleKey BackSpace = ConsoleKey.Backspace;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Adapters.DTO.HotelDTOs;
 using Adapters.DTO.UserDTOs;
+using Adapters.DTOs.AuthorisationDTOs;
 using AutoMapper;
 using DoMain.Entities;
 using HotelControlSystem.DTO.HotelDTOs;

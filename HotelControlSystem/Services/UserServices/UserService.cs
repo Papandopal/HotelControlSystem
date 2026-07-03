@@ -50,5 +50,13 @@ namespace HotelControlSystem.Services.UserServices
             unitOfWork.Users.Update(user);
             unitOfWork.Commit();
         }
+
+        public bool UserIsExists(int id)
+        {
+            unitOfWork.StartTransaction();
+            var user = unitOfWork.Users.GetById(id);
+            unitOfWork.Commit();
+            return user is not null && !user.isDeleted;
+        }
     }
 }

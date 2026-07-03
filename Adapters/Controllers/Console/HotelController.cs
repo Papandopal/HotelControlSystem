@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Adapters.DTO.HotelDTOs;
+using Adapters.DTOs.HotelDTOs;
 using AutoMapper;
 using UseCase.DTOs.HotelDTOs;
 using UseCase.Services.HotelServices;
@@ -17,7 +18,10 @@ namespace Adapters.Controllers.Console
         {
             return hotelService.HotelIsExists(id);
         }
-
+        public void CreateHotel(CreateHotelDTO createHotelDTO)
+        {
+            hotelService.CreateHotel(mapper.Map<CreateHotelUseCaseDTO>(createHotelDTO));
+        }
         public void SetHotelManager(HotelManagerAppointmentDTO hotelManagerAppointmentDTO)
         {
             hotelService.SetHotelManager(mapper.Map<HotelManagerAppointmentUseCaseDTO>(hotelManagerAppointmentDTO));

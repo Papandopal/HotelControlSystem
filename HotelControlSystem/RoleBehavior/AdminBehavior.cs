@@ -1,10 +1,12 @@
 ﻿using Adapters.Controllers.Console;
 using Adapters.DTO.HotelDTOs;
+using Adapters.DTOs.HotelDTOs;
 using AutoMapper;
 using DoMain.Enums;
 using HotelControlSystem.ConsoleIO;
 using HotelControlSystem.DTO.HotelDTOs;
 using HotelControlSystem.DTO.UserDTOs;
+using HotelControlSystem.DTOs.HotelDTOs;
 using HotelControlSystem.Exceptions;
 using UseCase.Services.UserServices;
 
@@ -26,7 +28,9 @@ namespace HotelControlSystem.RoleBehavior
             this.hotelController = hotelController;
             this.mapper = mapper;
             this.paginator = paginator;
-            Actions.AddRange(GetAllUsersAction, DeleteUserAction, PromoteUserAction);
+
+            //MethodNames must be called "***Action"
+            Actions.AddRange(GetAllUsersAction, DeleteUserAction, PromoteUserAction, CreateHotelAction, ChangeHotelManagerAction);
         }
 
         private void GetAllUsersAction()
@@ -42,6 +46,11 @@ namespace HotelControlSystem.RoleBehavior
             Input.GetItem("Id: ", out userId);
             userController.DeleteUserById(userId);
             Output.WriteLine("User deleted");
+        }
+
+        private void PromoteUserToHotelManager(int user_id)
+        {
+            userController.PromoteUser(user_id, UserRole.HotelManager);
         }
 
         private void PromoteUserAction()
@@ -73,7 +82,32 @@ namespace HotelControlSystem.RoleBehavior
             Output.WriteLine($"User {user_id} promoted");
         }
 
-        private void PromoteUserToHotelManager(int user_id)
+        private CreateHotelConsoleDTO GetCreateHotelConsoleDTO()
+        {
+            string country, city, address, name;
+            int managerId;
+
+            Input.GetItem("Country: ", out country);
+            Input.GetItem("City: ", out city);
+            Input.GetItem("Address: ", out address);
+
+            //NEED VALIDATION!!!!!!!!!!!!!!
+            Input.GetItem("Name: ", out name);
+            Input.GetItem("Manager Id: ", out managerId);
+            //ADD CANCELLATION OF ACTION
+
+            return new CreateHotelConsoleDTO 
+                { Country = country, City = city, Address = address, Name = name, ManagerId = managerId };
+        }
+
+        private void CreateHotelAction()
+        {
+            var createHotelConsoleDTO = GetCreateHotelConsoleDTO();
+
+            hotelController.CreateHotel(mapper.Map<CreateHotelDTO>(createHotelConsoleDTO));
+        }
+
+        private void ChangeHotelManagerAction()
         {
             int hotel_id;
             Input.GetItem("Hotel id: ", out hotel_id);
@@ -84,17 +118,19 @@ namespace HotelControlSystem.RoleBehavior
                 Input.GetItem("Hotel id: ", out hotel_id);
             }
 
-            userController.PromoteUser(user_id, UserRole.HotelManager);
+            int user_id;
+            Input.GetItem("Manager id: ", out user_id);
 
-            HotelManagerAppointmentConsoleDTO hotelManagerAppointmentConsoleDTO = 
+            while (!userController.UserIsExists(user_id))
+            {
+                Output.WriteLine("Manager not found");
+                Input.GetItem("Manager id: ", out user_id);
+            }
+
+            HotelManagerAppointmentConsoleDTO hotelManagerAppointmentConsoleDTO =
                 new HotelManagerAppointmentConsoleDTO { HotelId = hotel_id, ManagerId = user_id };
 
             hotelController.SetHotelManager(mapper.Map<HotelManagerAppointmentDTO>(hotelManagerAppointmentConsoleDTO));
-        }
-
-        private void CreateHotelAction()
-        {
-
         }
 
     }

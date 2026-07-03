@@ -23,14 +23,14 @@ namespace HotelControlSystem.ConsoleIO
                     int beforePrint = Console.CursorTop;
 
                     Output.WriteLine(GetInfo());
-                    
+
                     SetRoleActions(userMainInfo.Role);
 
                     Output.Write(GetMenu());
 
                     ChoiseAction();
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Console.WriteLine(e);
                 }
@@ -69,11 +69,15 @@ namespace HotelControlSystem.ConsoleIO
 
             StringBuilder sb = new StringBuilder();
             int offsetForSelectSymbol = Symbols.SelectedItem.Length;
+            string actionName;
 
             for (int i = 0; i < actions.Count; i++)
             {
-                if (i == curAction) sb.Append(Symbols.SelectedItem + actions[i].Method.Name+'\n');
-                else sb.Append(new string(' ', offsetForSelectSymbol) + actions[i].Method.Name+'\n');
+                //MethodNames must be called "***Action"
+                actionName = actions[i].Method.Name.Remove(actions[i].Method.Name.Length - "Action".Length);
+
+                if (i == curAction) sb.Append(Symbols.SelectedItem + actionName + '\n');
+                else sb.Append(new string(' ', offsetForSelectSymbol) + actionName + '\n');
             }
             return sb.ToString();
         }
@@ -105,7 +109,7 @@ namespace HotelControlSystem.ConsoleIO
             Output.ConsoleClear();
             if (curAction + 1 >= generalActions.Count + (roleActions is not null ? roleActions.Count : 0)) return;
             curAction++;
-            
+
         }
         private void PrevAction()
         {

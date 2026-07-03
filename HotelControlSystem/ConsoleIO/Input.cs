@@ -12,9 +12,7 @@ namespace HotelControlSystem.ConsoleIO
     {
         public static void GetItem<T>(string text, out T result) where T : IParsable<T>
         {
-            Output.Write(text);
-
-            string? input = Console.ReadLine();
+            string? input = BuildInput(text);
 
             while (input is null || input == string.Empty || !T.TryParse(input, null, out result))
             {
@@ -23,10 +21,11 @@ namespace HotelControlSystem.ConsoleIO
             }
         }
 
-        private static string BuildInput()
+        private static string BuildInput(string text)
         {
             StringBuilder builder = new();
             ConsoleKeyInfo key;
+            Output.Write(text);
 
             do
             {
@@ -34,10 +33,24 @@ namespace HotelControlSystem.ConsoleIO
 
                 if (key.Key == Symbols.StopInput && key.Modifiers.HasFlag(ConsoleModifiers.Control))
                     throw new UserCancelledInputException("user cancelled input");
+                if (key.Key == Symbols.BackSpace)
+                {
+                    if (Console.CursorLeft >= text.Length)
+                    {
+                        Console.Write(' ');
+                        Console.CursorLeft--;
+                        builder.Remove(builder.Length - 1, 1);
+                    }
+                    else Console.CursorLeft++;
+                    continue;
+                }
 
-                builder.Append(key);
+                builder.Append(key.KeyChar);
 
             } while (key.Key != ConsoleKey.Enter);
+
+            builder.Remove(builder.Length - 1, 1);
+            Output.Write(text + builder.ToString() + '\n');
 
             return builder.ToString();
         }

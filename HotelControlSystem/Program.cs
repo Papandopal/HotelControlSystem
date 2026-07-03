@@ -6,12 +6,14 @@ using HotelControlSystem.DataBase.UnitOfWork;
 using HotelControlSystem.DTOs.AuthorisationDTOs;
 using HotelControlSystem.RoleBehavior;
 using HotelControlSystem.Services.AuthorisationServices;
+using HotelControlSystem.Services.HotelServices;
 using HotelControlSystem.Services.UserServices;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using UseCase.Database;
 using UseCase.Database.Repositories;
 using UseCase.Services.AuthorisationServices;
+using UseCase.Services.HotelServices;
 using UseCase.Services.UserServices;
 
 namespace HotelControlSystem
@@ -53,6 +55,7 @@ namespace HotelControlSystem
 
             services.AddScoped<IAuthorisationService, AuthorisationService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IHotelService, HotelService>();
 
             services.AddAutoMapper(configuration =>
             {

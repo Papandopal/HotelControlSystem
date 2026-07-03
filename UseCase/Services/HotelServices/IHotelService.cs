@@ -10,6 +10,7 @@ namespace UseCase.Services.HotelServices
     public interface IHotelService
     {
         public bool HotelIsExists(int id);
+        public void CreateHotel(CreateHotelUseCaseDTO useCaseDTO);
         public void SetHotelManager(HotelManagerAppointmentUseCaseDTO hotelManagerAppointmentUseCaseDTO);
     }
 }
