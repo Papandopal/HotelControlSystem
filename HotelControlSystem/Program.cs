@@ -3,7 +3,7 @@ using HotelControlSystem.ConsoleIO;
 using HotelControlSystem.DataBase;
 using HotelControlSystem.DataBase.Repository;
 using HotelControlSystem.DataBase.UnitOfWork;
-using HotelControlSystem.DTO;
+using HotelControlSystem.DTOs.AuthorisationDTOs;
 using HotelControlSystem.RoleBehavior;
 using HotelControlSystem.Services.AuthorisationServices;
 using HotelControlSystem.Services.UserServices;

@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UseCase.Services.HotelServices.DTOs
+namespace UseCase.DTOs.HotelDTOs
 {
-    internal class HotelManagerAppointmentUseCaseDTO
+    public class HotelManagerAppointmentUseCaseDTO
     {
+        public int HotelId { get; init; }
+        public int ManagerId { get; init; }
     }
 }

@@ -1,8 +1,10 @@
 ﻿using Adapters.Controllers.Console;
+using Adapters.DTO.HotelDTOs;
 using AutoMapper;
 using DoMain.Enums;
 using HotelControlSystem.ConsoleIO;
-using HotelControlSystem.DTO;
+using HotelControlSystem.DTO.HotelDTOs;
+using HotelControlSystem.DTO.UserDTOs;
 using HotelControlSystem.Exceptions;
 using UseCase.Services.UserServices;
 
@@ -53,17 +55,7 @@ namespace HotelControlSystem.RoleBehavior
             {
                 if (new_user_role == (int)UserRole.HotelManager)
                 {
-                    int hotel_id;
-                    Input.GetItem("Hotel id: ", out hotel_id);
-
-                    while (!hotelController.HotelIsExists(hotel_id))
-                    {
-                        Output.WriteLine("Hotel not found");
-                        Input.GetItem("Hotel id: ", out hotel_id);
-                    }
-
-                    userController.PromoteUserToHotelManager(user_id);
-                    hotelController.SetHotelManager(hotel_id, user_id);
+                    PromoteUserToHotelManager(user_id);
                     break;
                 }
                 else if (Enum.IsDefined(typeof(UserRole), new_user_role))
@@ -78,11 +70,29 @@ namespace HotelControlSystem.RoleBehavior
                 }
             }
 
-
             Output.WriteLine($"User {user_id} promoted");
         }
 
-        private void CreateHotel()
+        private void PromoteUserToHotelManager(int user_id)
+        {
+            int hotel_id;
+            Input.GetItem("Hotel id: ", out hotel_id);
+
+            while (!hotelController.HotelIsExists(hotel_id))
+            {
+                Output.WriteLine("Hotel not found");
+                Input.GetItem("Hotel id: ", out hotel_id);
+            }
+
+            userController.PromoteUser(user_id, UserRole.HotelManager);
+
+            HotelManagerAppointmentConsoleDTO hotelManagerAppointmentConsoleDTO = 
+                new HotelManagerAppointmentConsoleDTO { HotelId = hotel_id, ManagerId = user_id };
+
+            hotelController.SetHotelManager(mapper.Map<HotelManagerAppointmentDTO>(hotelManagerAppointmentConsoleDTO));
+        }
+
+        private void CreateHotelAction()
         {
 
         }

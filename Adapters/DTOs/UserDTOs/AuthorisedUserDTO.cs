@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DoMain.Enums;
 
-namespace Adapters.DTO
+namespace Adapters.DTO.UserDTOs
 {
     public record AuthorisedUserDTO
     {

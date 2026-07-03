@@ -3,7 +3,7 @@ using Adapters.DTO.UserDTOs;
 using AutoMapper;
 using DoMain.Enums;
 using HotelControlSystem.ConsoleIO;
-using HotelControlSystem.DTO;
+using HotelControlSystem.DTOs.AuthorisationDTOs;
 
 namespace HotelControlSystem.RoleBehavior
 {
@@ -49,7 +49,7 @@ namespace HotelControlSystem.RoleBehavior
             mapper.Map(authorisedUserDTO, userMainInfoDTO);
         }
 
-        private VerifyUserConsoleDTO GetVerifyIUserConsoleDTO()
+        private VerifyUserConsoleDTO GetVerifyUserConsoleDTO()
         {
             string name, password;
             Input.GetItem("Name: ", out name);
@@ -59,7 +59,7 @@ namespace HotelControlSystem.RoleBehavior
 
         private void Verify()
         {
-            VerifyUserConsoleDTO verifyUserConsole = GetVerifyIUserConsoleDTO();
+            VerifyUserConsoleDTO verifyUserConsole = GetVerifyUserConsoleDTO();
             VerifyUserDTO verifyUser = mapper.Map<VerifyUserDTO>(verifyUserConsole);
             AuthorisedUserDTO authorisedUser = userController.Authorisation(verifyUser);
             mapper.Map(authorisedUser, userMainInfoDTO);

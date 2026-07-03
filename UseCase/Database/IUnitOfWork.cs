@@ -15,9 +15,9 @@ namespace UseCase.Database
         public void Commit();
         public void Rollback();
         public IUserRepository Users { get; }
-        public IRepository<Room> Rooms { get; }
-        public IRepository<LoyaltyProgram> LoyaltyPrograms { get; }
-        public IRepository<Hotel> Hotels { get; }
-        public IRepository<Booking> Bookings { get; }
+        public IRoomRepository Rooms { get; }
+        public ILoyaltyProgramRepository LoyaltyPrograms { get; }
+        public IHotelRepository Hotels { get; }
+        public IBookingRepository Bookings { get; }
     }
 }

@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace Adapters.DTO.HotelDTOs
 {
-    internal class HotelManagerAppointmentDTO
+    public class HotelManagerAppointmentDTO
     {
+        public int HotelId { get; init; }
+        public int ManagerId { get; init; }
     }
 }

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DoMain.Enums;
 
-namespace HotelControlSystem.DTO
+namespace HotelControlSystem.DTOs.AuthorisationDTOs
 {
     public record RegistrateUserConsoleDTO
     {

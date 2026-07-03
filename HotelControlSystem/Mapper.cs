@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Adapters.DTO.HotelDTOs;
 using Adapters.DTO.UserDTOs;
 using AutoMapper;
 using DoMain.Entities;
-using HotelControlSystem.DTO;
-using UseCase.Services.AuthorisationServices.DTO;
-using UseCase.Services.UserServices.DTO;
+using HotelControlSystem.DTO.HotelDTOs;
+using HotelControlSystem.DTO.UserDTOs;
+using HotelControlSystem.DTOs.AuthorisationDTOs;
+using UseCase.DTOs.AuthorisationDTOs;
+using UseCase.DTOs.HotelDTOs;
+using UseCase.DTOs.UserDTOs;
 
 namespace HotelControlSystem
 {
@@ -30,6 +29,9 @@ namespace HotelControlSystem
             CreateMap<User, UserInfoUseCaseDTO>();
             CreateMap<UserInfoUseCaseDTO, UserInfoDTO>();
             CreateMap<UserInfoDTO, UserInfoConsoleDTO>();
+
+            CreateMap<HotelManagerAppointmentConsoleDTO, HotelManagerAppointmentDTO>();
+            CreateMap<HotelManagerAppointmentDTO, HotelManagerAppointmentUseCaseDTO>();
         }
     }
 }

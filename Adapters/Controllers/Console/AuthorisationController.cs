@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Adapters.DTO.UserDTOs;
 using AutoMapper;
+using UseCase.DTOs.AuthorisationDTOs;
 using UseCase.Services.AuthorisationServices;
-using UseCase.Services.AuthorisationServices.DTO;
 
 namespace Adapters.Controllers.Console
 {
