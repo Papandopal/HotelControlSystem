@@ -40,7 +40,7 @@ namespace Adapters.Controllers.Console
         }
         public List<HotelInfoDTO> GetHotelsByManagerId(int id)
         {
-            return mapper.Map<List<HotelInfoDTO>>(hotelService.GetAllHotels());
+            return mapper.Map<List<HotelInfoDTO>>(hotelService.GetHotelsByManagerId(id));
         }
         public List<HotelInfoDTO> GetHotelsByPlace(string country, string? city = null)
         {

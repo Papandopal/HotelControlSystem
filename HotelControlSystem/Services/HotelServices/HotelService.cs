@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using DoMain.Entities;
 using DoMain.Enums;
+using FluentValidation;
+using FluentValidation.Results;
 using HotelControlSystem.DTOs.HotelDTOs;
 using HotelControlSystem.Exceptions;
 using UseCase.Database;
@@ -9,7 +11,7 @@ using UseCase.Services.HotelServices;
 
 namespace HotelControlSystem.Services.HotelServices
 {
-    internal class HotelService(IUnitOfWork unitOfWork, IMapper mapper) : IHotelService
+    internal class HotelService(IUnitOfWork unitOfWork, IMapper mapper, IValidator<Hotel> hotelValidator) : IHotelService
     {
         List<HotelInfoUseCaseDTO> hotels = new();
         public bool IsExists(int id)
@@ -82,8 +84,12 @@ namespace HotelControlSystem.Services.HotelServices
         {
             unitOfWork.StartTransaction();
 
-            var hotel = mapper.Map<Hotel>(updateHotelUseCaseDTO);
-            unitOfWork.Hotels.Update(hotel);
+            var hotel = unitOfWork.Hotels.GetById(updateHotelUseCaseDTO.Id);
+            Hotel updated_hotel = mapper.Map(updateHotelUseCaseDTO, hotel);
+
+            hotelValidator.ValidateAndThrow(updated_hotel);
+            
+            unitOfWork.Hotels.Update(updated_hotel);
 
             unitOfWork.Commit();
         }

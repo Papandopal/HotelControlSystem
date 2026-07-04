@@ -44,15 +44,12 @@ namespace HotelControlSystem
             CreateMap<HotelInfoUseCaseDTO, HotelInfoDTO>();
             CreateMap<HotelInfoDTO, HotelInfoConsoleDTO>();
 
-            CreateMap<UpdateHotelConsoleDTO, UpdateHotelDTO>().ForAllMembers(
-                opt=>opt.Condition((src, dest, srcProperty)=>srcProperty is not null)
-            );
-            CreateMap<UpdateHotelDTO, UpdateHotelUseCaseDTO>().ForAllMembers(
-                opt => opt.Condition((src, dest, srcProperty) => srcProperty is not null)
-            );
-            CreateMap<UpdateHotelUseCaseDTO, Hotel>().ForAllMembers(
-                opt => opt.Condition((src, dest, srcProperty) => srcProperty is not null)
-            );
+            CreateMap<UpdateHotelConsoleDTO, UpdateHotelDTO>();
+            CreateMap<UpdateHotelDTO, UpdateHotelUseCaseDTO>();
+            CreateMap<UpdateHotelUseCaseDTO, Hotel>();
+
+            CreateMap<HotelInfoUseCaseDTO, UpdateHotelDTO>();
+            CreateMap<UpdateHotelDTO, UpdateHotelConsoleDTO>();
         }
     }
 }

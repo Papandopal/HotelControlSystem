@@ -23,7 +23,7 @@ namespace HotelControlSystem.ConsoleIO
 
         public static bool TryGetItem<T>(string text, out T? result) where T : IParsable<T>
         {
-            string? input = BuildInput(text);
+            string? input = BuildInput("(not requared) " + text);
             if (input is null || input == string.Empty || !T.TryParse(input, null, out result))
             {
                 result = default;

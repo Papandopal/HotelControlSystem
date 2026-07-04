@@ -26,6 +26,7 @@ namespace HotelControlSystem.DataBase.UnitOfWork
 
         public void StartTransaction()
         {
+            if(transaction is not null) Rollback();
             transaction = dbContext.Database.BeginTransaction();
         }
         public void Commit()

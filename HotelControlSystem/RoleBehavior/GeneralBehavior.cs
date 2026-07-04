@@ -4,6 +4,7 @@ using AutoMapper;
 using DoMain.Enums;
 using HotelControlSystem.ConsoleIO;
 using HotelControlSystem.DTOs.AuthorisationDTOs;
+using HotelControlSystem.DTOs.HotelDTOs;
 
 namespace HotelControlSystem.RoleBehavior
 {
@@ -13,16 +14,25 @@ namespace HotelControlSystem.RoleBehavior
 
         UserMainInfoDTO userMainInfoDTO;
         AuthorisationController userController;
+        HotelController hotelController;
+        Paginator<HotelInfoConsoleDTO> hotelPaginator;
+
         IMapper mapper;
 
-        public GeneralBehavior(UserMainInfoDTO userMainInfoDTO, IMapper mapper, AuthorisationController userController)
+        public GeneralBehavior(UserMainInfoDTO userMainInfoDTO, IMapper mapper, Paginator<HotelInfoConsoleDTO> hotelPaginator,
+            AuthorisationController userController, HotelController hotelController)
         {
             this.userMainInfoDTO = userMainInfoDTO;
+
             this.userController = userController;
+            this.hotelController = hotelController;
+
             this.mapper = mapper;
+            this.hotelPaginator = hotelPaginator;
 
             //MethodNames must be called "***Action"
-            Actions.AddRange(RegistrationAction, VerifyAction, LogOutAction);
+            Actions.AddRange(RegistrationAction, VerifyAction, LogOutAction, GetAllHotelsAction, GetHotelsByPlaceAction,
+                GetHotelsByRatingAction, GetSortedHotelsByNameAction, GetSortedHotelsByRatingAction);
         }
 
         private RegistrateUserConsoleDTO GetRegistrateUserConsoleDTO()
@@ -69,6 +79,59 @@ namespace HotelControlSystem.RoleBehavior
         private void LogOutAction()
         {
             userMainInfoDTO.Reset();
+        }
+
+        private void GetAllHotelsAction()
+        {
+            List<HotelInfoConsoleDTO> hotels = mapper.Map<List<HotelInfoConsoleDTO>>(hotelController.GetAllHotels());
+            hotelPaginator.SetItems(hotels);
+            hotelPaginator.StartPagination();
+        }
+
+        private void GetHotelsByPlaceAction()
+        {
+            string country;
+            string? city;
+
+            Input.GetItem("Country: ", out country);
+            Input.TryGetItem("City: ", out city);
+
+            List<HotelInfoConsoleDTO> hotels = mapper.Map<List<HotelInfoConsoleDTO>>
+                (hotelController.GetHotelsByPlace(country, city));
+
+            hotelPaginator.SetItems(hotels);
+            hotelPaginator.StartPagination();
+        }
+
+        private void GetHotelsByRatingAction()
+        {
+            int rating;
+
+            Input.GetItem("Rating: ", out rating);
+
+            List<HotelInfoConsoleDTO> hotels = mapper.Map<List<HotelInfoConsoleDTO>>
+               (hotelController.GetHotelsByRating(rating));
+
+            hotelPaginator.SetItems(hotels);
+            hotelPaginator.StartPagination();
+        }
+
+        private void GetSortedHotelsByRatingAction()
+        {
+            List<HotelInfoConsoleDTO> hotels = mapper.Map<List<HotelInfoConsoleDTO>>
+               (hotelController.GetSortedHotelsByRating());
+
+            hotelPaginator.SetItems(hotels);
+            hotelPaginator.StartPagination();
+        }
+
+        private void GetSortedHotelsByNameAction()
+        {
+            List<HotelInfoConsoleDTO> hotels = mapper.Map<List<HotelInfoConsoleDTO>>
+               (hotelController.GetSortedHotelsByName());
+
+            hotelPaginator.SetItems(hotels);
+            hotelPaginator.StartPagination();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Adapters.Controllers.Console;
+﻿using System.Diagnostics.Metrics;
+using Adapters.Controllers.Console;
 using Adapters.DTO.HotelDTOs;
 using Adapters.DTOs.HotelDTOs;
 using AutoMapper;
@@ -36,22 +37,16 @@ namespace HotelControlSystem.RoleBehavior
             this.mapper = mapper;
 
             //MethodNames must be called "***Action"
-            Actions.AddRange(GetAllUsersAction, DeleteUserAction, PromoteUserAction, 
-                GetAllHotelsAction, CreateHotelAction, ChangeHotelManagerAction, UpdateHotelAction);
+            Actions.AddRange(GetAllUsersAction, DeleteUserAction, PromoteUserAction, CreateHotelAction,
+                ChangeHotelManagerAction, UpdateHotelAction);
         }
 
+        //actions with users
         private void GetAllUsersAction()
         {
             List<UserInfoConsoleDTO> users = mapper.Map<List<UserInfoConsoleDTO>>(userController.GetAllUsers());
             userPaginator.SetItems(users);
             userPaginator.StartPagination();
-        }
-
-        private void GetAllHotelsAction()
-        {
-            List<HotelInfoConsoleDTO> hotels = mapper.Map<List<HotelInfoConsoleDTO>>(hotelController.GetAllHotels());
-            hotelPaginator.SetItems(hotels);
-            hotelPaginator.StartPagination();  
         }
 
         private void DeleteUserAction()
@@ -96,6 +91,8 @@ namespace HotelControlSystem.RoleBehavior
             Output.WriteLine($"User {user_id} promoted");
         }
 
+        //actions with hotels
+
         private CreateHotelConsoleDTO GetCreateHotelConsoleDTO()
         {
             string country, city, address, name;
@@ -107,8 +104,8 @@ namespace HotelControlSystem.RoleBehavior
             Input.GetItem("Name: ", out name);
             Input.GetItem("Manager Id: ", out managerId);
 
-            return new CreateHotelConsoleDTO 
-                { Country = country, City = city, Address = address, Name = name, ManagerId = managerId };
+            return new CreateHotelConsoleDTO
+            { Country = country, City = city, Address = address, Name = name, ManagerId = managerId };
         }
 
         private void CreateHotelAction()
@@ -144,7 +141,7 @@ namespace HotelControlSystem.RoleBehavior
             hotelController.SetHotelManager(mapper.Map<HotelManagerAppointmentDTO>(hotelManagerAppointmentConsoleDTO));
         }
 
-        private UpdateHotelConsoleDTO CreateUpdateHotelConsoleDTO(int id)
+        private UpdateHotelConsoleDTO CreateUpdateHotelConsoleDTO(UpdateHotelConsoleDTO updatedHotel)
         {
             string? country, city, address, name;
 
@@ -153,7 +150,16 @@ namespace HotelControlSystem.RoleBehavior
             Input.TryGetItem("Address: ", out address);
             Input.TryGetItem("Name: ", out name);
 
-            return new UpdateHotelConsoleDTO { Id = id, Country = country, City = city, Address = address, Name = name };
+            var new_hotel_info = new UpdateHotelConsoleDTO
+            {
+                Id = updatedHotel.Id,
+                Country = country ?? updatedHotel.Country,
+                City = city ?? updatedHotel.City,
+                Address = address ?? updatedHotel.Address,
+                Name = name ?? updatedHotel.Name
+            };
+
+            return new_hotel_info;
         }
 
         private void UpdateHotelAction()
@@ -167,11 +173,12 @@ namespace HotelControlSystem.RoleBehavior
                 Input.GetItem("Hotel id: ", out hotel_id);
             }
 
-            UpdateHotelConsoleDTO updatedHotel = mapper.Map<UpdateHotelConsoleDTO>(hotelController);
+            UpdateHotelConsoleDTO updatedHotel = mapper.Map<UpdateHotelConsoleDTO>(hotelController.GetById(hotel_id));
 
-            UpdateHotelConsoleDTO updateHotelConsoleDTO = CreateUpdateHotelConsoleDTO(hotel_id);
+            UpdateHotelConsoleDTO updateHotelConsoleDTO = CreateUpdateHotelConsoleDTO(updatedHotel);
 
             hotelController.Update(mapper.Map<UpdateHotelDTO>(updateHotelConsoleDTO));
         }
+
     }
 }
