@@ -16,6 +16,7 @@ namespace UseCase.Services.RoomServices
         public void Update(UpdateRoomUseCaseDTO updateRoomUseCaseDTO);
         public void Delete(int id);
         public List<RoomInfoUseCaseDTO> GetAllRooms();
+        public List<RoomInfoUseCaseDTO> GetRoomsByHotelId(int hotelId);
         public List<RoomInfoUseCaseDTO> GetRoomsByType(RoomType type);
         public List<RoomInfoUseCaseDTO> GetRoomsByCapacity(int capacity);
         public List<RoomInfoUseCaseDTO> GetRoomsByPriceRange(decimal min_price = 0, decimal max_price = decimal.MaxValue);

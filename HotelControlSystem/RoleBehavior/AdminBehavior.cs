@@ -2,12 +2,14 @@
 using Adapters.Controllers.Console;
 using Adapters.DTO.HotelDTOs;
 using Adapters.DTOs.HotelDTOs;
+using Adapters.DTOs.RoomDTOs;
 using AutoMapper;
 using DoMain.Enums;
 using HotelControlSystem.ConsoleIO;
 using HotelControlSystem.DTO.HotelDTOs;
 using HotelControlSystem.DTO.UserDTOs;
 using HotelControlSystem.DTOs.HotelDTOs;
+using HotelControlSystem.DTOs.RoomDTOs;
 using HotelControlSystem.Exceptions;
 using UseCase.Services.UserServices;
 
@@ -19,29 +21,30 @@ namespace HotelControlSystem.RoleBehavior
 
         private UserController userController;
         private HotelController hotelController;
+        private RoomController roomController;
 
         private IMapper mapper;
 
         private Paginator<UserInfoConsoleDTO> userPaginator;
-        private Paginator<HotelInfoConsoleDTO> hotelPaginator;
-        public AdminBehavior(UserController userController, HotelController hotelController,
-            Paginator<UserInfoConsoleDTO> userPaginator, Paginator<HotelInfoConsoleDTO> hotelPaginator,
-            IMapper mapper)
+        private Paginator<RoomInfoConsoleDTO> roomPaginator;
+        public AdminBehavior(UserController userController, HotelController hotelController, RoomController roomController,
+            Paginator<UserInfoConsoleDTO> userPaginator, Paginator<RoomInfoConsoleDTO> roomPaginator, IMapper mapper)
         {
             this.userController = userController;
             this.hotelController = hotelController;
+            this.roomController = roomController;
 
             this.userPaginator = userPaginator;
-            this.hotelPaginator = hotelPaginator;
+            this.roomPaginator = roomPaginator;
 
             this.mapper = mapper;
 
             //MethodNames must be called "***Action"
             Actions.AddRange(GetAllUsersAction, DeleteUserAction, PromoteUserAction, CreateHotelAction,
-                ChangeHotelManagerAction, UpdateHotelAction);
+                ChangeHotelManagerAction, UpdateHotelAction, CreateRoomAction);
         }
 
-        //actions with users
+        //users actions
         private void GetAllUsersAction()
         {
             List<UserInfoConsoleDTO> users = mapper.Map<List<UserInfoConsoleDTO>>(userController.GetAllUsers());
@@ -57,41 +60,31 @@ namespace HotelControlSystem.RoleBehavior
             Output.WriteLine("User deleted");
         }
 
-        private void PromoteUserToHotelManager(int user_id)
-        {
-            userController.PromoteUser(user_id, UserRole.HotelManager);
-        }
-
         private void PromoteUserAction()
         {
             int user_id;
-            int new_user_role = (int)UserRole.Unauthorised;
+            UserRole new_user_role;
             Input.GetItem("Id: ", out user_id);
-            Input.GetItem("New user role: ", out new_user_role);
+            Input.GetEnumItem("New user role: ", out new_user_role);
 
             while (true)
             {
-                if (new_user_role == (int)UserRole.HotelManager)
+                if (new_user_role == UserRole.HotelManager)
                 {
-                    PromoteUserToHotelManager(user_id);
+                    userController.PromoteUser(user_id, new_user_role);
                     break;
-                }
-                else if (Enum.IsDefined(typeof(UserRole), new_user_role))
-                {
-                    Output.WriteLine("Cannot promote user to choosed role");
-                    Input.GetItem("New user role: ", out new_user_role);
                 }
                 else
                 {
-                    Output.WriteLine("Invalide data");
-                    Input.GetItem("New user role: ", out new_user_role);
+                    Output.WriteLine("Cannot promote user to choosed role");
+                    Input.GetEnumItem("New user role: ", out new_user_role);
                 }
             }
 
             Output.WriteLine($"User {user_id} promoted");
         }
 
-        //actions with hotels
+        //hotels actions
 
         private CreateHotelConsoleDTO GetCreateHotelConsoleDTO()
         {
@@ -141,7 +134,7 @@ namespace HotelControlSystem.RoleBehavior
             hotelController.SetHotelManager(mapper.Map<HotelManagerAppointmentDTO>(hotelManagerAppointmentConsoleDTO));
         }
 
-        private UpdateHotelConsoleDTO CreateUpdateHotelConsoleDTO(int id)
+        private UpdateHotelConsoleDTO GetUpdateHotelConsoleDTO(int id)
         {
             string? country, city, address, name;
 
@@ -173,10 +166,53 @@ namespace HotelControlSystem.RoleBehavior
                 Input.GetItem("Hotel id: ", out hotel_id);
             }
 
-            UpdateHotelConsoleDTO updateHotelConsoleDTO = CreateUpdateHotelConsoleDTO(hotel_id);
+            UpdateHotelConsoleDTO updateHotelConsoleDTO = GetUpdateHotelConsoleDTO(hotel_id);
 
             hotelController.Update(mapper.Map<UpdateHotelDTO>(updateHotelConsoleDTO));
         }
 
+        //room actions
+
+        private CreateRoomConsoleDTO GetCreateRoomConsoleDTO()
+        {
+            int hotelId, capacity;
+            decimal pricePerNight;
+            double area;
+            string description;
+            RoomType roomType;
+            string[] amenities = [];
+
+            Input.GetItem("Hotel id: ", out hotelId);
+            Input.GetEnumItem("Room type", out roomType);
+            Input.GetItem("Capacity: ", out capacity);
+            Input.GetItem("Area: ", out area);
+            Input.GetItem("Price per night: ", out pricePerNight);
+            Input.GetItem("Description: ", out description);
+
+            string? amenities_item;
+
+            while (true)
+            {
+                Input.TryGetItem($"Amenities№{amenities.Length}(send empty line for end input):", out amenities_item);
+                if (amenities_item == null) break;
+                amenities = amenities.Append(amenities_item).ToArray();
+            }
+
+            return new CreateRoomConsoleDTO
+            {
+                Amenities = amenities,
+                Area = area,
+                Capacity = capacity,
+                Description = description,
+                PricePerNight = pricePerNight,
+                RoomType = roomType,
+                HotelId = hotelId
+            };
+        }
+        private void CreateRoomAction()
+        {
+            CreateRoomConsoleDTO createRoomConsoleDTO = GetCreateRoomConsoleDTO();
+            roomController.Create(mapper.Map<CreateRoomDTO>(createRoomConsoleDTO));
+        }
     }
 }

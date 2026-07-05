@@ -18,7 +18,7 @@ namespace HotelControlSystem.Services.RoomServices
 {
     internal class RoomService(IUnitOfWork unitOfWork, IMapper mapper) : IRoomService
     {
-        private List<RoomInfoUseCaseDTO> rooms = new();
+        private List<RoomInfoUseCaseDTO> roomsCatalog = new();
         public void Create(CreateRoomUseCaseDTO createRoomUseCaseDTO)
         {
             unitOfWork.StartTransaction();
@@ -70,29 +70,29 @@ namespace HotelControlSystem.Services.RoomServices
         {
             unitOfWork.StartTransaction();
 
-            rooms = mapper.Map<List<RoomInfoUseCaseDTO>>(unitOfWork.Rooms.GetAll());
+            roomsCatalog = mapper.Map<List<RoomInfoUseCaseDTO>>(unitOfWork.Rooms.GetAll());
 
             unitOfWork.Commit();
 
-            return rooms;
+            return roomsCatalog;
         }
 
         public List<RoomInfoUseCaseDTO> GetRoomsByCapacity(int capacity)
         {
             unitOfWork.StartTransaction();
 
-            rooms = mapper.Map<List<RoomInfoUseCaseDTO>>(unitOfWork.Rooms.GetAll().Where(x=>x.Capacity==capacity));
+            roomsCatalog = mapper.Map<List<RoomInfoUseCaseDTO>>(unitOfWork.Rooms.GetAll().Where(x=>x.Capacity==capacity));
 
             unitOfWork.Commit();
 
-            return rooms;
+            return roomsCatalog;
         }
 
         public List<RoomInfoUseCaseDTO> GetRoomsByDate(DateTime date)
         {
             unitOfWork.StartTransaction();
 
-            rooms.Clear();
+            roomsCatalog.Clear();
             var all_rooms = unitOfWork.Rooms.GetAll();
 
             foreach (var room in all_rooms)
@@ -110,57 +110,57 @@ namespace HotelControlSystem.Services.RoomServices
                     }
                 }
 
-                if (add_room) rooms.Add(mapper.Map<RoomInfoUseCaseDTO>(room));
+                if (add_room) roomsCatalog.Add(mapper.Map<RoomInfoUseCaseDTO>(room));
             }
 
             unitOfWork.Commit();
 
-            return rooms;
+            return roomsCatalog;
         }
 
         public List<RoomInfoUseCaseDTO> GetRoomsByPriceRange(decimal min_price = 0, decimal max_price = decimal.MaxValue)
         {
             unitOfWork.StartTransaction();
 
-            rooms = mapper.Map<List<RoomInfoUseCaseDTO>>(unitOfWork.Rooms.GetRoomsByPriceRange(min_price, max_price));
+            roomsCatalog = mapper.Map<List<RoomInfoUseCaseDTO>>(unitOfWork.Rooms.GetRoomsByPriceRange(min_price, max_price));
 
             unitOfWork.Commit();
-            return rooms;
+            return roomsCatalog;
         }
 
         public List<RoomInfoUseCaseDTO> GetRoomsByType(RoomType type)
         {
             unitOfWork.StartTransaction();
 
-            rooms = mapper.Map<List<RoomInfoUseCaseDTO>>(unitOfWork.Rooms.GetAll().Where(x=>x.RoomType==type));
+            roomsCatalog = mapper.Map<List<RoomInfoUseCaseDTO>>(unitOfWork.Rooms.GetAll().Where(x=>x.RoomType==type));
 
             unitOfWork.Commit();
-            return rooms;
+            return roomsCatalog;
         }
 
         public List<RoomInfoUseCaseDTO> GetSortedRoomsByCapacity()
         {
-            if(rooms.Count == 0) rooms = GetAllRooms(); 
-            return rooms.OrderByDescending(x => x.Capacity).ToList();
+            if(roomsCatalog.Count == 0) roomsCatalog = GetAllRooms(); 
+            return roomsCatalog.OrderByDescending(x => x.Capacity).ToList();
         }
 
         public List<RoomInfoUseCaseDTO> GetDescSortedRoomsByCapacity()
         {
-            rooms = GetSortedRoomsByCapacity();
-            rooms.Reverse();
-            return rooms;
+            roomsCatalog = GetSortedRoomsByCapacity();
+            roomsCatalog.Reverse();
+            return roomsCatalog;
         }
 
         public List<RoomInfoUseCaseDTO> GetSortedRoomsByPrice()
         {
-            if (rooms.Count == 0) rooms = GetAllRooms();
-            return rooms.OrderByDescending(x => x.PricePerNight).ToList();
+            if (roomsCatalog.Count == 0) roomsCatalog = GetAllRooms();
+            return roomsCatalog.OrderByDescending(x => x.PricePerNight).ToList();
         }
         public List<RoomInfoUseCaseDTO> GetDescSortedRoomsByPrice()
         {
-            rooms = GetSortedRoomsByPrice();
-            rooms.Reverse();
-            return rooms;
+            roomsCatalog = GetSortedRoomsByPrice();
+            roomsCatalog.Reverse();
+            return roomsCatalog;
         }
 
         public bool IsExists(int roomId)
@@ -172,6 +172,17 @@ namespace HotelControlSystem.Services.RoomServices
             unitOfWork.Commit();
 
             return isExists;
+        }
+
+        public List<RoomInfoUseCaseDTO> GetRoomsByHotelId(int hotelId)
+        {
+            unitOfWork.StartTransaction();
+
+            roomsCatalog = mapper.Map<List<RoomInfoUseCaseDTO>>(unitOfWork.Rooms.GetAll().Where(x=>x.HotelId == hotelId).ToList());
+
+            unitOfWork.Commit();
+
+            return roomsCatalog;
         }
     }
 }

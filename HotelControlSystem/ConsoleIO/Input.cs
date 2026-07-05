@@ -12,19 +12,31 @@ namespace HotelControlSystem.ConsoleIO
     {
         public static void GetItem<T>(string text, out T result) where T : IParsable<T>
         {
-            string? input = BuildInput(text);
+            string input = BuildInput(text);
 
-            while (input is null || input == string.Empty || !T.TryParse(input, null, out result))
+            while (input == string.Empty || !T.TryParse(input, null, out result))
             {
                 Output.WriteLine("Invalide data");
-                input = Console.ReadLine();
+                input = BuildInput(text);
             }
+        }
+
+        public static void GetEnumItem<T>(string text, out T result) where T : Enum
+        {
+            string input = BuildInput(text);
+
+            while (input == string.Empty || !int.TryParse(input, out _) || !Enum.IsDefined(typeof(T), int.Parse(input))) 
+            {
+                Output.WriteLine("Invalide data");
+                input = BuildInput(text);
+            }
+            result = (T)Enum.Parse(typeof(T), input);
         }
 
         public static bool TryGetItem<T>(string text, out T? result) where T : IParsable<T>
         {
-            string? input = BuildInput("(not requared) " + text);
-            if (input is null || input == string.Empty || !T.TryParse(input, null, out result))
+            string input = BuildInput("(not requared) " + text);
+            if (input == string.Empty || !T.TryParse(input, null, out result))
             {
                 result = default;
                 return false;

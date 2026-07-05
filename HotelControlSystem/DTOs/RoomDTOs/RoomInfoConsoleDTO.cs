@@ -7,7 +7,7 @@ using DoMain.Enums;
 
 namespace HotelControlSystem.DTOs.RoomDTOs
 {
-    internal class RoomInfoConsoleDTO
+    public class RoomInfoConsoleDTO
     {
         public int Id { get; init; }
         public int HotelId { get; init; }
