@@ -37,6 +37,11 @@ namespace HotelControlSystem.DataBase.Repository
             return room;
         }
 
+        public IEnumerable<Room> GetRoomsByPriceRange(decimal min_price = 0, decimal max_price = decimal.MaxValue)
+        {
+            return rooms.Where(x => x.PricePerNight >= min_price && x.PricePerNight <= max_price);
+        }
+
         public bool IsExists(int id)
         {
             var room = rooms.FirstOrDefault(x => x.Id == id);

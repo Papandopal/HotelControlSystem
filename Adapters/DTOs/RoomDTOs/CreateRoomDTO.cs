@@ -8,7 +8,7 @@ using DoMain.Enums;
 
 namespace Adapters.DTOs.RoomDTOs
 {
-    internal class CreateRoomDTO
+    public class CreateRoomDTO
     {
         public int Id { get; init; }
         public int HotelId { get; init; }

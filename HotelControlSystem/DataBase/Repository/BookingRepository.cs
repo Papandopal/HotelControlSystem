@@ -30,6 +30,16 @@ namespace HotelControlSystem.DataBase.Repository
             return bookings.ToList();
         }
 
+        public IEnumerable<Booking> GetBookingsByRoomId(int roomId)
+        {
+            return bookings.Where(x=>x.RoomId == roomId);
+        }
+
+        public IEnumerable<Booking> GetBookingsByUserId(int userId)
+        {
+            return bookings.Where((x)=>x.UserId == userId);
+        }
+
         public Booking GetById(int id)
         {
             var booking = bookings.FirstOrDefault(x => x.Id == id);

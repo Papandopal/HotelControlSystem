@@ -10,7 +10,6 @@ namespace HotelControlSystem.DTOs.RoomDTOs
     internal class UpdateRoomConsoleDTO
     {
         public int Id { get; init; }
-        public int HotelId { get; init; }
         public RoomType? RoomType { get; set; }
         public decimal? PricePerNight { get; set; }
         public int? Capacity { get; set; }

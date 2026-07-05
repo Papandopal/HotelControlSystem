@@ -18,9 +18,11 @@ namespace UseCase.Services.RoomServices
         public List<RoomInfoUseCaseDTO> GetAllRooms();
         public List<RoomInfoUseCaseDTO> GetRoomsByType(RoomType type);
         public List<RoomInfoUseCaseDTO> GetRoomsByCapacity(int capacity);
-        public List<RoomInfoUseCaseDTO> GetRoomsByPriceRange(double min_price = 0, double max_price = double.MaxValue);
+        public List<RoomInfoUseCaseDTO> GetRoomsByPriceRange(decimal min_price = 0, decimal max_price = decimal.MaxValue);
         public List<RoomInfoUseCaseDTO> GetRoomsByDate(DateTime date);
         public List<RoomInfoUseCaseDTO> GetSortedRoomsByPrice();
+        public List<RoomInfoUseCaseDTO> GetDescSortedRoomsByPrice();
         public List<RoomInfoUseCaseDTO> GetSortedRoomsByCapacity();
+        public List<RoomInfoUseCaseDTO> GetDescSortedRoomsByCapacity();
     }
 }

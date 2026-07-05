@@ -18,7 +18,7 @@ namespace HotelControlSystem.Services.RoomServices
 {
     internal class RoomService(IUnitOfWork unitOfWork, IMapper mapper) : IRoomService
     {
-        private List<RoomInfoUseCaseDTO> rooms;
+        private List<RoomInfoUseCaseDTO> rooms = new();
         public void Create(CreateRoomUseCaseDTO createRoomUseCaseDTO)
         {
             unitOfWork.StartTransaction();
@@ -35,6 +35,18 @@ namespace HotelControlSystem.Services.RoomServices
             new_room = mapper.Map<Room>(createRoomUseCaseDTO);
 
             unitOfWork.Rooms.Add(new_room);
+
+            unitOfWork.Commit();
+        }
+
+        public void Update(UpdateRoomUseCaseDTO updateRoomUseCaseDTO)
+        {
+            unitOfWork.StartTransaction();
+
+            var room = unitOfWork.Rooms.GetById(updateRoomUseCaseDTO.Id);
+            var updated_room = mapper.Map(updateRoomUseCaseDTO, room);
+
+            unitOfWork.Rooms.Update(updated_room);
 
             unitOfWork.Commit();
         }
@@ -78,37 +90,88 @@ namespace HotelControlSystem.Services.RoomServices
 
         public List<RoomInfoUseCaseDTO> GetRoomsByDate(DateTime date)
         {
-            throw new NotImplementedException();
+            unitOfWork.StartTransaction();
+
+            rooms.Clear();
+            var all_rooms = unitOfWork.Rooms.GetAll();
+
+            foreach (var room in all_rooms)
+            {
+                int id = room.Id;
+                bool add_room = true;
+                var related_bookings = unitOfWork.Bookings.GetBookingsByRoomId(id);
+
+                foreach (var booking in related_bookings)
+                {
+                    if (booking.CheckInDate <= date && date <= booking.CheckOutDate)
+                    {
+                        add_room = false;
+                        break;
+                    }
+                }
+
+                if (add_room) rooms.Add(mapper.Map<RoomInfoUseCaseDTO>(room));
+            }
+
+            unitOfWork.Commit();
+
+            return rooms;
         }
 
-        public List<RoomInfoUseCaseDTO> GetRoomsByPriceRange(double min_price = 0, double max_price = double.MaxValue)
+        public List<RoomInfoUseCaseDTO> GetRoomsByPriceRange(decimal min_price = 0, decimal max_price = decimal.MaxValue)
         {
-            throw new NotImplementedException();
+            unitOfWork.StartTransaction();
+
+            rooms = mapper.Map<List<RoomInfoUseCaseDTO>>(unitOfWork.Rooms.GetRoomsByPriceRange(min_price, max_price));
+
+            unitOfWork.Commit();
+            return rooms;
         }
 
         public List<RoomInfoUseCaseDTO> GetRoomsByType(RoomType type)
         {
-            throw new NotImplementedException();
+            unitOfWork.StartTransaction();
+
+            rooms = mapper.Map<List<RoomInfoUseCaseDTO>>(unitOfWork.Rooms.GetAll().Where(x=>x.RoomType==type));
+
+            unitOfWork.Commit();
+            return rooms;
         }
 
         public List<RoomInfoUseCaseDTO> GetSortedRoomsByCapacity()
         {
-            throw new NotImplementedException();
+            if(rooms.Count == 0) rooms = GetAllRooms(); 
+            return rooms.OrderByDescending(x => x.Capacity).ToList();
+        }
+
+        public List<RoomInfoUseCaseDTO> GetDescSortedRoomsByCapacity()
+        {
+            rooms = GetSortedRoomsByCapacity();
+            rooms.Reverse();
+            return rooms;
         }
 
         public List<RoomInfoUseCaseDTO> GetSortedRoomsByPrice()
         {
-            throw new NotImplementedException();
+            if (rooms.Count == 0) rooms = GetAllRooms();
+            return rooms.OrderByDescending(x => x.PricePerNight).ToList();
+        }
+        public List<RoomInfoUseCaseDTO> GetDescSortedRoomsByPrice()
+        {
+            rooms = GetSortedRoomsByPrice();
+            rooms.Reverse();
+            return rooms;
         }
 
         public bool IsExists(int roomId)
         {
-            throw new NotImplementedException();
-        }
+            unitOfWork.StartTransaction();
 
-        public void Update(UpdateRoomUseCaseDTO updateRoomUseCaseDTO)
-        {
-            throw new NotImplementedException();
+            var isExists = unitOfWork.Rooms.IsExists(roomId);
+
+            unitOfWork.Commit();
+
+            return isExists;
         }
     }
 }
