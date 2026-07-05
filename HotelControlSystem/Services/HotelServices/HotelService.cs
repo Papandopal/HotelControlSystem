@@ -62,7 +62,7 @@ namespace HotelControlSystem.Services.HotelServices
                 unitOfWork.Rollback();
                 throw new ItemNotFoundException("hotel not found");
             }
-            if (new_manager is null || new_manager.Role != DoMain.Enums.UserRole.HotelManager)
+            if (new_manager is null || new_manager.Role != UserRole.HotelManager)
             {
                 unitOfWork.Rollback();
                 throw new ItemNotFoundException("manager not found");
@@ -141,11 +141,13 @@ namespace HotelControlSystem.Services.HotelServices
 
         public List<HotelInfoUseCaseDTO> GetSortedHotelsByRating()
         {
+            if (hotels.Count == 0) hotels = GetAllHotels();
             return hotels.OrderByDescending(x => x.Rating).ToList();
         }
 
         public List<HotelInfoUseCaseDTO> GetSortedHotelsByName()
         {
+            if (hotels.Count == 0) hotels = GetAllHotels();
             return hotels.OrderBy(x => x.Name).ToList();
         }
     }
