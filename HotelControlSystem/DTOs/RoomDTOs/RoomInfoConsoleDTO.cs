@@ -17,5 +17,14 @@ namespace HotelControlSystem.DTOs.RoomDTOs
         public string Description { get; set; } = string.Empty;
         public string[] Amenities { get; set; } = Array.Empty<string>();
         public double Area { get; set; }
+
+        public override string ToString()
+        {
+            return $"Id: {Id}\n" +
+                   $"HotelId: {HotelId}\n" +
+                   $"RoomType: {RoomType}\n" +
+                   $"Description: {Description}\n" +
+                   $"Price per night: {PricePerNight}";
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Adapters.DTOs.RoomDTOs;
@@ -29,9 +30,15 @@ namespace Adapters.Controllers.Console
         {
             roomService.Delete(id);
         }
+
         public List<RoomInfoDTO> GetAllRooms()
         {
             return mapper.Map<List<RoomInfoDTO>>(roomService.GetAllRooms());
+        }
+
+        public List<RoomInfoDTO> GetRoomsByHotelId(int hotelId)
+        {
+            return mapper.Map<List<RoomInfoDTO>>(roomService.GetRoomsByHotelId(hotelId));
         }
 
         public List<RoomInfoDTO> GetRoomsByCapacity(int capacity)

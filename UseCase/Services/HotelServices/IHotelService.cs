@@ -19,7 +19,9 @@ namespace UseCase.Services.HotelServices
         public List<HotelInfoUseCaseDTO> GetHotelsByPlace(string country, string? city = null);
         public List<HotelInfoUseCaseDTO> GetHotelsByRating(int rating);
         public List<HotelInfoUseCaseDTO> GetSortedHotelsByRating();
+        public List<HotelInfoUseCaseDTO> GetDescSortedHotelsByRating();
         public List<HotelInfoUseCaseDTO> GetSortedHotelsByName();
+        public List<HotelInfoUseCaseDTO> GetDescSortedHotelsByName();
 
     }
 }

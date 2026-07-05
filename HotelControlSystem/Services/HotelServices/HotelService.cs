@@ -145,10 +145,24 @@ namespace HotelControlSystem.Services.HotelServices
             return hotels.OrderByDescending(x => x.Rating).ToList();
         }
 
+        public List<HotelInfoUseCaseDTO> GetDescSortedHotelsByRating()
+        {
+            hotels = GetSortedHotelsByRating();
+            hotels.Reverse();
+            return hotels;
+        }
+
         public List<HotelInfoUseCaseDTO> GetSortedHotelsByName()
         {
             if (hotels.Count == 0) hotels = GetAllHotels();
             return hotels.OrderBy(x => x.Name).ToList();
+        }
+
+        public List<HotelInfoUseCaseDTO> GetDescSortedHotelsByName()
+        {
+            hotels = GetSortedHotelsByName();
+            hotels.Reverse();
+            return hotels;
         }
     }
 }

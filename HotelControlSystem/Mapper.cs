@@ -2,14 +2,17 @@
 using Adapters.DTO.UserDTOs;
 using Adapters.DTOs.AuthorisationDTOs;
 using Adapters.DTOs.HotelDTOs;
+using Adapters.DTOs.RoomDTOs;
 using AutoMapper;
 using DoMain.Entities;
 using HotelControlSystem.DTO.HotelDTOs;
 using HotelControlSystem.DTO.UserDTOs;
 using HotelControlSystem.DTOs.AuthorisationDTOs;
 using HotelControlSystem.DTOs.HotelDTOs;
+using HotelControlSystem.DTOs.RoomDTOs;
 using UseCase.DTOs.AuthorisationDTOs;
 using UseCase.DTOs.HotelDTOs;
+using UseCase.DTOs.RoomDTOs;
 using UseCase.DTOs.UserDTOs;
 
 namespace HotelControlSystem
@@ -47,6 +50,21 @@ namespace HotelControlSystem
             CreateMap<UpdateHotelConsoleDTO, UpdateHotelDTO>();
             CreateMap<UpdateHotelDTO, UpdateHotelUseCaseDTO>();
             CreateMap<UpdateHotelUseCaseDTO, Hotel>().ForAllMembers(opt => opt.Condition((src, dest, srcMember) =>
+            {
+                return srcMember is not null;
+            }));
+
+            CreateMap<CreateRoomConsoleDTO, CreateRoomDTO>();
+            CreateMap<CreateRoomDTO, CreateRoomUseCaseDTO>();
+            CreateMap<CreateRoomUseCaseDTO, Room>();
+
+            CreateMap<Room, RoomInfoUseCaseDTO>();
+            CreateMap<RoomInfoUseCaseDTO, RoomInfoDTO>();
+            CreateMap<RoomInfoDTO, RoomInfoConsoleDTO>();
+
+            CreateMap<UpdateRoomConsoleDTO, UpdateRoomDTO>();
+            CreateMap<UpdateRoomDTO, UpdateRoomUseCaseDTO>();
+            CreateMap<UpdateRoomUseCaseDTO, Room>().ForAllMembers(opt => opt.Condition((src, dest, srcMember) =>
             {
                 return srcMember is not null;
             }));

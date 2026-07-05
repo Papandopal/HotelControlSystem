@@ -44,6 +44,31 @@ namespace HotelControlSystem.ConsoleIO
             return true;
         }
 
+        public static bool TryGetItem<T>(string text, out T? result) where T : struct, IParsable<T>
+        {
+            string input = BuildInput("(not requared) " + text);
+            if (input == string.Empty || !T.TryParse(input, null, out _))
+            {
+                result = default;
+                return false;
+            }
+            result = T.Parse(input, null);
+            return true;
+        }
+
+        public static bool TryGetEnumItem<T>(string text, out T? result) where T : struct, Enum
+        {
+            string input = BuildInput("(not requared) " + text);
+
+            if (input == string.Empty || !int.TryParse(input, out _) || !Enum.IsDefined(typeof(T), int.Parse(input)))
+            {
+                result= default;
+                return false;
+            }
+            result = (T)Enum.Parse(typeof(T), input);
+            return true;
+        }
+
         private static string BuildInput(string text)
         {
             StringBuilder builder = new();

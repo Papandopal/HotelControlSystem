@@ -26,22 +26,20 @@ namespace HotelControlSystem.RoleBehavior
         private IMapper mapper;
 
         private Paginator<UserInfoConsoleDTO> userPaginator;
-        private Paginator<RoomInfoConsoleDTO> roomPaginator;
         public AdminBehavior(UserController userController, HotelController hotelController, RoomController roomController,
-            Paginator<UserInfoConsoleDTO> userPaginator, Paginator<RoomInfoConsoleDTO> roomPaginator, IMapper mapper)
+            Paginator<UserInfoConsoleDTO> userPaginator, IMapper mapper)
         {
             this.userController = userController;
             this.hotelController = hotelController;
             this.roomController = roomController;
 
             this.userPaginator = userPaginator;
-            this.roomPaginator = roomPaginator;
 
             this.mapper = mapper;
 
             //MethodNames must be called "***Action"
             Actions.AddRange(GetAllUsersAction, DeleteUserAction, PromoteUserAction, CreateHotelAction,
-                ChangeHotelManagerAction, UpdateHotelAction, CreateRoomAction);
+                ChangeHotelManagerAction, UpdateHotelAction, CreateRoomAction, UpdateRoomAction);
         }
 
         //users actions
@@ -214,5 +212,56 @@ namespace HotelControlSystem.RoleBehavior
             CreateRoomConsoleDTO createRoomConsoleDTO = GetCreateRoomConsoleDTO();
             roomController.Create(mapper.Map<CreateRoomDTO>(createRoomConsoleDTO));
         }
+
+        private UpdateRoomConsoleDTO GetUpdateRoomConsoleDTO(int id)
+        {
+            int? capacity;
+            decimal? pricePerNight;
+            double? area;
+            string? description;
+            RoomType? roomType;
+            string[]? amenities = [];
+
+            Input.TryGetEnumItem("Room type", out roomType);
+            Input.TryGetItem("Capacity: ", out capacity);
+            Input.TryGetItem("Area: ", out area);
+            Input.TryGetItem("Price per night: ", out pricePerNight);
+            Input.TryGetItem("Description: ", out description);
+
+            string? amenities_item;
+
+            while (true)
+            {
+                Input.TryGetItem($"Amenities№{amenities.Length}(send empty line for end input):", out amenities_item);
+                if (amenities_item == null) break;
+                amenities = amenities.Append(amenities_item).ToArray();
+            }
+            return new UpdateRoomConsoleDTO { 
+                Id = id,
+                Amenities = amenities,
+                Area = area,
+                Capacity = capacity,
+                Description = description,
+                PricePerNight = pricePerNight,
+                RoomType = roomType
+            };
+        }
+
+        private void UpdateRoomAction()
+        {
+            int room_id;
+            Input.GetItem("Room id:", out room_id);
+
+            while(!roomController.IsExists(room_id))
+            {
+                Output.WriteLine("Room not found");
+                Input.GetItem("Room id:", out room_id);
+            }
+
+            UpdateRoomConsoleDTO updateRoomConsoleDTO = GetUpdateRoomConsoleDTO(room_id);
+
+            roomController.Update(mapper.Map<UpdateRoomDTO>(updateRoomConsoleDTO));
+        }
+
     }
 }

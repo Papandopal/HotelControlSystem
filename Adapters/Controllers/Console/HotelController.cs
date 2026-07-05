@@ -54,9 +54,17 @@ namespace Adapters.Controllers.Console
         {
             return mapper.Map<List<HotelInfoDTO>>(hotelService.GetSortedHotelsByRating());
         }
+        public List<HotelInfoDTO> GetDescSortedHotelsByRating()
+        {
+            return mapper.Map<List<HotelInfoDTO>>(hotelService.GetDescSortedHotelsByRating());
+        }
         public List<HotelInfoDTO> GetSortedHotelsByName()
         {
             return mapper.Map<List<HotelInfoDTO>>(hotelService.GetSortedHotelsByName());
+        }
+        public List<HotelInfoDTO> GetDescSortedHotelsByName()
+        {
+            return mapper.Map<List<HotelInfoDTO>>(hotelService.GetDescSortedHotelsByName());
         }
     }
 }
