@@ -25,6 +25,7 @@ bld/
 
 .vs/
 cso.dat
+.bat
 
 # .NET Core
 project.lock.json
