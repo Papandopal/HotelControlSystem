@@ -22,7 +22,8 @@ namespace DoMain.Entities
         public Room Room { get; set; } 
         public DateTime CheckInDate { get; set; }
         public DateTime CheckOutDate { get; set; }
-        public decimal? TotalPrice { get => Room.PricePerNight * (CheckOutDate - CheckInDate).Days; }
+        public decimal SaleProcent { get; set; }
+        public decimal TotalPrice { get => (Room.PricePerNight * (CheckOutDate - CheckInDate).Days)*(1-SaleProcent); }
         public BookingStatus Status { get; set; }
         public bool IsDeleted { get; set; } = false;
     }

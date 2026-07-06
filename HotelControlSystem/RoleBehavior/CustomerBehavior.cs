@@ -5,10 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Adapters.Controllers.Console;
 using Adapters.DTOs.BookingDTOs;
+using Adapters.DTOs.LoyaltyProgramDTOs;
 using AutoMapper;
 using HotelControlSystem.ConsoleIO;
 using HotelControlSystem.DTOs.AuthorisationDTOs;
 using HotelControlSystem.DTOs.BookingDTOs;
+using HotelControlSystem.DTOs.LoyaltyProgramDTO;
 
 namespace HotelControlSystem.RoleBehavior
 {
@@ -20,21 +22,33 @@ namespace HotelControlSystem.RoleBehavior
         private IMapper mapper;
 
         private BookingController bookingController;
+        private LoyaltyProgramController loyaltyProgramController;
 
         private Paginator<BookingInfoForCustomerConsoleDTO> bookingPaginator;
 
         public CustomerBehavior(UserMainInfoDTO userMainInfoDTO, IMapper mapper, BookingController bookingController,
-            Paginator<BookingInfoForCustomerConsoleDTO> bookingPaginator) 
+            LoyaltyProgramController loyaltyProgramController, Paginator<BookingInfoForCustomerConsoleDTO> bookingPaginator) 
         {
             currentUser = userMainInfoDTO;
             this.mapper = mapper;
 
             this.bookingController = bookingController;
+            this.loyaltyProgramController = loyaltyProgramController;
 
             this.bookingPaginator = bookingPaginator;
 
             //MethodNames must be called "***Action"
             Actions.AddRange(GetAllBookingsAction, CreateBookingAction, CanselBookingAction);
+        }
+
+        private void GetAllBookingsAction()
+        {
+            List<BookingInfoForCustomerConsoleDTO> bookings = mapper.Map<List<BookingInfoForCustomerConsoleDTO>>
+                (bookingController.GetAllForCustomer(currentUser.Id));
+
+            bookingPaginator.SetItems(bookings);
+            bookingPaginator.StartPagination();
+
         }
 
         private CreateBookingConsoleDTO GetCreateBookingConsoleDTO()
@@ -67,19 +81,39 @@ namespace HotelControlSystem.RoleBehavior
             return new CreateBookingConsoleDTO { UserId = currentUser.Id, RoomId = roomId, CheckInDate = (DateTime)checkInDate, CheckOutDate = checkOutDate } ;
         }
 
-        private void GetAllBookingsAction()
+        private void CallJoinLoyaltyProgram()
         {
-            List<BookingInfoForCustomerConsoleDTO> bookings = mapper.Map<List<BookingInfoForCustomerConsoleDTO>>
-                (bookingController.GetAllForCustomer(currentUser.Id));
+            char answer;
 
-            bookingPaginator.SetItems(bookings);
-            bookingPaginator.StartPagination();
+            Input.GetItem($"Do you want to join loyalty program?({(char)Symbols.Yes} - yes): ", out answer);
 
-        } 
+            if(answer == (char)Symbols.Yes)
+            {
+                var createLoyaltyProgramConsoleDTO = new CreateLoyaltyProgramConsoleDTO { Id = currentUser.Id };
+                loyaltyProgramController.Create(mapper.Map<CreateLoyaltyProgramDTO>(createLoyaltyProgramConsoleDTO));
+            }
+        }
+
+        private void CallUseLoyaltyProgram(CreateBookingConsoleDTO createBookingConsoleDTO)
+        {
+            char answer;
+            decimal saleProcent = loyaltyProgramController.GetSaleProcentByUserId(currentUser.Id);
+
+            Input.GetItem($"You want use a sale on {saleProcent}% for current booking?({(char)Symbols.Yes} - yes): ", out answer);
+
+            if (answer == (char)Symbols.Yes)
+            {
+                createBookingConsoleDTO.Sale = saleProcent;
+            }
+        }
 
         private void CreateBookingAction()
         {
             CreateBookingConsoleDTO createBookingConsoleDTO = GetCreateBookingConsoleDTO();
+
+            if(!loyaltyProgramController.IsExistsByUserId(currentUser.Id)) CallJoinLoyaltyProgram();
+            if(loyaltyProgramController.IsExistsByUserId(currentUser.Id)) CallUseLoyaltyProgram(createBookingConsoleDTO);
+
             bookingController.Create(mapper.Map<CreateBookingDTO>(createBookingConsoleDTO));
         }
 
@@ -95,6 +129,11 @@ namespace HotelControlSystem.RoleBehavior
             }
 
             bookingController.Cancel(bookingId);
+        }
+
+        private void RegistrateLoyaltyProgramAction()
+        {
+
         }
     }
 }

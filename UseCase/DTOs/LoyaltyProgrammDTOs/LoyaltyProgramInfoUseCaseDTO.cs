@@ -3,20 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DoMain.Entities;
 using DoMain.Enums;
 
-namespace DoMain.Entities
+namespace UseCase.DTOs.LoyaltyProgrammDTOs
 {
-    public class LoyaltyProgram
+    public class LoyaltyProgramInfoUseCaseDTO
     {
-        private LoyaltyProgram() { }
-        public LoyaltyProgram(User user) 
-        {
-            User = user;
-        }
         public int Id { get; init; }
         public int UserId { get; init; }
-        public User User { get; init; }
         public int TotalPoints { get; set; }
         public LoyaltyProgramTier Tier => TotalPoints switch
         {
@@ -27,12 +22,6 @@ namespace DoMain.Entities
         };
         public decimal TotalSpent { get; set; }
         public bool IsDeleted { get; set; }
-        public DateTime JoinedAt { get; } = DateTime.Now;
-        public void UpdateAfterPurchase(decimal price, decimal coefForPoints)
-        {
-            TotalSpent += price;
-            TotalPoints += (int)(price * coefForPoints);
-        }
-
+        public DateTime JoinedAt { get; set; } 
     }
 }

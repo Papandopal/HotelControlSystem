@@ -9,6 +9,7 @@ using HotelControlSystem.ConsoleIO;
 using HotelControlSystem.DTO.HotelDTOs;
 using HotelControlSystem.DTO.UserDTOs;
 using HotelControlSystem.DTOs.HotelDTOs;
+using HotelControlSystem.DTOs.LoyaltyProgramDTO;
 using HotelControlSystem.DTOs.RoomDTOs;
 using HotelControlSystem.Exceptions;
 using UseCase.Services.UserServices;
@@ -22,24 +23,30 @@ namespace HotelControlSystem.RoleBehavior
         private UserController userController;
         private HotelController hotelController;
         private RoomController roomController;
+        private LoyaltyProgramController loyaltyProgramController;
 
         private IMapper mapper;
 
         private Paginator<UserInfoConsoleDTO> userPaginator;
+        private Paginator<LoyaltyProgramInfoConsoleDTO> loyaltyProgramPaginator;
+
         public AdminBehavior(UserController userController, HotelController hotelController, RoomController roomController,
-            Paginator<UserInfoConsoleDTO> userPaginator, IMapper mapper)
+            LoyaltyProgramController loyaltyProgramController, Paginator<UserInfoConsoleDTO> userPaginator,
+            Paginator<LoyaltyProgramInfoConsoleDTO> loyaltyProgramPaginator, IMapper mapper)
         {
             this.userController = userController;
             this.hotelController = hotelController;
             this.roomController = roomController;
+            this.loyaltyProgramController = loyaltyProgramController;
 
             this.userPaginator = userPaginator;
+            this.loyaltyProgramPaginator = loyaltyProgramPaginator;
 
             this.mapper = mapper;
 
             //MethodNames must be called "***Action"
             Actions.AddRange(GetAllUsersAction, DeleteUserAction, PromoteUserAction, CreateHotelAction,
-                ChangeHotelManagerAction, UpdateHotelAction, CreateRoomAction, UpdateRoomAction);
+                ChangeHotelManagerAction, UpdateHotelAction, CreateRoomAction, UpdateRoomAction, GetAllLoyaltyProgramsAction);
         }
 
         //users actions
@@ -261,6 +268,14 @@ namespace HotelControlSystem.RoleBehavior
             UpdateRoomConsoleDTO updateRoomConsoleDTO = GetUpdateRoomConsoleDTO(room_id);
 
             roomController.Update(mapper.Map<UpdateRoomDTO>(updateRoomConsoleDTO));
+        }
+
+        private void GetAllLoyaltyProgramsAction()
+        {
+            var loyaltyPrograms = mapper.Map<List<LoyaltyProgramInfoConsoleDTO>>(loyaltyProgramController.GetAll());
+
+            loyaltyProgramPaginator.SetItems(loyaltyPrograms);
+            loyaltyProgramPaginator.StartPagination();
         }
 
     }

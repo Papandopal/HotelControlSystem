@@ -37,9 +37,22 @@ namespace HotelControlSystem.DataBase.Repository
             return loyaltyProgram;
         }
 
+        public LoyaltyProgram GetByUserId(int userId)
+        {
+            var loyaltyProgram = loyaltyPrograms.FirstOrDefault(x => x.UserId == userId);
+            if (loyaltyProgram is null) throw new ItemNotFoundException("loyaltyProgram not found");
+            return loyaltyProgram;
+        }
+
         public bool IsExists(int id)
         {
             var program = loyaltyPrograms.FirstOrDefault(x => x.Id == id);
+            return program is not null && !program.IsDeleted;
+        }
+
+        public bool IsExistsByUserId(int userId)
+        {
+            var program = loyaltyPrograms.FirstOrDefault(x => x.UserId == userId);
             return program is not null && !program.IsDeleted;
         }
 

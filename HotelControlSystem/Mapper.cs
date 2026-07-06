@@ -3,6 +3,7 @@ using Adapters.DTO.UserDTOs;
 using Adapters.DTOs.AuthorisationDTOs;
 using Adapters.DTOs.BookingDTOs;
 using Adapters.DTOs.HotelDTOs;
+using Adapters.DTOs.LoyaltyProgramDTOs;
 using Adapters.DTOs.RoomDTOs;
 using AutoMapper;
 using DoMain.Entities;
@@ -11,10 +12,12 @@ using HotelControlSystem.DTO.UserDTOs;
 using HotelControlSystem.DTOs.AuthorisationDTOs;
 using HotelControlSystem.DTOs.BookingDTOs;
 using HotelControlSystem.DTOs.HotelDTOs;
+using HotelControlSystem.DTOs.LoyaltyProgramDTO;
 using HotelControlSystem.DTOs.RoomDTOs;
 using UseCase.DTOs.AuthorisationDTOs;
 using UseCase.DTOs.BookingDTOs;
 using UseCase.DTOs.HotelDTOs;
+using UseCase.DTOs.LoyaltyProgrammDTOs;
 using UseCase.DTOs.RoomDTOs;
 using UseCase.DTOs.UserDTOs;
 
@@ -86,6 +89,12 @@ namespace HotelControlSystem
 
             CreateMap<ChangeBookingStatusConsoleDTO, ChangeBookingStatusDTO>();
             CreateMap<ChangeBookingStatusDTO, ChangeBookingStatusUseCaseDTO>();
+
+            CreateMap<Booking, BookingCreatedUseCaseDTO>();
+
+            CreateMap<CreateLoyaltyProgramConsoleDTO, CreateLoyaltyProgramDTO>();
+            CreateMap<CreateLoyaltyProgramDTO, CreateLoyaltyProgramUseCaseDTO>();
+            CreateMap<CreateLoyaltyProgramUseCaseDTO, LoyaltyProgram>();
         }
     }
 }

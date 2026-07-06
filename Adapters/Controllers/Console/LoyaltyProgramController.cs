@@ -17,9 +17,9 @@ namespace Adapters.Controllers.Console
             loyaltyProgramService.Create(mapper.Map<CreateLoyaltyProgramUseCaseDTO>(createLoyaltyProgramDTO));
         }
 
-        public void Update(UpdateLoyaltyProgramDTO updateLoyaltyProgramDTO) 
+        public List<LoyaltyProgramInfoDTO> GetAll()
         {
-            loyaltyProgramService.Update(mapper.Map<UpdateLoyaltyProgramUseCaseDTO>(updateLoyaltyProgramDTO));
+            return mapper.Map<List<LoyaltyProgramInfoDTO>>(loyaltyProgramService.GetAll());
         }
 
         public bool IsExistsByUserId(int userId)

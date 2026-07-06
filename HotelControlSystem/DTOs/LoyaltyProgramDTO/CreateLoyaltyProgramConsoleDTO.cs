@@ -8,5 +8,6 @@ namespace HotelControlSystem.DTOs.LoyaltyProgramDTO
 {
     public class CreateLoyaltyProgramConsoleDTO
     {
+        public int Id { get; set; }
     }
 }

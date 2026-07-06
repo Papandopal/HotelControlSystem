@@ -14,6 +14,8 @@ namespace HotelControlSystem.Services.BookingServices
 {
     public class BookingService(IUnitOfWork unitOfWork, IMapper mapper) : IBookingService
     {
+        public event IBookingService.bookingCreated BookingCreated;
+
         public void Cancel(int id)
         {
             unitOfWork.StartTransaction();
@@ -60,6 +62,8 @@ namespace HotelControlSystem.Services.BookingServices
             createBookingUseCaseDTO.Room = related_room;
 
             var new_booking = mapper.Map<Booking>(createBookingUseCaseDTO);
+
+            BookingCreated.Invoke(mapper.Map<BookingCreatedUseCaseDTO>(new_booking));
 
             unitOfWork.Bookings.Add(new_booking);
 

@@ -5,18 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using DoMain.Enums;
 
-namespace DoMain.Entities
+namespace HotelControlSystem.DTOs.LoyaltyProgramDTO
 {
-    public class LoyaltyProgram
+    public class LoyaltyProgramInfoConsoleDTO
     {
-        private LoyaltyProgram() { }
-        public LoyaltyProgram(User user) 
-        {
-            User = user;
-        }
         public int Id { get; init; }
         public int UserId { get; init; }
-        public User User { get; init; }
         public int TotalPoints { get; set; }
         public LoyaltyProgramTier Tier => TotalPoints switch
         {
@@ -27,12 +21,14 @@ namespace DoMain.Entities
         };
         public decimal TotalSpent { get; set; }
         public bool IsDeleted { get; set; }
-        public DateTime JoinedAt { get; } = DateTime.Now;
-        public void UpdateAfterPurchase(decimal price, decimal coefForPoints)
+        public DateTime JoinedAt { get; set; }
+        public override string ToString()
         {
-            TotalSpent += price;
-            TotalPoints += (int)(price * coefForPoints);
+            return $"Id: {Id}\n" +
+                   $"UserId: {UserId}\n" +
+                   $"TotalPoints: {TotalPoints}\n" +
+                   $"TotalSpent: {TotalSpent}\n" +
+                   $"Tier: {Tier}";
         }
-
     }
 }
