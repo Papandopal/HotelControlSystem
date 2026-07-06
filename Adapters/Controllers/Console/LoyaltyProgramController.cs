@@ -22,14 +22,14 @@ namespace Adapters.Controllers.Console
             loyaltyProgramService.Update(mapper.Map<UpdateLoyaltyProgramUseCaseDTO>(updateLoyaltyProgramDTO));
         }
 
-        public bool IsExists(int userId)
+        public bool IsExistsByUserId(int userId)
         {
-            return loyaltyProgramService.IsExistsByUser(userId);
+            return loyaltyProgramService.IsExistsByUserId(userId);
         }
 
-        public decimal GetSaleProcent(int userId)
+        public decimal GetSaleProcentByUserId(int userId)
         {
-            return loyaltyProgramService.GetSaleProcentByUser(userId);
+            return loyaltyProgramService.GetSaleProcentByUserId(userId);
         }
     }
 }
