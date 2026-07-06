@@ -16,6 +16,6 @@ namespace UseCase.DTOs.BookingDTOs
         public Room Room { get; set; }
         public DateTime CheckInDate { get; set; }
         public DateTime CheckOutDate { get; set; }
-        public BookingStatus Status { get; set; }
+        public BookingStatus Status { get; set; } = BookingStatus.Created;
     }
 }

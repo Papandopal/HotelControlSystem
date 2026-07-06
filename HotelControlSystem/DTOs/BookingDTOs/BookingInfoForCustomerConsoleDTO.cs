@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using DoMain.Enums;
 
-namespace Adapters.DTOs.BookingDTOs
+namespace HotelControlSystem.DTOs.BookingDTOs
 {
-    public class BookingInfoForUserDTO
+    public class BookingInfoForCustomerConsoleDTO
     {
         public int Id { get; init; }
         public int UserId { get; set; }
@@ -15,5 +15,13 @@ namespace Adapters.DTOs.BookingDTOs
         public DateTime CheckInDate { get; set; }
         public DateTime CheckOutDate { get; set; }
         public BookingStatus Status { get; set; }
+        public override string ToString()
+        {
+            return $"Id:{Id}\n" +
+                   $"Room id: {RoomId}\n" +
+                   $"Check in date: {CheckInDate}\n" +
+                   $"Check out date: {CheckOutDate}\n" +
+                   $"Status: {Status}";
+        }
     }
 }

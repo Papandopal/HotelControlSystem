@@ -218,12 +218,13 @@ namespace HotelControlSystem.RoleBehavior
                 Input.TryGetItem("Minimal price(default = 0): ", out minPrice);
             }
 
-            Input.TryGetItem("Maximal price(default = inf): ", out maxPrice);
-
+            Input.TryGetItem("Maximum price(default = inf): ", out maxPrice);
+            if (maxPrice == 0) maxPrice = decimal.MaxValue;
             while (maxPrice < 0 || minPrice > maxPrice)
             {
                 Output.WriteLine("Invalide data");
-                Input.TryGetItem("Minimal price(default = 0): ", out minPrice);
+                Input.TryGetItem("Maximum price(default = inf): ", out maxPrice);
+                if (maxPrice == 0) maxPrice = decimal.MaxValue;
             }
 
             List<RoomInfoConsoleDTO> rooms = mapper.Map<List<RoomInfoConsoleDTO>>

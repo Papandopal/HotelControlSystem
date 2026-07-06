@@ -7,6 +7,7 @@ using HotelControlSystem.DataBase.UnitOfWork;
 using HotelControlSystem.DTOs.AuthorisationDTOs;
 using HotelControlSystem.RoleBehavior;
 using HotelControlSystem.Services.AuthorisationServices;
+using HotelControlSystem.Services.BookingServices;
 using HotelControlSystem.Services.HotelServices;
 using HotelControlSystem.Services.RoomServices;
 using HotelControlSystem.Services.UserServices;
@@ -16,6 +17,7 @@ using Microsoft.Extensions.DependencyInjection;
 using UseCase.Database;
 using UseCase.Database.Repositories;
 using UseCase.Services.AuthorisationServices;
+using UseCase.Services.BookingService;
 using UseCase.Services.HotelServices;
 using UseCase.Services.RoomServices;
 using UseCase.Services.UserServices;
@@ -61,6 +63,7 @@ namespace HotelControlSystem
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IHotelService, HotelService>();
             services.AddScoped<IRoomService, RoomService>();
+            services.AddScoped<IBookingService, BookingService>();
 
             services.AddValidatorsFromAssemblyContaining<HotelValidator>();
 

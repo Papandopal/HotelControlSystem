@@ -11,5 +11,6 @@ namespace UseCase.Database.Repositories
     {
         public IEnumerable<Booking> GetBookingsByRoomId(int roomId);
         public IEnumerable<Booking> GetBookingsByUserId(int userId);
+        public IEnumerable<Booking> GetBookingsByManagerId(int managerId);
     }
 }

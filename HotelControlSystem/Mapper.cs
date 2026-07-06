@@ -1,6 +1,7 @@
 ﻿using Adapters.DTO.HotelDTOs;
 using Adapters.DTO.UserDTOs;
 using Adapters.DTOs.AuthorisationDTOs;
+using Adapters.DTOs.BookingDTOs;
 using Adapters.DTOs.HotelDTOs;
 using Adapters.DTOs.RoomDTOs;
 using AutoMapper;
@@ -8,9 +9,11 @@ using DoMain.Entities;
 using HotelControlSystem.DTO.HotelDTOs;
 using HotelControlSystem.DTO.UserDTOs;
 using HotelControlSystem.DTOs.AuthorisationDTOs;
+using HotelControlSystem.DTOs.BookingDTOs;
 using HotelControlSystem.DTOs.HotelDTOs;
 using HotelControlSystem.DTOs.RoomDTOs;
 using UseCase.DTOs.AuthorisationDTOs;
+using UseCase.DTOs.BookingDTOs;
 using UseCase.DTOs.HotelDTOs;
 using UseCase.DTOs.RoomDTOs;
 using UseCase.DTOs.UserDTOs;
@@ -68,6 +71,21 @@ namespace HotelControlSystem
             {
                 return srcMember is not null;
             }));
+
+            CreateMap<CreateBookingConsoleDTO, CreateBookingDTO>();
+            CreateMap<CreateBookingDTO, CreateBookingUseCaseDTO>();
+            CreateMap<CreateBookingUseCaseDTO, Booking>();
+
+            CreateMap<Booking, BookingInfoForAdminsUseCaseDTO>();
+            CreateMap<BookingInfoForAdminsUseCaseDTO, BookingInfoForAdminsDTO>();
+            CreateMap<BookingInfoForAdminsDTO, BookingInfoForAdminsConsoleDTO>();
+
+            CreateMap<Booking, BookingInfoForCustomerUseCaseDTO>();
+            CreateMap<BookingInfoForCustomerUseCaseDTO, BookingInfoForCustomerDTO>();
+            CreateMap<BookingInfoForCustomerDTO, BookingInfoForCustomerConsoleDTO>();
+
+            CreateMap<ChangeBookingStatusConsoleDTO, ChangeBookingStatusDTO>();
+            CreateMap<ChangeBookingStatusDTO, ChangeBookingStatusUseCaseDTO>();
         }
     }
 }

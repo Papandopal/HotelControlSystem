@@ -22,9 +22,19 @@ namespace Adapters.Controllers.Console
             bookingService.Cancel(id);
         }
 
-        public List<BookingInfoForUserDTO> GetAllForUser(int userId)
+        public void ChangeBookingStatus(ChangeBookingStatusDTO changeBookingStatusDTO)
         {
-            return mapper.Map<List<BookingInfoForUserDTO>>(bookingService.GetAllForUser(userId));
+            bookingService.ChangeStatus(mapper.Map<ChangeBookingStatusUseCaseDTO>(changeBookingStatusDTO));
+        }
+
+        public bool IsExists(int id)
+        {
+            return bookingService.IsExists(id);
+        }
+
+        public List<BookingInfoForCustomerDTO> GetAllForCustomer(int userId)
+        {
+            return mapper.Map<List<BookingInfoForCustomerDTO>>(bookingService.GetAllForCustomer(userId));
         }
 
         public List<BookingInfoForAdminsDTO> GetAll()
@@ -40,6 +50,11 @@ namespace Adapters.Controllers.Console
         public List<BookingInfoForAdminsDTO> GetAllByRoom(int roomId)
         {
             return mapper.Map<List<BookingInfoForAdminsDTO>>(bookingService.GetAllByRoom(roomId));
+        }
+
+        public List<BookingInfoForAdminsDTO> GetAllByManagerId(int managerId)
+        {
+            return mapper.Map<List<BookingInfoForAdminsDTO>>(bookingService.GetAllByManagerId(managerId));
         }
 
     }
