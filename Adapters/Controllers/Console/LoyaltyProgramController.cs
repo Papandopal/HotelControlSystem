@@ -3,10 +3,33 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Adapters.DTOs.LoyaltyProgramDTOs;
+using AutoMapper;
+using UseCase.DTOs.LoyaltyProgrammDTOs;
+using UseCase.Services.LoyaltyProgramServices;
 
 namespace Adapters.Controllers.Console
 {
-    public class LoyaltyProgramController
+    public class LoyaltyProgramController(ILoyaltyProgramService loyaltyProgramService, IMapper mapper)
     {
+        public void Create(CreateLoyaltyProgramDTO createLoyaltyProgramDTO)
+        {
+            loyaltyProgramService.Create(mapper.Map<CreateLoyaltyProgramUseCaseDTO>(createLoyaltyProgramDTO));
+        }
+
+        public void Update(UpdateLoyaltyProgramDTO updateLoyaltyProgramDTO) 
+        {
+            loyaltyProgramService.Update(mapper.Map<UpdateLoyaltyProgramUseCaseDTO>(updateLoyaltyProgramDTO));
+        }
+
+        public bool IsExists(int userId)
+        {
+            return loyaltyProgramService.IsExistsByUser(userId);
+        }
+
+        public decimal GetSaleProcent(int userId)
+        {
+            return loyaltyProgramService.GetSaleProcentByUser(userId);
+        }
     }
 }

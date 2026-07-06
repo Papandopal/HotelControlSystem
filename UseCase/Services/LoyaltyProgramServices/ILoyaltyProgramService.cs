@@ -11,7 +11,7 @@ namespace UseCase.Services.LoyaltyProgramServices
     {
         public void Create(CreateLoyaltyProgramUseCaseDTO createLoyaltyProgramUseCaseDTO);
         public void Update(UpdateLoyaltyProgramUseCaseDTO updateLoyaltyProgramUseCaseDTO);
-        public bool IsExists(int userId);
-        public decimal GetSaleProcent(int userId);
+        public bool IsExistsByUser(int userId);
+        public decimal GetSaleProcentByUser(int userId);
     }
 }

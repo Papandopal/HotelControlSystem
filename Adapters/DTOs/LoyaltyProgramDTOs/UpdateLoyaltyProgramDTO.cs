@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DoMain.Enums;
 
-namespace UseCase.DTOs.LoyaltyProgrammDTOs
+namespace Adapters.DTOs.LoyaltyProgramDTOs
 {
-    public class UpdateLoyaltyProgramUseCaseDTO
+    public class UpdateLoyaltyProgramDTO
     {
-        public int Id { get; init; } 
+        public int Id { get; init; }
         public int TotalPoints { get; set; }
         public decimal TotalSpent { get; set; }
     }
