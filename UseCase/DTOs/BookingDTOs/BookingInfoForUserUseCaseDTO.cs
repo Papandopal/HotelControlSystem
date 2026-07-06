@@ -10,6 +10,7 @@ namespace UseCase.DTOs.BookingDTOs
 {
     public class BookingInfoForUserUseCaseDTO
     {
+        public int Id { get; init; } 
         public int UserId { get; set; }
         public int RoomId { get; set; }
         public DateTime CheckInDate { get; set; }
