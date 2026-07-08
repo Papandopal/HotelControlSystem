@@ -16,18 +16,15 @@ using UseCase.Services.RoomServices;
 
 namespace HotelControlSystem.Services.RoomServices
 {
-    internal class RoomService(IUnitOfWork unitOfWork, IMapper mapper) : IRoomService
+    internal class RoomService(IUnitOfWork unitOfWork, IMapper mapper, IValidator<CreateRoomUseCaseDTO> createValidator,
+        IValidator<UpdateRoomUseCaseDTO> updateValidator) : IRoomService
     {
         private List<RoomInfoUseCaseDTO> roomsCatalog = new();
         public void Create(CreateRoomUseCaseDTO createRoomUseCaseDTO)
         {
-            unitOfWork.StartTransaction();
+            createValidator.ValidateAndThrow(createRoomUseCaseDTO);
 
-            if (!unitOfWork.Hotels.IsExists(createRoomUseCaseDTO.HotelId))
-            {
-                unitOfWork.Rollback();
-                throw new ItemNotFoundException("Hotel not found");
-            }
+            unitOfWork.StartTransaction();
 
             Hotel hotel = unitOfWork.Hotels.GetById(createRoomUseCaseDTO.HotelId);
             Room new_room = new Room(hotel);
@@ -41,6 +38,8 @@ namespace HotelControlSystem.Services.RoomServices
 
         public void Update(UpdateRoomUseCaseDTO updateRoomUseCaseDTO)
         {
+            updateValidator.ValidateAndThrow(updateRoomUseCaseDTO);
+
             unitOfWork.StartTransaction();
 
             var room = unitOfWork.Rooms.GetById(updateRoomUseCaseDTO.Id);
@@ -54,12 +53,6 @@ namespace HotelControlSystem.Services.RoomServices
         public void Delete(int id)
         {
             unitOfWork.StartTransaction();
-
-            if (!unitOfWork.Rooms.IsExists(id))
-            {
-                unitOfWork.Rollback();
-                throw new ItemNotFoundException("room not found");
-            }
 
             unitOfWork.Rooms.Delete(id);
 
@@ -95,11 +88,15 @@ namespace HotelControlSystem.Services.RoomServices
             roomsCatalog.Clear();
             var all_rooms = unitOfWork.Rooms.GetAll();
 
+            int id;
+            bool add_room;
+            IEnumerable<Booking> related_bookings;
+
             foreach (var room in all_rooms)
             {
-                int id = room.Id;
-                bool add_room = true;
-                var related_bookings = unitOfWork.Bookings.GetBookingsByRoomId(id);
+                id = room.Id;
+                add_room = true;
+                related_bookings = unitOfWork.Bookings.GetBookingsByRoomId(id);
 
                 foreach (var booking in related_bookings)
                 {

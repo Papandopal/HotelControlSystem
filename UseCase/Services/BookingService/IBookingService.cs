@@ -9,8 +9,8 @@ namespace UseCase.Services.BookingService
 {
     public interface IBookingService
     {
-        public delegate void bookingCreated(BookingCreatedUseCaseDTO bookingCreatedUseCaseDTO);
-        public event bookingCreated BookingCreated;
+        public delegate void bookingComplited(BookingComplitedUseCaseDTO bookingCreatedUseCaseDTO);
+        public event bookingComplited BookingComplited;
         public void Create(CreateBookingUseCaseDTO createBookingUseCaseDTO);
         public void Cancel(int id);
         public void ChangeStatus(ChangeBookingStatusUseCaseDTO changeBookingStatusUseCaseDTO);

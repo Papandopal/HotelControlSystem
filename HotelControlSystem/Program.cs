@@ -12,7 +12,7 @@ using HotelControlSystem.Services.HotelServices;
 using HotelControlSystem.Services.LoyaltyProgramService;
 using HotelControlSystem.Services.RoomServices;
 using HotelControlSystem.Services.UserServices;
-using HotelControlSystem.Validators;
+using HotelControlSystem.Validators.HotelValidators;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using UseCase.Database;
@@ -30,7 +30,7 @@ namespace HotelControlSystem
     {
         static void Main(string[] args)
         {
-            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomainUnhandledException;
 
             var services = new ServiceCollection();
 
@@ -68,7 +68,7 @@ namespace HotelControlSystem
             services.AddScoped<IBookingService, BookingService>();
             services.AddScoped<ILoyaltyProgramService, LoyaltyProgramService>();
 
-            services.AddValidatorsFromAssemblyContaining<HotelValidator>();
+            services.AddValidatorsFromAssembly(typeof(Program).Assembly);
 
             services.AddAutoMapper(configuration =>
             {
@@ -85,7 +85,7 @@ namespace HotelControlSystem
             else dialog.Start();
         }
 
-        private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        private static void CurrentDomainUnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
 
 #if DEBUG

@@ -37,6 +37,11 @@ namespace HotelControlSystem.DataBase.Repository
             return hotel;
         }
 
+        public IEnumerable<Hotel> GetHotelsByCity(string city)
+        {
+            return hotels.Where(x => x.City == city);
+        }
+
         public bool IsExists(int id)
         {
             var hotel = hotels.FirstOrDefault(x => x.Id == id);

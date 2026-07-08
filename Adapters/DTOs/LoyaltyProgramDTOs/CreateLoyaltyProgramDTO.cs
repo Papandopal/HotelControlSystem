@@ -8,6 +8,6 @@ namespace Adapters.DTOs.LoyaltyProgramDTOs
 {
     public class CreateLoyaltyProgramDTO
     {
-        public int Id { get; set; }
+        public int UserId { get; set; }
     }
 }

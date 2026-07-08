@@ -77,7 +77,10 @@ namespace HotelControlSystem
 
             CreateMap<CreateBookingConsoleDTO, CreateBookingDTO>();
             CreateMap<CreateBookingDTO, CreateBookingUseCaseDTO>();
-            CreateMap<CreateBookingUseCaseDTO, Booking>();
+            CreateMap<CreateBookingUseCaseDTO, Booking>().ForMember(desc=>desc.TotalPrice, opt =>
+            {
+                opt.MapFrom(src => src.Room.PricePerNight * (src.CheckOutDate - src.CheckInDate).Days * (1 - src.SaleProcent*0.01M));
+            });
 
             CreateMap<Booking, BookingInfoForAdminsUseCaseDTO>();
             CreateMap<BookingInfoForAdminsUseCaseDTO, BookingInfoForAdminsDTO>();
@@ -90,11 +93,15 @@ namespace HotelControlSystem
             CreateMap<ChangeBookingStatusConsoleDTO, ChangeBookingStatusDTO>();
             CreateMap<ChangeBookingStatusDTO, ChangeBookingStatusUseCaseDTO>();
 
-            CreateMap<Booking, BookingCreatedUseCaseDTO>();
+            CreateMap<Booking, BookingComplitedUseCaseDTO>();
 
             CreateMap<CreateLoyaltyProgramConsoleDTO, CreateLoyaltyProgramDTO>();
             CreateMap<CreateLoyaltyProgramDTO, CreateLoyaltyProgramUseCaseDTO>();
             CreateMap<CreateLoyaltyProgramUseCaseDTO, LoyaltyProgram>();
+
+            CreateMap<LoyaltyProgram, LoyaltyProgramInfoUseCaseDTO>();
+            CreateMap<LoyaltyProgramInfoUseCaseDTO, LoyaltyProgramInfoDTO>();
+            CreateMap<LoyaltyProgramInfoDTO, LoyaltyProgramInfoConsoleDTO>();
         }
     }
 }

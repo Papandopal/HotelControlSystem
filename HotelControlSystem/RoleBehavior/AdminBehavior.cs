@@ -8,6 +8,7 @@ using DoMain.Enums;
 using HotelControlSystem.ConsoleIO;
 using HotelControlSystem.DTO.HotelDTOs;
 using HotelControlSystem.DTO.UserDTOs;
+using HotelControlSystem.DTOs.BookingDTOs;
 using HotelControlSystem.DTOs.HotelDTOs;
 using HotelControlSystem.DTOs.LoyaltyProgramDTO;
 using HotelControlSystem.DTOs.RoomDTOs;
@@ -23,30 +24,35 @@ namespace HotelControlSystem.RoleBehavior
         private UserController userController;
         private HotelController hotelController;
         private RoomController roomController;
+        private BookingController bookingController;
         private LoyaltyProgramController loyaltyProgramController;
 
         private IMapper mapper;
 
         private Paginator<UserInfoConsoleDTO> userPaginator;
+        private Paginator<BookingInfoForAdminsConsoleDTO> bookingPaginator;
         private Paginator<LoyaltyProgramInfoConsoleDTO> loyaltyProgramPaginator;
 
         public AdminBehavior(UserController userController, HotelController hotelController, RoomController roomController,
-            LoyaltyProgramController loyaltyProgramController, Paginator<UserInfoConsoleDTO> userPaginator,
-            Paginator<LoyaltyProgramInfoConsoleDTO> loyaltyProgramPaginator, IMapper mapper)
+            BookingController bookingController, LoyaltyProgramController loyaltyProgramController,
+            Paginator<UserInfoConsoleDTO> userPaginator, Paginator<LoyaltyProgramInfoConsoleDTO> loyaltyProgramPaginator,
+            Paginator<BookingInfoForAdminsConsoleDTO> bookingPaginator, IMapper mapper)
         {
             this.userController = userController;
             this.hotelController = hotelController;
             this.roomController = roomController;
+            this.bookingController = bookingController;
             this.loyaltyProgramController = loyaltyProgramController;
 
             this.userPaginator = userPaginator;
+            this.bookingPaginator = bookingPaginator;
             this.loyaltyProgramPaginator = loyaltyProgramPaginator;
 
             this.mapper = mapper;
 
             //MethodNames must be called "***Action"
-            Actions.AddRange(GetAllUsersAction, DeleteUserAction, PromoteUserAction, CreateHotelAction,
-                ChangeHotelManagerAction, UpdateHotelAction, CreateRoomAction, UpdateRoomAction, GetAllLoyaltyProgramsAction);
+            Actions.AddRange(GetAllUsersAction, DeleteUserAction, PromoteUserAction, CreateHotelAction, ChangeHotelManagerAction,
+                UpdateHotelAction, CreateRoomAction, UpdateRoomAction, GetAllBookingsAction, GetAllLoyaltyProgramsAction);
         }
 
         //users actions
@@ -188,7 +194,7 @@ namespace HotelControlSystem.RoleBehavior
             string[] amenities = [];
 
             Input.GetItem("Hotel id: ", out hotelId);
-            Input.GetEnumItem("Room type", out roomType);
+            Input.GetEnumItem("Room type: ", out roomType);
             Input.GetItem("Capacity: ", out capacity);
             Input.GetItem("Area: ", out area);
             Input.GetItem("Price per night: ", out pricePerNight);
@@ -268,6 +274,15 @@ namespace HotelControlSystem.RoleBehavior
             UpdateRoomConsoleDTO updateRoomConsoleDTO = GetUpdateRoomConsoleDTO(room_id);
 
             roomController.Update(mapper.Map<UpdateRoomDTO>(updateRoomConsoleDTO));
+        }
+
+        private void GetAllBookingsAction()
+        {
+            List<BookingInfoForAdminsConsoleDTO> bookings = 
+                mapper.Map<List<BookingInfoForAdminsConsoleDTO>>(bookingController.GetAll());
+
+            bookingPaginator.SetItems(bookings);
+            bookingPaginator.StartPagination();
         }
 
         private void GetAllLoyaltyProgramsAction()

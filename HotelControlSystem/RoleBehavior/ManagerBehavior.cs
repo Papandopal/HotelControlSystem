@@ -143,7 +143,7 @@ namespace HotelControlSystem.RoleBehavior
 
             Input.GetEnumItem("Booking status: ", out bookingStatus);
 
-            while(bookingStatus != BookingStatus.Confirmed || bookingStatus != BookingStatus.Complited)
+            while(bookingStatus != BookingStatus.Confirmed && bookingStatus != BookingStatus.Complited)
             {
                 Output.WriteLine("Invalide data");
                 Input.GetEnumItem("Booking status: ", out bookingStatus);

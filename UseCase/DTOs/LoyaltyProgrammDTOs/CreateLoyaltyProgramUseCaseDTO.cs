@@ -11,6 +11,5 @@ namespace UseCase.DTOs.LoyaltyProgrammDTOs
     {
         public int UserId { get; set; }
         public User User { get; set; }
-        public decimal Sale { get; set; }
     }
 }

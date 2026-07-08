@@ -87,10 +87,10 @@ namespace HotelControlSystem.ConsoleIO
 
             Action choise = input switch
             {
-                ConsoleKeyInfo key when key.Key == Symbols.RunAction => RunAction,
-                ConsoleKeyInfo key when key.Key == Symbols.NextAction => NextAction,
-                ConsoleKeyInfo key when key.Key == Symbols.PrevAction => PrevAction,
-                ConsoleKeyInfo key when key.Key == Symbols.Exit => Exit,
+                ConsoleKeyInfo key when key.Key == SpecialKeys.RunAction => RunAction,
+                ConsoleKeyInfo key when key.Key == SpecialKeys.NextAction => NextAction,
+                ConsoleKeyInfo key when key.Key == SpecialKeys.PrevAction => PrevAction,
+                ConsoleKeyInfo key when key.Key == SpecialKeys.Exit => Exit,
                 _ => ChoiseAction
             };
             choise.Invoke();

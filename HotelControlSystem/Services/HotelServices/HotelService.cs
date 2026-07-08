@@ -11,7 +11,9 @@ using UseCase.Services.HotelServices;
 
 namespace HotelControlSystem.Services.HotelServices
 {
-    internal class HotelService(IUnitOfWork unitOfWork, IMapper mapper, IValidator<Hotel> hotelValidator) : IHotelService
+    internal class HotelService(IUnitOfWork unitOfWork, IMapper mapper,
+        IValidator<CreateHotelUseCaseDTO> createValidator, IValidator<UpdateHotelUseCaseDTO> updateValidator,
+        IValidator<HotelManagerAppointmentUseCaseDTO> appointmentValidator) : IHotelService
     {
         List<HotelInfoUseCaseDTO> hotels = new();
         public bool IsExists(int id)
@@ -34,16 +36,12 @@ namespace HotelControlSystem.Services.HotelServices
         }
         public void Create(CreateHotelUseCaseDTO createHotelUseCaseDTO)
         {
+            createValidator.ValidateAndThrow(createHotelUseCaseDTO);
+
             unitOfWork.StartTransaction();
 
             var hotel = mapper.Map<Hotel>(createHotelUseCaseDTO);
             var manager = unitOfWork.Users.GetById(createHotelUseCaseDTO.ManagerId);
-
-            if(manager.Role != UserRole.HotelManager)
-            {
-                unitOfWork.Rollback();
-                throw new UnsuitableItemException("user is not manager");
-            }
 
             hotel.Manager = manager;
             unitOfWork.Hotels.Add(hotel);
@@ -52,27 +50,12 @@ namespace HotelControlSystem.Services.HotelServices
         }
         public void SetHotelManager(HotelManagerAppointmentUseCaseDTO hotelManagerAppointmentUseCaseDTO)
         {
+            appointmentValidator.ValidateAndThrow(hotelManagerAppointmentUseCaseDTO);
+
             unitOfWork.StartTransaction();
 
             var hotel = unitOfWork.Hotels.GetById(hotelManagerAppointmentUseCaseDTO.HotelId);
             var new_manager = unitOfWork.Users.GetById(hotelManagerAppointmentUseCaseDTO.ManagerId);
-
-            if (hotel is null)
-            {
-                unitOfWork.Rollback();
-                throw new ItemNotFoundException("hotel not found");
-            }
-            if (new_manager is null || new_manager.Role != UserRole.HotelManager)
-            {
-                unitOfWork.Rollback();
-                throw new ItemNotFoundException("manager not found");
-            }
-
-            if (new_manager.Role != UserRole.HotelManager)
-            {
-                unitOfWork.Rollback();
-                throw new UnsuitableItemException("user is not manager");
-            }
 
             hotel.Manager = new_manager;
             unitOfWork.Hotels.Update(hotel);
@@ -82,13 +65,13 @@ namespace HotelControlSystem.Services.HotelServices
 
         public void Update(UpdateHotelUseCaseDTO updateHotelUseCaseDTO)
         {
+            updateValidator.ValidateAndThrow(updateHotelUseCaseDTO);
+
             unitOfWork.StartTransaction();
 
             var hotel = unitOfWork.Hotels.GetById(updateHotelUseCaseDTO.Id);
             Hotel updated_hotel = mapper.Map(updateHotelUseCaseDTO, hotel);
 
-            hotelValidator.ValidateAndThrow(updated_hotel);
-            
             unitOfWork.Hotels.Update(updated_hotel);
 
             unitOfWork.Commit();

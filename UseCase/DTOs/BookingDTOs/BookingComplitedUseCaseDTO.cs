@@ -7,7 +7,7 @@ using DoMain.Entities;
 
 namespace UseCase.DTOs.BookingDTOs
 {
-    public class BookingCreatedUseCaseDTO
+    public class BookingComplitedUseCaseDTO
     {
         public int UserId { get; init; }
         public int RoomId { get; init; }

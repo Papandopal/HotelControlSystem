@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using DoMain.Entities;
 using DoMain.Enums;
+using FluentValidation;
 using UseCase.Database;
 using UseCase.DTOs.BookingDTOs;
 using UseCase.DTOs.LoyaltyProgrammDTOs;
@@ -18,16 +19,27 @@ namespace HotelControlSystem.Services.LoyaltyProgramService
     {
         private IUnitOfWork unitOfWork;
         private IMapper mapper;
-        public LoyaltyProgramService(IUnitOfWork unitOfWork, IMapper mapper, IBookingService bookingService)
+        private IValidator<CreateLoyaltyProgramUseCaseDTO> createValidator;
+        public LoyaltyProgramService(IUnitOfWork unitOfWork, IMapper mapper, IBookingService bookingService, 
+            IValidator<CreateLoyaltyProgramUseCaseDTO> createValidator)
         {
-            bookingService.BookingCreated += BookingCreatedHandler;
+            bookingService.BookingComplited += BookingComplitedHandler;
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
+            this.createValidator = createValidator;
         }
 
-        private void BookingCreatedHandler(BookingCreatedUseCaseDTO bookingCreatedUseCaseDTO)
+        private void BookingComplitedHandler(BookingComplitedUseCaseDTO bookingCreatedUseCaseDTO)
         {
             unitOfWork.StartTransaction();
+
+            var loyaltyProgramExists = unitOfWork.LoyaltyPrograms.IsExistsByUserId(bookingCreatedUseCaseDTO.UserId);
+
+            if (!loyaltyProgramExists)
+            {
+                unitOfWork.Commit();
+                return;
+            }
 
             var loyaltyProgram = unitOfWork.LoyaltyPrograms.GetByUserId(bookingCreatedUseCaseDTO.UserId);
 
@@ -40,23 +52,17 @@ namespace HotelControlSystem.Services.LoyaltyProgramService
 
         public void Create(CreateLoyaltyProgramUseCaseDTO createLoyaltyProgramUseCaseDTO)
         {
+            createValidator.ValidateAndThrow(createLoyaltyProgramUseCaseDTO);
+
             unitOfWork.StartTransaction();
-
-            var isExists = unitOfWork.LoyaltyPrograms.IsExistsByUserId(createLoyaltyProgramUseCaseDTO.UserId);
-
-            //MOVE IN VALIDATOR
-
-            if (isExists)
-            {
-                unitOfWork.Rollback();
-                throw new Exception("loyalty program exists");
-            }
 
             var related_user = unitOfWork.Users.GetById(createLoyaltyProgramUseCaseDTO.UserId);
 
             createLoyaltyProgramUseCaseDTO.User = related_user;
 
             var new_loyalty_program = mapper.Map<LoyaltyProgram>(createLoyaltyProgramUseCaseDTO);
+
+            unitOfWork.LoyaltyPrograms.Add(new_loyalty_program);
 
             unitOfWork.Commit();
         }
@@ -76,7 +82,7 @@ namespace HotelControlSystem.Services.LoyaltyProgramService
         {
             unitOfWork.StartTransaction();
 
-            LoyaltyProgramTier tier = unitOfWork.LoyaltyPrograms.GetById(userId).Tier;
+            LoyaltyProgramTier tier = unitOfWork.LoyaltyPrograms.GetByUserId(userId).Tier;
 
             decimal procent = (int)tier * 5;
 

@@ -6,54 +6,55 @@ using System.Threading.Tasks;
 using AutoMapper;
 using DoMain.Entities;
 using DoMain.Enums;
+using FluentValidation;
 using UseCase.Database;
 using UseCase.DTOs.BookingDTOs;
 using UseCase.Services.BookingService;
 
 namespace HotelControlSystem.Services.BookingServices
 {
-    public class BookingService(IUnitOfWork unitOfWork, IMapper mapper) : IBookingService
+    public class BookingService(IUnitOfWork unitOfWork, IMapper mapper,
+        IValidator<ChangeBookingStatusUseCaseDTO> changeStatusValidator, 
+        IValidator<CreateBookingUseCaseDTO> createValidator) : IBookingService
     {
-        public event IBookingService.bookingCreated BookingCreated;
+        public event IBookingService.bookingComplited BookingComplited;
 
         public void Cancel(int id)
         {
             unitOfWork.StartTransaction();
 
-            unitOfWork.Bookings.GetById(id).Status = BookingStatus.Cancelled; //MUST REDO
+            var booking = unitOfWork.Bookings.GetById(id);
+
+            booking.Cancel();
+
+            unitOfWork.Bookings.Update(booking);
 
             unitOfWork.Commit();
         }
 
         public void ChangeStatus(ChangeBookingStatusUseCaseDTO changeBookingStatusUseCaseDTO)
         {
+            changeStatusValidator.ValidateAndThrow(changeBookingStatusUseCaseDTO);
+
             unitOfWork.StartTransaction();
 
-            unitOfWork.Bookings.GetById(changeBookingStatusUseCaseDTO.Id).Status = changeBookingStatusUseCaseDTO.NewStatus; //MUST REDO
+            var booking = unitOfWork.Bookings.GetById(changeBookingStatusUseCaseDTO.Id); 
+
+            booking.ChangeStatus(changeBookingStatusUseCaseDTO.NewStatus);
+
+            if(changeBookingStatusUseCaseDTO.NewStatus == BookingStatus.Complited) 
+                BookingComplited.Invoke(mapper.Map<BookingComplitedUseCaseDTO>(booking));
+
+            unitOfWork.Bookings.Update(booking);
 
             unitOfWork.Commit();
         }
 
         public void Create(CreateBookingUseCaseDTO createBookingUseCaseDTO)
         {
+            createValidator.ValidateAndThrow(createBookingUseCaseDTO);
+
             unitOfWork.StartTransaction();
-
-            //MOVE ON VALIDATOR
-
-            var bookings = unitOfWork.Bookings.GetBookingsByRoomId(createBookingUseCaseDTO.RoomId);
-
-            foreach (var booking in bookings)
-            {
-                if (booking.Status == BookingStatus.Cancelled || booking.Status == BookingStatus.Complited) continue;
-
-                if((booking.CheckInDate < createBookingUseCaseDTO.CheckInDate &&
-                    createBookingUseCaseDTO.CheckInDate < booking.CheckOutDate) ||
-                    (booking.CheckInDate < createBookingUseCaseDTO.CheckOutDate &&
-                    createBookingUseCaseDTO.CheckOutDate < booking.CheckOutDate))
-                {
-                    throw new Exception("cannot booking because room not empty");
-                }
-            }
 
             var related_room = unitOfWork.Rooms.GetById(createBookingUseCaseDTO.RoomId);
             var related_user = unitOfWork.Users.GetById(createBookingUseCaseDTO.UserId);
@@ -62,8 +63,6 @@ namespace HotelControlSystem.Services.BookingServices
             createBookingUseCaseDTO.Room = related_room;
 
             var new_booking = mapper.Map<Booking>(createBookingUseCaseDTO);
-
-            BookingCreated.Invoke(mapper.Map<BookingCreatedUseCaseDTO>(new_booking));
 
             unitOfWork.Bookings.Add(new_booking);
 
@@ -123,7 +122,7 @@ namespace HotelControlSystem.Services.BookingServices
         {
             unitOfWork.StartTransaction();
 
-            var bookings = unitOfWork.Bookings.GetBookingsByUserId(userId);
+            var bookings = unitOfWork.Bookings.GetBookingsByUserId(userId).ToList();
 
             unitOfWork.Commit();
 

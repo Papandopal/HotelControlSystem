@@ -62,9 +62,9 @@ namespace HotelControlSystem.ConsoleIO
                 ConsoleKeyInfo input = Console.ReadKey(true);
                 Action choise = input switch
                 {
-                    ConsoleKeyInfo key when key.Key == Symbols.NextPage => NextPage,
-                    ConsoleKeyInfo key when key.Key == Symbols.PrevPage => PrevPage,
-                    ConsoleKeyInfo key when key.Key == Symbols.Exit => Exit,
+                    ConsoleKeyInfo key when key.Key == SpecialKeys.NextPage => NextPage,
+                    ConsoleKeyInfo key when key.Key == SpecialKeys.PrevPage => PrevPage,
+                    ConsoleKeyInfo key when key.Key == SpecialKeys.Exit => Exit,
                     _ => StartPagination
                 };
                 choise.Invoke();

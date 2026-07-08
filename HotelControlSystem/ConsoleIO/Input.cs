@@ -79,9 +79,9 @@ namespace HotelControlSystem.ConsoleIO
             {
                 key = Console.ReadKey();
 
-                if (key.Key == Symbols.StopInput && key.Modifiers.HasFlag(ConsoleModifiers.Control))
+                if (key.Key == SpecialKeys.StopInput && key.Modifiers.HasFlag(ConsoleModifiers.Control))
                     throw new UserCancelledInputException("user cancelled input");
-                if (key.Key == Symbols.BackSpace)
+                if (key.Key == SpecialKeys.BackSpace)
                 {
                     if (Console.CursorLeft >= text.Length)
                     {

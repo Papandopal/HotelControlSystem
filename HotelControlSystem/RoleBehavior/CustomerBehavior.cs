@@ -85,11 +85,11 @@ namespace HotelControlSystem.RoleBehavior
         {
             char answer;
 
-            Input.GetItem($"Do you want to join loyalty program?({(char)Symbols.Yes} - yes): ", out answer);
+            Input.GetItem($"Do you want to join loyalty program?({Symbols.Yes} - yes): ", out answer);
 
-            if(answer == (char)Symbols.Yes)
+            if(answer == Symbols.Yes)
             {
-                var createLoyaltyProgramConsoleDTO = new CreateLoyaltyProgramConsoleDTO { Id = currentUser.Id };
+                var createLoyaltyProgramConsoleDTO = new CreateLoyaltyProgramConsoleDTO { UserId = currentUser.Id };
                 loyaltyProgramController.Create(mapper.Map<CreateLoyaltyProgramDTO>(createLoyaltyProgramConsoleDTO));
             }
         }
@@ -103,7 +103,7 @@ namespace HotelControlSystem.RoleBehavior
 
             if (answer == (char)Symbols.Yes)
             {
-                createBookingConsoleDTO.Sale = saleProcent;
+                createBookingConsoleDTO.SaleProcent = saleProcent;
             }
         }
 

@@ -26,4 +26,8 @@
     <ProjectReference Include="..\UseCase\UseCase.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Validators\UserValidators\" />
+  </ItemGroup>
+
 </Project>
