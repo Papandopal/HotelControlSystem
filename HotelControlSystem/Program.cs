@@ -1,16 +1,28 @@
 ﻿using Adapters.Controllers.Console;
+using FluentValidation;
 using HotelControlSystem.ConsoleIO;
 using HotelControlSystem.DataBase;
 using HotelControlSystem.DataBase.Repository;
 using HotelControlSystem.DataBase.UnitOfWork;
-using HotelControlSystem.DTO;
+using HotelControlSystem.DTOs.AuthorisationDTOs;
 using HotelControlSystem.RoleBehavior;
 using HotelControlSystem.Services.AuthorisationServices;
+using HotelControlSystem.Services.BookingServices;
+using HotelControlSystem.Services.HotelServices;
+using HotelControlSystem.Services.LoyaltyProgramService;
+using HotelControlSystem.Services.RoomServices;
 using HotelControlSystem.Services.UserServices;
+using HotelControlSystem.Validators.HotelValidators;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using UseCase.Database;
+using UseCase.Database.Repositories;
 using UseCase.Services.AuthorisationServices;
+using UseCase.Services.BookingService;
+using UseCase.Services.HotelServices;
+using UseCase.Services.LoyaltyProgramServices;
+using UseCase.Services.RoomServices;
 using UseCase.Services.UserServices;
 
 namespace HotelControlSystem
@@ -19,7 +31,18 @@ namespace HotelControlSystem
     {
         static void Main(string[] args)
         {
-            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomainUnhandledException;
+
+            Console.TreatControlCAsInput = true;
+
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+#if DEBUG
+                .AddJsonFile("DbConnection.json", optional: false, reloadOnChange: true)
+#else
+                .AddEnvironmentVariables()
+#endif
+                .Build();
 
             var services = new ServiceCollection();
 
@@ -41,7 +64,7 @@ namespace HotelControlSystem
 
             services.AddDbContext<AppDbContext>(options =>
             {
-                options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=ConsoleDb1;Trusted_Connection=True;");
+                options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
             });
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IUserRepository, UserRepository>();
@@ -52,6 +75,12 @@ namespace HotelControlSystem
 
             services.AddScoped<IAuthorisationService, AuthorisationService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IHotelService, HotelService>();
+            services.AddScoped<IRoomService, RoomService>();
+            services.AddScoped<IBookingService, BookingService>();
+            services.AddScoped<ILoyaltyProgramService, LoyaltyProgramService>();
+
+            services.AddValidatorsFromAssembly(typeof(Program).Assembly);
 
             services.AddAutoMapper(configuration =>
             {
@@ -63,12 +92,16 @@ namespace HotelControlSystem
 
             var provider = services.BuildServiceProvider();
 
+            var dbContext = provider.GetService<AppDbContext>();
+            if (dbContext is null) throw new Exception("DbContext not found in service provider");
+            else dbContext.Database.Migrate();
+
             var dialog = provider.GetService<Dialog>();
-            if (dialog is null) Console.WriteLine("");
+            if (dialog is null) Console.WriteLine("Dialog not found in service provider");
             else dialog.Start();
         }
 
-        private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        private static void CurrentDomainUnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
 
 #if DEBUG

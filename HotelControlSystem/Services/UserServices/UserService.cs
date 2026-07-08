@@ -6,21 +6,22 @@ using System.Threading.Tasks;
 using AutoMapper;
 using DoMain.Enums;
 using HotelControlSystem.ConsoleIO;
-using HotelControlSystem.DTO;
+using HotelControlSystem.DTOs.AuthorisationDTOs;
 using HotelControlSystem.Exceptions;
 using UseCase.Database;
+using UseCase.Database.Repositories;
+using UseCase.DTOs.UserDTOs;
 using UseCase.Services.UserServices;
-using UseCase.Services.UserServices.DTO;
 
 namespace HotelControlSystem.Services.UserServices
 {
-    internal class UserService(UserMainInfoDTO userMainInfo, IUserRepository userRepository, IUnitOfWork unitOfWork, IMapper mapper) : IUserService
+    internal class UserService(UserMainInfoDTO userMainInfo, IUnitOfWork unitOfWork, IMapper mapper) : IUserService
     {
-        public void DeleteUserById(int id)
+        public void Delete(int id)
         {
             unitOfWork.StartTransaction();
 
-            userRepository.Delete(id);
+            unitOfWork.Users.Delete(id);
             if (userMainInfo.Id == id)
             {
                 userMainInfo.Reset();
@@ -31,10 +32,10 @@ namespace HotelControlSystem.Services.UserServices
 
         public List<UserInfoUseCaseDTO> GetAllUsers()
         {
-            return mapper.Map<List<UserInfoUseCaseDTO>>(userRepository.GetAll());
+            return mapper.Map<List<UserInfoUseCaseDTO>>(unitOfWork.Users.GetAll());
         }
 
-        public void PromoteUserById(int id, UserRole new_role)
+        public void Promote(int id, UserRole new_role)
         {
             unitOfWork.StartTransaction();
 
@@ -44,11 +45,18 @@ namespace HotelControlSystem.Services.UserServices
                 throw new AccessDeniedException("user cannot promote yourself");
             }
 
-            var user = userRepository.GetById(id);
+            var user = unitOfWork.Users.GetById(id);
             user.Role = new_role;
-            userRepository.Update(user);
-
+            unitOfWork.Users.Update(user);
             unitOfWork.Commit();
+        }
+
+        public bool IsExists(int id)
+        {
+            unitOfWork.StartTransaction();
+            var user = unitOfWork.Users.GetById(id);
+            unitOfWork.Commit();
+            return user is not null && !user.isDeleted;
         }
     }
 }

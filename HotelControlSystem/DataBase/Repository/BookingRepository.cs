@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using DoMain.Entities;
 using HotelControlSystem.Exceptions;
 using Microsoft.EntityFrameworkCore;
-using UseCase.Database;
+using UseCase.Database.Repositories;
 
 namespace HotelControlSystem.DataBase.Repository
 {
@@ -30,6 +30,21 @@ namespace HotelControlSystem.DataBase.Repository
             return bookings.ToList();
         }
 
+        public IEnumerable<Booking> GetBookingsByManagerId(int managerId)
+        {
+            return bookings.Where(x => x.Room.Hotel.ManagerId == managerId);
+        }
+
+        public IEnumerable<Booking> GetBookingsByRoomId(int roomId)
+        {
+            return bookings.Where(x=>x.RoomId == roomId);
+        }
+
+        public IEnumerable<Booking> GetBookingsByUserId(int userId)
+        {
+            return bookings.Where(x=>x.UserId == userId);
+        }
+
         public Booking GetById(int id)
         {
             var booking = bookings.FirstOrDefault(x => x.Id == id);
@@ -37,11 +52,17 @@ namespace HotelControlSystem.DataBase.Repository
             return booking;
         }
 
+        public bool IsExists(int id)
+        {
+            var booking = bookings.FirstOrDefault(x => x.Id == id);
+            return booking is not null && !booking.IsDeleted;
+        }
+
         public void Update(Booking entity)
         {
             var booking = bookings.FirstOrDefault(x => x.Id == entity.Id);
             if (booking is null) throw new ItemNotFoundException("booking not found");
-            booking = entity;
+            bookings.Update(booking);
         }
     }
 }

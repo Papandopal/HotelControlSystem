@@ -9,21 +9,24 @@ using HotelControlSystem.DataBase.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using UseCase.Database;
+using UseCase.Database.Repositories;
 
 namespace HotelControlSystem.DataBase.UnitOfWork
 {
-    internal class UnitOfWork(AppDbContext context, IUserRepository userRepository) : IUnitOfWork
+    internal class UnitOfWork(AppDbContext dbContext, IUserRepository userRepository, IRoomRepository roomRepository,
+        IHotelRepository hotelRepository, ILoyaltyProgramRepository loyaltyProgramRepository, 
+        IBookingRepository bookingRepository) : IUnitOfWork
     {
         IDbContextTransaction? transaction;
-        AppDbContext dbContext = context;
         public IUserRepository Users => userRepository;
-        public IRepository<Room> Rooms => new RoomRepository(dbContext);
-        public IRepository<LoyaltyProgram> LoyaltyPrograms => new LoyaltyProgramRepository(dbContext);
-        public IRepository<Hotel> Hotels => new HotelRepository(dbContext);
-        public IRepository<Booking> Bookings => new BookingRepository(dbContext);
+        public IRoomRepository Rooms => roomRepository;
+        public ILoyaltyProgramRepository LoyaltyPrograms =>  loyaltyProgramRepository;
+        public IHotelRepository Hotels => hotelRepository;
+        public IBookingRepository Bookings => bookingRepository;
 
         public void StartTransaction()
         {
+            if(transaction is not null) Rollback();
             transaction = dbContext.Database.BeginTransaction();
         }
         public void Commit()

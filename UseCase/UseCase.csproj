@@ -21,8 +21,4 @@
     <ProjectReference Include="..\DoMain\DoMain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Exceptions\" />
-  </ItemGroup>
-
 </Project>

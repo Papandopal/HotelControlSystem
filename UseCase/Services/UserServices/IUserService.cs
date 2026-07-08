@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DoMain.Enums;
-using UseCase.Database;
-using UseCase.Services.AuthorisationServices.DTO;
-using UseCase.Services.UserServices.DTO;
+﻿using DoMain.Enums;
+using UseCase.DTOs.UserDTOs;
 
 namespace UseCase.Services.UserServices
 {
     public interface IUserService
     {
+        public bool IsExists(int id);
         public List<UserInfoUseCaseDTO> GetAllUsers();
-        public void DeleteUserById(int id); 
-        public void PromoteUserById(int id, UserRole new_role);
+        public void Delete(int id); 
+        public void Promote(int id, UserRole new_role);
     }
 }

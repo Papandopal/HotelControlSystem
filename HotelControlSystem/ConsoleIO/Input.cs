@@ -12,32 +12,101 @@ namespace HotelControlSystem.ConsoleIO
     {
         public static void GetItem<T>(string text, out T result) where T : IParsable<T>
         {
-            Output.Write(text);
+            string input = BuildInput(text);
 
-            string? input = Console.ReadLine();
-
-            while (input is null || input == string.Empty || !T.TryParse(input, null, out result))
+            while (input == string.Empty || !T.TryParse(input, null, out result))
             {
                 Output.WriteLine("Invalide data");
-                input = Console.ReadLine();
+                input = BuildInput(text);
             }
         }
 
-        private static string BuildInput()
+        public static void GetEnumItem<T>(string text, out T result) where T : Enum
+        {
+            string input = BuildInput(text);
+
+            while (input == string.Empty || !int.TryParse(input, out _) || !Enum.IsDefined(typeof(T), int.Parse(input))) 
+            {
+                Output.WriteLine("Invalide data");
+                input = BuildInput(text);
+            }
+            result = (T)Enum.Parse(typeof(T), input);
+        }
+
+        public static bool TryGetItem<T>(string text, out T? result) where T : IParsable<T>
+        {
+            string input = BuildInput("(not requared) " + text);
+            if (input == string.Empty || !T.TryParse(input, null, out result))
+            {
+                result = default;
+                return false;
+            }
+            return true;
+        }
+
+        public static bool TryGetItem<T>(string text, out T? result) where T : struct, IParsable<T>
+        {
+            string input = BuildInput("(not requared) " + text);
+            if (input == string.Empty || !T.TryParse(input, null, out _))
+            {
+                result = default;
+                return false;
+            }
+            result = T.Parse(input, null);
+            return true;
+        }
+
+        public static bool TryGetEnumItem<T>(string text, out T? result) where T : struct, Enum
+        {
+            string input = BuildInput("(not requared) " + text);
+
+            if (input == string.Empty || !int.TryParse(input, out _) || !Enum.IsDefined(typeof(T), int.Parse(input)))
+            {
+                result= default;
+                return false;
+            }
+            result = (T)Enum.Parse(typeof(T), input);
+            return true;
+        }
+
+        private static string BuildInput(string text)
         {
             StringBuilder builder = new();
             ConsoleKeyInfo key;
+            Output.Write(text);
 
             do
             {
-                key = Console.ReadKey();
+                key = Console.ReadKey(true);
 
-                if (key.Key == Symbols.StopInput && key.Modifiers.HasFlag(ConsoleModifiers.Control))
+                if (key.Key == SpecialKeys.StopInput)
+                {
+                    while (Console.KeyAvailable)
+                    {
+                        Console.ReadKey(true);
+                    }
+
                     throw new UserCancelledInputException("user cancelled input");
+                }
+                    
+                if (key.Key == SpecialKeys.BackSpace)
+                {
+                    if (builder.Length > 0)
+                    {
+                        Console.Write(' ');
+                        Console.CursorLeft--;
+                        builder.Remove(builder.Length - 1, 1);
+                    }
+                    else Console.CursorLeft++;
+                    continue;
+                }
 
-                builder.Append(key);
+                builder.Append(key.KeyChar);
 
             } while (key.Key != ConsoleKey.Enter);
+
+            builder.Remove(builder.Length - 1, 1);
+            Output.Write(text + builder.ToString() + '\n');
 
             return builder.ToString();
         }

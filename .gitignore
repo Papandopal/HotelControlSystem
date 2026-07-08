@@ -23,8 +23,11 @@ bld/
 [Ll]og/
 [Ll]ogs/
 
+DbConnection.json
+
 .vs/
 cso.dat
+*.bat
 
 # .NET Core
 project.lock.json

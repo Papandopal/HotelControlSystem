@@ -1,6 +1,6 @@
 ﻿using System.Text;
 using DoMain.Enums;
-using HotelControlSystem.DTO;
+using HotelControlSystem.DTOs.AuthorisationDTOs;
 using HotelControlSystem.Exceptions;
 using HotelControlSystem.RoleBehavior;
 
@@ -23,16 +23,20 @@ namespace HotelControlSystem.ConsoleIO
                     int beforePrint = Console.CursorTop;
 
                     Output.WriteLine(GetInfo());
-                    
+
                     SetRoleActions(userMainInfo.Role);
 
                     Output.Write(GetMenu());
 
                     ChoiseAction();
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
+#if DEBUG
                     Console.WriteLine(e);
+#else
+                    Console.WriteLine(e.Message);
+#endif
                 }
             }
         }
@@ -69,11 +73,15 @@ namespace HotelControlSystem.ConsoleIO
 
             StringBuilder sb = new StringBuilder();
             int offsetForSelectSymbol = Symbols.SelectedItem.Length;
+            string actionName;
 
             for (int i = 0; i < actions.Count; i++)
             {
-                if (i == curAction) sb.Append(Symbols.SelectedItem + actions[i].Method.Name+'\n');
-                else sb.Append(new string(' ', offsetForSelectSymbol) + actions[i].Method.Name+'\n');
+                //MethodNames must be called "***Action"
+                actionName = actions[i].Method.Name.Remove(actions[i].Method.Name.Length - "Action".Length);
+
+                if (i == curAction) sb.Append(Symbols.SelectedItem + actionName + '\n');
+                else sb.Append(new string(' ', offsetForSelectSymbol) + actionName + '\n');
             }
             return sb.ToString();
         }
@@ -83,10 +91,10 @@ namespace HotelControlSystem.ConsoleIO
 
             Action choise = input switch
             {
-                ConsoleKeyInfo key when key.Key == Symbols.RunAction => RunAction,
-                ConsoleKeyInfo key when key.Key == Symbols.NextAction => NextAction,
-                ConsoleKeyInfo key when key.Key == Symbols.PrevAction => PrevAction,
-                ConsoleKeyInfo key when key.Key == Symbols.Exit => Exit,
+                ConsoleKeyInfo key when key.Key == SpecialKeys.RunAction => RunAction,
+                ConsoleKeyInfo key when key.Key == SpecialKeys.NextAction => NextAction,
+                ConsoleKeyInfo key when key.Key == SpecialKeys.PrevAction => PrevAction,
+                ConsoleKeyInfo key when key.Key == SpecialKeys.Exit => Exit,
                 _ => ChoiseAction
             };
             choise.Invoke();
@@ -103,14 +111,22 @@ namespace HotelControlSystem.ConsoleIO
         private void NextAction()
         {
             Output.ConsoleClear();
-            if (curAction + 1 >= generalActions.Count + (roleActions is not null ? roleActions.Count : 0)) return;
+            if (curAction + 1 >= (generalActions.Count + (roleActions?.Count ?? 0)))
+            {
+                curAction = 0;
+                return;
+            }
             curAction++;
-            
+
         }
         private void PrevAction()
         {
             Output.ConsoleClear();
-            if (curAction <= 0) return;
+            if (curAction <= 0)
+            {
+                curAction = (uint)(generalActions.Count + (roleActions?.Count ?? 0)) - 1;
+                return;
+            }
             curAction--;
         }
         private void Exit()

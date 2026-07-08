@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Adapters.DTO;
+using Adapters.DTOs.AuthorisationDTOs;
 using AutoMapper;
+using UseCase.DTOs.AuthorisationDTOs;
 using UseCase.Services.AuthorisationServices;
-using UseCase.Services.AuthorisationServices.DTO;
 
 namespace Adapters.Controllers.Console
 {

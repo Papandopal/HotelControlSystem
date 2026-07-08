@@ -1,0 +1,28 @@
+
+services:
+  hotel_db:
+    image: postgres:latest
+    container_name: hotel_system_db
+    restart: always
+    environment:
+      POSTGRES_USER: hotel_system
+      POSTGRES_PASSWORD: hotel_system
+      POSTGRES_DB: HotelSystemDb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+
+  hotel_system:
+    build: . 
+    container_name: hotel_system_app
+    restart: on-failure
+    tty: true
+    stdin_open: true
+    depends_on:
+      - hotel_db
+    environment:
+      ConnectionStrings__DefaultConnection: "Host=hotel_db;Port=5432;Database=HotelSystemDb;Username=hotel_system;Password=hotel_system;"
+
+volumes:
+  postgres_data:

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using DoMain.Entities;
 using HotelControlSystem.Exceptions;
 using Microsoft.EntityFrameworkCore;
-using UseCase.Database;
+using UseCase.Database.Repositories;
 
 namespace HotelControlSystem.DataBase.Repository
 {
@@ -37,11 +37,30 @@ namespace HotelControlSystem.DataBase.Repository
             return loyaltyProgram;
         }
 
+        public LoyaltyProgram GetByUserId(int userId)
+        {
+            var loyaltyProgram = loyaltyPrograms.FirstOrDefault(x => x.UserId == userId);
+            if (loyaltyProgram is null) throw new ItemNotFoundException("loyaltyProgram not found");
+            return loyaltyProgram;
+        }
+
+        public bool IsExists(int id)
+        {
+            var program = loyaltyPrograms.FirstOrDefault(x => x.Id == id);
+            return program is not null && !program.IsDeleted;
+        }
+
+        public bool IsExistsByUserId(int userId)
+        {
+            var program = loyaltyPrograms.FirstOrDefault(x => x.UserId == userId);
+            return program is not null && !program.IsDeleted;
+        }
+
         public void Update(LoyaltyProgram entity)
         {
             var loyaltyProgram = loyaltyPrograms.FirstOrDefault(x => x.Id == entity.Id);
             if (loyaltyProgram is null) throw new ItemNotFoundException("loyaltyProgram not found");
-            loyaltyProgram = entity;
+            loyaltyPrograms.Update(loyaltyProgram);
         }
     }
 }

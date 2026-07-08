@@ -7,7 +7,7 @@ using System.Xml.Linq;
 using DoMain.Entities;
 using HotelControlSystem.Exceptions;
 using Microsoft.EntityFrameworkCore;
-using UseCase.Database;
+using UseCase.Database.Repositories;
 
 namespace HotelControlSystem.DataBase.Repository
 {
@@ -37,19 +37,25 @@ namespace HotelControlSystem.DataBase.Repository
         {
             var user = users.FirstOrDefault(x => x.Id == entity.Id);
             if (user is null) throw new ItemNotFoundException("user not found");
-            user = entity;
+            users.Update(user);
         }
 
-        public IEnumerable<User> GetByUserName(string userName)
+        public IEnumerable<User> GetUsersByUserName(string userName)
         {
-            var user = users.Where(x => x.UserName == userName).AsEnumerable();
-            if (user.Count()==0) throw new ItemNotFoundException("user not found");
-            return user;
+            var cathedUsers = users.Where(x => x.UserName == userName).AsEnumerable();
+            if (cathedUsers.Count()==0) throw new ItemNotFoundException("user not found");
+            return cathedUsers;
         }
 
         public List<User> GetAll()
         {
             return users.ToList();
+        }
+
+        public bool IsExists(int id)
+        {
+            var user = users.FirstOrDefault(x => x.Id == id);
+            return user is not null && !user.isDeleted;
         }
     }
 }
