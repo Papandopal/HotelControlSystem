@@ -27,7 +27,7 @@ DbConnection.json
 
 .vs/
 cso.dat
-.bat
+*.bat
 
 # .NET Core
 project.lock.json
