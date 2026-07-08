@@ -107,14 +107,22 @@ namespace HotelControlSystem.ConsoleIO
         private void NextAction()
         {
             Output.ConsoleClear();
-            if (curAction + 1 >= generalActions.Count + (roleActions is not null ? roleActions.Count : 0)) return;
+            if (curAction + 1 >= (generalActions.Count + (roleActions?.Count ?? 0)))
+            {
+                curAction = 0;
+                return;
+            }
             curAction++;
 
         }
         private void PrevAction()
         {
             Output.ConsoleClear();
-            if (curAction <= 0) return;
+            if (curAction <= 0)
+            {
+                curAction = (uint)(generalActions.Count + (roleActions?.Count ?? 0)) - 1;
+                return;
+            }
             curAction--;
         }
         private void Exit()

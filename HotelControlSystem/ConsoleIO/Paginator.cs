@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HotelControlSystem.Exceptions;
 
 namespace HotelControlSystem.ConsoleIO
 {
@@ -21,7 +22,7 @@ namespace HotelControlSystem.ConsoleIO
             index = 0;
             pages.Clear();
 
-            if (size == 0) throw new ArgumentOutOfRangeException("size of page can`t be 0");
+            if (size <= 0) throw new ArgumentOutOfRangeException($"size of page can`t be {size}");
 
             List<T> page = new();
             int curCount = 0;
@@ -75,7 +76,7 @@ namespace HotelControlSystem.ConsoleIO
         private void CurPage()
         {
             Output.ConsoleClear();
-            if (!TryGetPage(0)) exit = true;
+            if (!TryGetPage(0)) throw new ItemNotFoundException("Collection is empty");
             else Output.WriteList(pages[index]);
         }
 
