@@ -77,13 +77,21 @@ namespace HotelControlSystem.ConsoleIO
 
             do
             {
-                key = Console.ReadKey();
+                key = Console.ReadKey(true);
 
-                if (key.Key == SpecialKeys.StopInput && key.Modifiers.HasFlag(ConsoleModifiers.Control))
+                if (key.Key == SpecialKeys.StopInput)
+                {
+                    while (Console.KeyAvailable)
+                    {
+                        Console.ReadKey(true);
+                    }
+
                     throw new UserCancelledInputException("user cancelled input");
+                }
+                    
                 if (key.Key == SpecialKeys.BackSpace)
                 {
-                    if (Console.CursorLeft >= text.Length)
+                    if (builder.Length > 0)
                     {
                         Console.Write(' ');
                         Console.CursorLeft--;

@@ -14,6 +14,7 @@ using HotelControlSystem.Services.RoomServices;
 using HotelControlSystem.Services.UserServices;
 using HotelControlSystem.Validators.HotelValidators;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using UseCase.Database;
 using UseCase.Database.Repositories;
@@ -31,6 +32,17 @@ namespace HotelControlSystem
         static void Main(string[] args)
         {
             AppDomain.CurrentDomain.UnhandledException += CurrentDomainUnhandledException;
+
+            Console.TreatControlCAsInput = true;
+
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+#if DEBUG
+                .AddJsonFile("DbConnection.json", optional: false, reloadOnChange: true)
+#else
+                .AddEnvironmentVariables()
+#endif
+                .Build();
 
             var services = new ServiceCollection();
 
@@ -52,7 +64,7 @@ namespace HotelControlSystem
 
             services.AddDbContext<AppDbContext>(options =>
             {
-                options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=ConsoleDb1;Trusted_Connection=True;");
+                options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
             });
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IUserRepository, UserRepository>();
@@ -80,8 +92,12 @@ namespace HotelControlSystem
 
             var provider = services.BuildServiceProvider();
 
+            var dbContext = provider.GetService<AppDbContext>();
+            if (dbContext is null) throw new Exception("DbContext not found in service provider");
+            else dbContext.Database.Migrate();
+
             var dialog = provider.GetService<Dialog>();
-            if (dialog is null) Console.WriteLine("");
+            if (dialog is null) Console.WriteLine("Dialog not found in service provider");
             else dialog.Start();
         }
 

@@ -32,7 +32,11 @@ namespace HotelControlSystem.ConsoleIO
                 }
                 catch (Exception e)
                 {
+#if DEBUG
                     Console.WriteLine(e);
+#else
+                    Console.WriteLine(e.Message);
+#endif
                 }
             }
         }

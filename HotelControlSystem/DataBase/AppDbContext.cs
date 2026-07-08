@@ -11,11 +11,7 @@ namespace HotelControlSystem.DataBase
 {
     public class AppDbContext : DbContext
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) 
-        {
-            //Database.EnsureDeleted();
-            //Database.EnsureCreated();
-        }
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
