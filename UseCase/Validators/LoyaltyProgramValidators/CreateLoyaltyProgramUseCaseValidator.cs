@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FluentValidation;
-using HotelControlSystem.DataBase.UnitOfWork;
+﻿using FluentValidation;
 using UseCase.Database;
 using UseCase.DTOs.LoyaltyProgrammDTOs;
 
-namespace HotelControlSystem.Validators.LoyaltyProgramValidators
+namespace UseCase.Validators.LoyaltyProgramValidators
 {
     public class CreateLoyaltyProgramUseCaseValidator : AbstractValidator<CreateLoyaltyProgramUseCaseDTO>
     {

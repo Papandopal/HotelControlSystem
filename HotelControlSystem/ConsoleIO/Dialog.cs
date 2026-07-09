@@ -3,13 +3,14 @@ using DoMain.Enums;
 using HotelControlSystem.DTOs.AuthorisationDTOs;
 using HotelControlSystem.Exceptions;
 using HotelControlSystem.RoleBehavior;
+using UseCase.DTOs;
 
 namespace HotelControlSystem.ConsoleIO
 {
-    internal class Dialog(UserMainInfoDTO userMainInfo, GeneralBehavior generalBehavior, CustomerBehavior customerBehavior,
+    internal class Dialog(IUserSession userSession, GeneralBehavior generalBehavior, CustomerBehavior customerBehavior,
         AdminBehavior adminBehavior, ManagerBehavior managerBehavior)
     {
-        private UserMainInfoDTO userMainInfo = userMainInfo;
+        private IUserSession userSession = userSession;
         private List<Action> generalActions = generalBehavior.Actions;
         private List<Action>? roleActions;
         private uint curAction = 0;
@@ -24,7 +25,7 @@ namespace HotelControlSystem.ConsoleIO
 
                     Output.WriteLine(GetInfo());
 
-                    SetRoleActions(userMainInfo.Role);
+                    SetRoleActions(userSession.currentUser.Role);
 
                     Output.Write(GetMenu());
 
@@ -42,8 +43,8 @@ namespace HotelControlSystem.ConsoleIO
         }
         public string GetInfo()
         {
-            if (userMainInfo.Role != UserRole.Unauthorised)
-                return new string(' ', Symbols.SelectedItem.Length) + userMainInfo.ToString();
+            if (userSession.currentUser.Role != UserRole.Unauthorised)
+                return new string(' ', Symbols.SelectedItem.Length) + userSession.ToString();
             else return "Unauthorised";
         }
         private void SetRoleActions(UserRole role)

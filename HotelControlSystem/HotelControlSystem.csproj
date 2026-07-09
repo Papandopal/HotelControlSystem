@@ -31,10 +31,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Validators\UserValidators\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="DbConnection.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

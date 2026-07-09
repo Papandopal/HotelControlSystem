@@ -1,30 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using DoMain.Enums;
-using HotelControlSystem.ConsoleIO;
-using HotelControlSystem.DTOs.AuthorisationDTOs;
-using HotelControlSystem.Exceptions;
 using UseCase.Database;
-using UseCase.Database.Repositories;
+using UseCase.DTOs;
 using UseCase.DTOs.UserDTOs;
-using UseCase.Services.UserServices;
+using UseCase.Exceptions;
 
-namespace HotelControlSystem.Services.UserServices
+namespace UseCase.Services.UserServices
 {
-    internal class UserService(UserMainInfoDTO userMainInfo, IUnitOfWork unitOfWork, IMapper mapper) : IUserService
+    public class UserService(IUserSession userSession, IUnitOfWork unitOfWork, IMapper mapper) : IUserService
     {
         public void Delete(int id)
         {
             unitOfWork.StartTransaction();
 
             unitOfWork.Users.Delete(id);
-            if (userMainInfo.Id == id)
+
+            if(userSession.currentUser.Id == id)
             {
-                userMainInfo.Reset();
+                userSession.Reset();
             }
 
             unitOfWork.Commit();
@@ -39,7 +32,7 @@ namespace HotelControlSystem.Services.UserServices
         {
             unitOfWork.StartTransaction();
 
-            if (userMainInfo.Id == id)
+            if (userSession.currentUser.Id == id)
             {
                 unitOfWork.Rollback();
                 throw new AccessDeniedException("user cannot promote yourself");

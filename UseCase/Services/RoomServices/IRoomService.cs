@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DoMain.Enums;
-using UseCase.DTOs.HotelDTOs;
+﻿using DoMain.Enums;
 using UseCase.DTOs.RoomDTOs;
 
 namespace UseCase.Services.RoomServices

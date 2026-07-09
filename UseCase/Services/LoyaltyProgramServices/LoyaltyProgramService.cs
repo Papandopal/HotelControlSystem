@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using DoMain.Entities;
 using DoMain.Enums;
 using FluentValidation;
 using UseCase.Database;
 using UseCase.DTOs.BookingDTOs;
 using UseCase.DTOs.LoyaltyProgrammDTOs;
-using UseCase.Services.BookingService;
-using UseCase.Services.LoyaltyProgramServices;
+using UseCase.Services.BookingServices;
 
-namespace HotelControlSystem.Services.LoyaltyProgramService
+namespace UseCase.Services.LoyaltyProgramServices
 {
     public class LoyaltyProgramService : ILoyaltyProgramService
     {

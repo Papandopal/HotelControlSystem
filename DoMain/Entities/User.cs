@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.Tracing;
-using DoMain.Enums;
+﻿using DoMain.Enums;
 
 namespace DoMain.Entities
 {

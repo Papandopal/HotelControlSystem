@@ -12,6 +12,7 @@ using HotelControlSystem.ConsoleIO;
 using HotelControlSystem.DTOs.AuthorisationDTOs;
 using HotelControlSystem.DTOs.BookingDTOs;
 using HotelControlSystem.DTOs.HotelDTOs;
+using UseCase.DTOs;
 
 namespace HotelControlSystem.RoleBehavior
 {
@@ -19,7 +20,7 @@ namespace HotelControlSystem.RoleBehavior
     {
         public List<Action> Actions { get; set; } = new List<Action>();
 
-        private UserMainInfoDTO userMainInfo;
+        private IUserSession userSession;
 
         private HotelController hotelController;
         private BookingController bookingController;
@@ -28,11 +29,11 @@ namespace HotelControlSystem.RoleBehavior
         private Paginator<BookingInfoForAdminsConsoleDTO> bookingPaginator;
 
         private IMapper mapper;
-        public ManagerBehavior(UserMainInfoDTO userMainInfo, HotelController hotelController, BookingController bookingController,
+        public ManagerBehavior(IUserSession userSession, HotelController hotelController, BookingController bookingController,
             Paginator<HotelInfoConsoleDTO> hotelPaginator, Paginator<BookingInfoForAdminsConsoleDTO> bookingPaginator, 
             IMapper mapper)
         {
-            this.userMainInfo = userMainInfo;
+            this.userSession = userSession;
 
             this.hotelController = hotelController;
             this.bookingController = bookingController;
@@ -50,7 +51,7 @@ namespace HotelControlSystem.RoleBehavior
         private void GetHotelsAction()
         {
             List<HotelInfoConsoleDTO> hotels = mapper.Map<List<HotelInfoConsoleDTO>>
-                (hotelController.GetHotelsByManagerId(userMainInfo.Id));
+                (hotelController.GetHotelsByManagerId(userSession.currentUser.Id));
 
             hotelPaginator.SetItems(hotels);
             hotelPaginator.StartPagination();
@@ -98,7 +99,7 @@ namespace HotelControlSystem.RoleBehavior
         private void GetAllBookingsAction()
         {
             List<BookingInfoForAdminsConsoleDTO> bookings = 
-                mapper.Map<List<BookingInfoForAdminsConsoleDTO>>(bookingController.GetAllByManagerId(userMainInfo.Id));
+                mapper.Map<List<BookingInfoForAdminsConsoleDTO>>(bookingController.GetAllByManagerId(userSession.currentUser.Id));
 
             bookingPaginator.SetItems(bookings);
             bookingPaginator.StartPagination();

@@ -1,18 +1,17 @@
 ﻿using AutoMapper;
-using BCrypt.Net;
 using DoMain.Entities;
 using FluentValidation;
-using HotelControlSystem.Exceptions;
 using UseCase.Database;
+using UseCase.DTOs;
 using UseCase.DTOs.AuthorisationDTOs;
-using UseCase.Services.AuthorisationServices;
+using UseCase.Exceptions;
 
-namespace HotelControlSystem.Services.AuthorisationServices
+namespace UseCase.Services.AuthorisationServices
 {
-    public class AuthorisationService(IUnitOfWork unitOfWork, IMapper mapper, IValidator<VerifyUserUseCaseDTO> verifyValidator,
+    public class AuthorisationService(IUserSession userSession, IUnitOfWork unitOfWork, IMapper mapper, IValidator<VerifyUserUseCaseDTO> verifyValidator,
         IValidator<RegistrateUserUseCaseDTO> registrationValidator) : IAuthorisationService
     {
-        public AuthorisedUserUseCaseDTO Registration(RegistrateUserUseCaseDTO info)
+        public void Registration(RegistrateUserUseCaseDTO info)
         {
             registrationValidator.ValidateAndThrow(info);
 
@@ -26,12 +25,12 @@ namespace HotelControlSystem.Services.AuthorisationServices
             unitOfWork.Users.Add(user);
 
             unitOfWork.Commit();
-            return mapper.Map<AuthorisedUserUseCaseDTO>(user);
+
+            userSession.SetUser(mapper.Map<UserMainInfoDTO>(user));
         }
 
-        public AuthorisedUserUseCaseDTO Verify(VerifyUserUseCaseDTO info)
+        public void Verify(VerifyUserUseCaseDTO info)
         {
-
             verifyValidator.ValidateAndThrow(info);
 
             IEnumerable<User> users = unitOfWork.Users.GetUsersByUserName(info.UserName);
@@ -45,7 +44,8 @@ namespace HotelControlSystem.Services.AuthorisationServices
 
                 if (BCrypt.Net.BCrypt.Verify(password, hash))
                 {
-                    return mapper.Map<AuthorisedUserUseCaseDTO>(user);
+                     userSession.SetUser(mapper.Map<UserMainInfoDTO>(user));
+                    return;
                 }
             }
 

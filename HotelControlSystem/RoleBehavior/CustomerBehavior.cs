@@ -11,6 +11,7 @@ using HotelControlSystem.ConsoleIO;
 using HotelControlSystem.DTOs.AuthorisationDTOs;
 using HotelControlSystem.DTOs.BookingDTOs;
 using HotelControlSystem.DTOs.LoyaltyProgramDTO;
+using UseCase.DTOs;
 
 namespace HotelControlSystem.RoleBehavior
 {
@@ -18,7 +19,7 @@ namespace HotelControlSystem.RoleBehavior
     {
         public List<Action> Actions { get; } = new List<Action>();
 
-        private UserMainInfoDTO currentUser;
+        private IUserSession userSession;
         private IMapper mapper;
 
         private BookingController bookingController;
@@ -26,10 +27,10 @@ namespace HotelControlSystem.RoleBehavior
 
         private Paginator<BookingInfoForCustomerConsoleDTO> bookingPaginator;
 
-        public CustomerBehavior(UserMainInfoDTO userMainInfoDTO, IMapper mapper, BookingController bookingController,
+        public CustomerBehavior(IUserSession userSession, IMapper mapper, BookingController bookingController,
             LoyaltyProgramController loyaltyProgramController, Paginator<BookingInfoForCustomerConsoleDTO> bookingPaginator) 
         {
-            currentUser = userMainInfoDTO;
+            this.userSession = userSession;
             this.mapper = mapper;
 
             this.bookingController = bookingController;
@@ -44,7 +45,7 @@ namespace HotelControlSystem.RoleBehavior
         private void GetAllBookingsAction()
         {
             List<BookingInfoForCustomerConsoleDTO> bookings = mapper.Map<List<BookingInfoForCustomerConsoleDTO>>
-                (bookingController.GetAllForCustomer(currentUser.Id));
+                (bookingController.GetAllForCustomer(userSession.currentUser.Id));
 
             bookingPaginator.SetItems(bookings);
             bookingPaginator.StartPagination();
@@ -78,7 +79,7 @@ namespace HotelControlSystem.RoleBehavior
                 Input.GetItem("Check out date: ", out checkOutDate);
             }
 
-            return new CreateBookingConsoleDTO { UserId = currentUser.Id, RoomId = roomId, CheckInDate = (DateTime)checkInDate, CheckOutDate = checkOutDate } ;
+            return new CreateBookingConsoleDTO { UserId = userSession.currentUser.Id, RoomId = roomId, CheckInDate = (DateTime)checkInDate, CheckOutDate = checkOutDate } ;
         }
 
         private void CallJoinLoyaltyProgram()
@@ -89,7 +90,7 @@ namespace HotelControlSystem.RoleBehavior
 
             if(answer == Symbols.Yes)
             {
-                var createLoyaltyProgramConsoleDTO = new CreateLoyaltyProgramConsoleDTO { UserId = currentUser.Id };
+                var createLoyaltyProgramConsoleDTO = new CreateLoyaltyProgramConsoleDTO { UserId = userSession.currentUser.Id };
                 loyaltyProgramController.Create(mapper.Map<CreateLoyaltyProgramDTO>(createLoyaltyProgramConsoleDTO));
             }
         }
@@ -97,7 +98,7 @@ namespace HotelControlSystem.RoleBehavior
         private void CallUseLoyaltyProgram(CreateBookingConsoleDTO createBookingConsoleDTO)
         {
             char answer;
-            decimal saleProcent = loyaltyProgramController.GetSaleProcentByUserId(currentUser.Id);
+            decimal saleProcent = loyaltyProgramController.GetSaleProcentByUserId(userSession.currentUser.Id);
 
             Input.GetItem($"You want use a sale on {saleProcent}% for current booking?({(char)Symbols.Yes} - yes): ", out answer);
 
@@ -111,8 +112,8 @@ namespace HotelControlSystem.RoleBehavior
         {
             CreateBookingConsoleDTO createBookingConsoleDTO = GetCreateBookingConsoleDTO();
 
-            if(!loyaltyProgramController.IsExistsByUserId(currentUser.Id)) CallJoinLoyaltyProgram();
-            if(loyaltyProgramController.IsExistsByUserId(currentUser.Id)) CallUseLoyaltyProgram(createBookingConsoleDTO);
+            if(!loyaltyProgramController.IsExistsByUserId(userSession.currentUser.Id)) CallJoinLoyaltyProgram();
+            if(loyaltyProgramController.IsExistsByUserId(userSession.currentUser.Id)) CallUseLoyaltyProgram(createBookingConsoleDTO);
 
             bookingController.Create(mapper.Map<CreateBookingDTO>(createBookingConsoleDTO));
         }

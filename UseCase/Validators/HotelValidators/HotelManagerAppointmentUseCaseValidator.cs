@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DoMain.Enums;
+﻿using DoMain.Enums;
 using FluentValidation;
-using HotelControlSystem.DataBase.UnitOfWork;
-using HotelControlSystem.Exceptions;
 using UseCase.Database;
 using UseCase.DTOs.HotelDTOs;
 
-namespace HotelControlSystem.Validators.HotelValidators
+namespace UseCase.Validators.HotelValidators
 {
     public class HotelManagerAppointmentUseCaseValidator : AbstractValidator<HotelManagerAppointmentUseCaseDTO>
     {

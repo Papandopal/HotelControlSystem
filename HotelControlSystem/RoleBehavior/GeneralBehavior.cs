@@ -6,6 +6,7 @@ using HotelControlSystem.ConsoleIO;
 using HotelControlSystem.DTOs.AuthorisationDTOs;
 using HotelControlSystem.DTOs.HotelDTOs;
 using HotelControlSystem.DTOs.RoomDTOs;
+using UseCase.DTOs;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace HotelControlSystem.RoleBehavior
@@ -14,7 +15,7 @@ namespace HotelControlSystem.RoleBehavior
     {
         public List<Action> Actions { get; } = new List<Action>();
 
-        UserMainInfoDTO userMainInfoDTO;
+        IUserSession userSession;
 
         AuthorisationController userController;
         HotelController hotelController;
@@ -25,11 +26,11 @@ namespace HotelControlSystem.RoleBehavior
 
         IMapper mapper;
 
-        public GeneralBehavior(UserMainInfoDTO userMainInfoDTO, IMapper mapper,
+        public GeneralBehavior(IUserSession userSession, IMapper mapper,
             AuthorisationController userController, HotelController hotelController, RoomController roomController,
             Paginator<HotelInfoConsoleDTO> hotelPaginator, Paginator<RoomInfoConsoleDTO> roomPaginator)
         {
-            this.userMainInfoDTO = userMainInfoDTO;
+            this.userSession = userSession;
 
             this.userController = userController;
             this.hotelController = hotelController;
@@ -70,8 +71,7 @@ namespace HotelControlSystem.RoleBehavior
         {
             RegistrateUserConsoleDTO registrateUserConsole = GetRegistrateUserConsoleDTO();
             RegistrateUserDTO registrateUser = mapper.Map<RegistrateUserDTO>(registrateUserConsole);
-            AuthorisedUserDTO authorisedUserDTO = userController.Registration(registrateUser);
-            mapper.Map(authorisedUserDTO, userMainInfoDTO);
+            userController.Registration(registrateUser);
         }
 
         private VerifyUserConsoleDTO GetVerifyUserConsoleDTO()
@@ -86,13 +86,12 @@ namespace HotelControlSystem.RoleBehavior
         {
             VerifyUserConsoleDTO verifyUserConsole = GetVerifyUserConsoleDTO();
             VerifyUserDTO verifyUser = mapper.Map<VerifyUserDTO>(verifyUserConsole);
-            AuthorisedUserDTO authorisedUser = userController.Authorisation(verifyUser);
-            mapper.Map(authorisedUser, userMainInfoDTO);
+            userController.Authorisation(verifyUser);
         }
 
         private void LogOutAction()
         {
-            userMainInfoDTO.Reset();
+            userSession.Reset();
         }
 
         private void GetAllHotelsAction()

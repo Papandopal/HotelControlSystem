@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Adapters.DTOs.LoyaltyProgramDTOs;
+﻿using Adapters.DTOs.LoyaltyProgramDTOs;
 using AutoMapper;
 using UseCase.DTOs.LoyaltyProgrammDTOs;
 using UseCase.Services.LoyaltyProgramServices;

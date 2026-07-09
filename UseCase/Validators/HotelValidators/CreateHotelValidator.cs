@@ -1,20 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DoMain.Entities;
-using DoMain.Enums;
+﻿using DoMain.Enums;
 using FluentValidation;
-using HotelControlSystem.DTOs.AuthorisationDTOs;
 using UseCase.Database;
+using UseCase.DTOs;
 using UseCase.DTOs.HotelDTOs;
 
-namespace HotelControlSystem.Validators.HotelValidators
+namespace UseCase.Validators.HotelValidators
 {
     public class CreateHotelValidator : AbstractValidator<CreateHotelUseCaseDTO>
     {
-        public CreateHotelValidator(UserMainInfoDTO currentUserMainInfo, IUnitOfWork unitOfWork) 
+        public CreateHotelValidator(IUserSession userSession, IUnitOfWork unitOfWork) 
         {
             RuleFor(x=>x.ManagerId).Must(managerId =>
             {
@@ -29,7 +23,7 @@ namespace HotelControlSystem.Validators.HotelValidators
 
             RuleFor(x => x.Name).Must(managerName => 
             {
-                return currentUserMainInfo.Role == UserRole.Admin;
+                return userSession.currentUser.Role == UserRole.Admin;
             }).WithMessage("Access denied");
 
             RuleFor(x => x.Name).Must((dto, name)  =>

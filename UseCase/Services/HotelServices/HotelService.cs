@@ -1,17 +1,12 @@
 ﻿using AutoMapper;
 using DoMain.Entities;
-using DoMain.Enums;
 using FluentValidation;
-using FluentValidation.Results;
-using HotelControlSystem.DTOs.HotelDTOs;
-using HotelControlSystem.Exceptions;
 using UseCase.Database;
 using UseCase.DTOs.HotelDTOs;
-using UseCase.Services.HotelServices;
 
-namespace HotelControlSystem.Services.HotelServices
+namespace UseCase.Services.HotelServices
 {
-    internal class HotelService(IUnitOfWork unitOfWork, IMapper mapper,
+    public class HotelService(IUnitOfWork unitOfWork, IMapper mapper,
         IValidator<CreateHotelUseCaseDTO> createValidator, IValidator<UpdateHotelUseCaseDTO> updateValidator,
         IValidator<HotelManagerAppointmentUseCaseDTO> appointmentValidator) : IHotelService
     {
