@@ -2,9 +2,7 @@
 # INSTRUCTIONS
 ## START
 
-docker-compose up --build -d
-
-docker attach hotel_system_app
+docker-compose up --build -d | docker attach hotel_system_app
 
 ## SPECIALS KEYS
 
