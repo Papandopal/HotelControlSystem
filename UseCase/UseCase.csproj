@@ -22,8 +22,4 @@
     <ProjectReference Include="..\DoMain\DoMain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Validators\UserValidators\" />
-  </ItemGroup>
-
 </Project>
