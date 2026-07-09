@@ -1,22 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Adapters.Controllers.Console;
-using AutoMapper;
+﻿using AutoMapper;
 using DoMain.Entities;
 using DoMain.Enums;
 using FluentValidation;
-using HotelControlSystem.Exceptions;
 using UseCase.Database;
-using UseCase.DTOs.HotelDTOs;
 using UseCase.DTOs.RoomDTOs;
-using UseCase.Services.RoomServices;
 
-namespace HotelControlSystem.Services.RoomServices
+namespace UseCase.Services.RoomServices
 {
-    internal class RoomService(IUnitOfWork unitOfWork, IMapper mapper, IValidator<CreateRoomUseCaseDTO> createValidator,
+    public class RoomService(IUnitOfWork unitOfWork, IMapper mapper, IValidator<CreateRoomUseCaseDTO> createValidator,
         IValidator<UpdateRoomUseCaseDTO> updateValidator) : IRoomService
     {
         private List<RoomInfoUseCaseDTO> roomsCatalog = new();

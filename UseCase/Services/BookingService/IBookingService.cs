@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UseCase.DTOs.BookingDTOs;
+﻿using UseCase.DTOs.BookingDTOs;
 
-namespace UseCase.Services.BookingService
+namespace UseCase.Services.BookingServices
 {
     public interface IBookingService
     {

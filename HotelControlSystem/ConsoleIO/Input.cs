@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Channels;
-using System.Threading.Tasks;
+﻿using System.Text;
 using HotelControlSystem.Exceptions;
 
 namespace HotelControlSystem.ConsoleIO
@@ -25,7 +20,7 @@ namespace HotelControlSystem.ConsoleIO
         {
             string input = BuildInput(text);
 
-            while (input == string.Empty || !int.TryParse(input, out _) || !Enum.IsDefined(typeof(T), int.Parse(input))) 
+            while (input == string.Empty || !int.TryParse(input, out _) || !Enum.IsDefined(typeof(T), int.Parse(input)))
             {
                 Output.WriteLine("Invalide data");
                 input = BuildInput(text);
@@ -62,7 +57,7 @@ namespace HotelControlSystem.ConsoleIO
 
             if (input == string.Empty || !int.TryParse(input, out _) || !Enum.IsDefined(typeof(T), int.Parse(input)))
             {
-                result= default;
+                result = default;
                 return false;
             }
             result = (T)Enum.Parse(typeof(T), input);
@@ -77,21 +72,15 @@ namespace HotelControlSystem.ConsoleIO
 
             do
             {
-                key = Console.ReadKey(true);
+                key = Console.ReadKey();
 
-                if (key.Key == SpecialKeys.StopInput)
-                {
-                    while (Console.KeyAvailable)
-                    {
-                        Console.ReadKey(true);
-                    }
 
+                if (key.Key == SpecialKeys.StopInput && key.Modifiers.HasFlag(ConsoleModifiers.Control))
                     throw new UserCancelledInputException("user cancelled input");
-                }
-                    
+
                 if (key.Key == SpecialKeys.BackSpace)
                 {
-                    if (builder.Length > 0)
+                    if (Console.CursorLeft >= text.Length)
                     {
                         Console.Write(' ');
                         Console.CursorLeft--;

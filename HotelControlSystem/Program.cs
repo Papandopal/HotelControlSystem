@@ -4,22 +4,16 @@ using HotelControlSystem.ConsoleIO;
 using HotelControlSystem.DataBase;
 using HotelControlSystem.DataBase.Repository;
 using HotelControlSystem.DataBase.UnitOfWork;
-using HotelControlSystem.DTOs.AuthorisationDTOs;
+using HotelControlSystem.DTOs;
 using HotelControlSystem.RoleBehavior;
-using HotelControlSystem.Services.AuthorisationServices;
-using HotelControlSystem.Services.BookingServices;
-using HotelControlSystem.Services.HotelServices;
-using HotelControlSystem.Services.LoyaltyProgramService;
-using HotelControlSystem.Services.RoomServices;
-using HotelControlSystem.Services.UserServices;
-using HotelControlSystem.Validators.HotelValidators;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using UseCase.Database;
 using UseCase.Database.Repositories;
+using UseCase.DTOs;
 using UseCase.Services.AuthorisationServices;
-using UseCase.Services.BookingService;
+using UseCase.Services.BookingServices;
 using UseCase.Services.HotelServices;
 using UseCase.Services.LoyaltyProgramServices;
 using UseCase.Services.RoomServices;
@@ -80,7 +74,7 @@ namespace HotelControlSystem
             services.AddScoped<IBookingService, BookingService>();
             services.AddScoped<ILoyaltyProgramService, LoyaltyProgramService>();
 
-            services.AddValidatorsFromAssembly(typeof(Program).Assembly);
+            services.AddValidatorsFromAssembly(typeof(UseCase.Validators.AuthorisationValidators.RegistrateUserUseCaseValidator).Assembly);
 
             services.AddAutoMapper(configuration =>
             {
@@ -88,7 +82,7 @@ namespace HotelControlSystem
             });
             services.AddScoped(typeof(Paginator<>));
 
-            services.AddScoped<UserMainInfoDTO>();
+            services.AddScoped<IUserSession, UserSession>();
 
             var provider = services.BuildServiceProvider();
 

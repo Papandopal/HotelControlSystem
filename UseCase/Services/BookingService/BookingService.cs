@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using DoMain.Entities;
 using DoMain.Enums;
 using FluentValidation;
 using UseCase.Database;
 using UseCase.DTOs.BookingDTOs;
-using UseCase.Services.BookingService;
 
-namespace HotelControlSystem.Services.BookingServices
+namespace UseCase.Services.BookingServices
 {
     public class BookingService(IUnitOfWork unitOfWork, IMapper mapper,
         IValidator<ChangeBookingStatusUseCaseDTO> changeStatusValidator, 

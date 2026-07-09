@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FluentValidation;
+﻿using FluentValidation;
 using UseCase.DTOs.AuthorisationDTOs;
 
-namespace HotelControlSystem.Validators.AuthorisationValidators
+namespace UseCase.Validators.AuthorisationValidators
 {
     public class RegistrateUserUseCaseValidator : AbstractValidator<RegistrateUserUseCaseDTO>
     {

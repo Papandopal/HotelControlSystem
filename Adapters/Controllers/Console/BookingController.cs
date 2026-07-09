@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Adapters.DTOs.BookingDTOs;
+﻿using Adapters.DTOs.BookingDTOs;
 using AutoMapper;
-using DoMain.Entities;
 using UseCase.DTOs.BookingDTOs;
-using UseCase.Services.BookingService;
+using UseCase.Services.BookingServices;
 
 namespace Adapters.Controllers.Console
 {

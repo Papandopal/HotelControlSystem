@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-
-namespace HotelControlSystem.ConsoleIO
+﻿namespace HotelControlSystem.ConsoleIO
 {
     public static class Symbols
     {

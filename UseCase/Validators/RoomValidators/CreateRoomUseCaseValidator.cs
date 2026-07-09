@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FluentValidation;
-using HotelControlSystem.DataBase.UnitOfWork;
-using HotelControlSystem.Exceptions;
+﻿using FluentValidation;
 using UseCase.Database;
 using UseCase.DTOs.RoomDTOs;
 
-namespace HotelControlSystem.Validators.RoomValidators
+namespace UseCase.Validators.RoomValidators
 {
     public class CreateRoomUseCaseValidator : AbstractValidator<CreateRoomUseCaseDTO>
     {
